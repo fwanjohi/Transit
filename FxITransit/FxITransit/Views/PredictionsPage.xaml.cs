@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
 namespace FxITransit.Views
@@ -24,11 +25,42 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = new PredictionsViewModel(stop);
+
+            var map = new Map
+            {
+                IsShowingUser = true,
+                //HeightRequest = 300,
+
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                
+
+            };
+
+            var position = new Position(stop.Lat, stop.Lon); // Latitude, Longitude
+            var pin = new Pin
+            {
+                Type = PinType.Place,
+                Position = position,
+                Label = stop.Title,
+
+            };
+           
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
+            
+
+            map.Pins.Add(pin);
+            MapHolder.Children.Add(map);
+
+
+
+
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
+
 
             if (viewModel.Stop != null)
             {

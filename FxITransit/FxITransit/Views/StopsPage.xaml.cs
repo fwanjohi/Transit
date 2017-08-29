@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
 namespace FxITransit.Views
@@ -18,6 +19,8 @@ namespace FxITransit.Views
         public StopsPage()
         {
             InitializeComponent();
+          
+
         }
 
         public StopsPage(Direction direction)
@@ -37,5 +40,9 @@ namespace FxITransit.Views
             // Manually deselect item
             StopsListView.SelectedItem = null;
         }
+
+        
+
+
     }
 }

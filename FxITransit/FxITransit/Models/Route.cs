@@ -46,9 +46,9 @@ namespace FxITransit.Models
 
         public string Title { get; set; }
 
-        public string Lat { get; set; }
+        public double Lat { get; set; }
 
-        public string Lon { get; set; }
+        public double Lon { get; set; }
 
         public string StopId { get; set; }
 

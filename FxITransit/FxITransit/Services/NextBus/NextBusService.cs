@@ -86,8 +86,20 @@ namespace FxITransit.Services.NextBus
                 foreach (var stopNode in doc.GetDescendantElements("stop"))
                 {
                     var stop = new Stop();
-                    stop.Lat = stopNode.GetAttribute("lat");
-                    stop.Lon = stopNode.GetAttribute("lon");
+                    stop.Lat = 0;
+                    stop.Lon = 0;
+                    var lat = stopNode.GetAttribute("lat");
+                    var lon = stopNode.GetAttribute("lon");
+                    try
+                    {
+                        stop.Lat = Convert.ToDouble(stopNode.GetAttribute("lat"));
+                        stop.Lon = Convert.ToDouble(stopNode.GetAttribute("lon"));
+                    }
+                    catch (Exception ex )
+                    {
+                        var ss = ex.Message;
+                    }
+
                     stop.Tag = stopNode.GetAttribute("tag");
                     stop.Title = stopNode.GetAttribute("title");
                     stop.StopId = stopNode.GetAttribute("stopId");
