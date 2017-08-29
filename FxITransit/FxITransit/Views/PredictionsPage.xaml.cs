@@ -43,6 +43,7 @@ namespace FxITransit.Views
                 Type = PinType.Place,
                 Position = position,
                 Label = stop.Title,
+                Address = stop.Title
 
             };
            
