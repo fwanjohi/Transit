@@ -20,29 +20,44 @@ namespace FxITransit.ViewModels
         public Stop Stop { get; private set; }
         public bool AutoRefresh { get; internal set; }
 
+        public int RefreshInterval  {get; set;}
+
+        private int _elapsedTime;
+
         public PredictionsViewModel(Stop stop)
         {
+            _elapsedTime = 0;
             AutoRefresh = true;
+            RefreshInterval = 30;
             Stop = stop;
             Title = $"Predictions : {stop.Title }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
             AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
-            //_refreshTimer = new Timer(1 * 60 * 1000);
-            //_refreshTimer.Elapsed += OnTimedEvent;
-            //_refreshTimer.AutoReset = true;
-
-            //_timeTimer = new Timer(1 * 1000);
-            //_timeTimer.Elapsed += OnSecondEvent;
-            //_timeTimer.AutoReset = true;
+            
 
 
         }
         async Task ExecuteRefreshCommand()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(30), () =>
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
             {
                 if (!AutoRefresh) return false;
-                ExecuteLoadPredictionsCommand();
+                if (_elapsedTime >= RefreshInterval)
+                {
+                    ExecuteLoadPredictionsCommand();
+                    _elapsedTime = 0;
+
+
+                }
+                else
+                {
+                    foreach (var pred in Stop.Predictions)
+                    {
+                        pred.LocalTime = Utils.ConvertUnixTimeStamp(pred.EpochTime);
+                    }
+                }
+
+                _elapsedTime++;
                 return AutoRefresh; // True = Repeat again, False = Stop the timer
             });
         }

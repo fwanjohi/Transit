@@ -22,13 +22,14 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Padding="10">
-                                <Label Text="{Binding LocalTime}"
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemTextStyle}"
-                       FontSize="16"/>
                                 <Label Text="{Binding Display}"
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemTextStyle}"
+                       FontSize="16"/>
+                                <Label  Text="{Binding LocalTime, StringFormat='{}{0: hh:mm:ss tt}'}"
+                       LineBreakMode="NoWrap"
+                       Style="{DynamicResource ListItemTextStyle}"
+                       FontAttributes="None"
                        FontSize="13"/>
                                 
                             </StackLayout>

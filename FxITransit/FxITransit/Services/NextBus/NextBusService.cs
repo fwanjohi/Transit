@@ -157,20 +157,15 @@ namespace FxITransit.Services.NextBus
                 pred.EpochTime = predNode.GetAttribute("epochTime");
                 pred.IsDeparture = predNode.GetAttribute("isDeparture");
                 pred.DirTag = predNode.GetAttribute("dirTag");
-                pred.LocalTime = ConvertUnixTimeStamp(pred.EpochTime);
+                pred.LocalTime = Utils.ConvertUnixTimeStamp(pred.EpochTime);
                 preds.Add(pred);
             }
-            stop.Predictions.ReplaceRange(preds);
+            stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
 
 
         }
 
-        public static DateTime? ConvertUnixTimeStamp(string unixTimeStamp)
-        {
-            var UTC = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(unixTimeStamp));
-            var date = UTC.ToLocalTime();
-            return date;
-        }
+        
 
         private HttpClient GetClient()
         {
