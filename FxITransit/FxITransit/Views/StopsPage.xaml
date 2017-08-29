@@ -9,6 +9,8 @@
                        
                        TextColor="Blue"
                        FontSize="16"/>
+            <StackLayout x:Name="MapHolder" HeightRequest="200"/>
+            
             <ListView x:Name="StopsListView"
 				ItemsSource="{Binding Path=Direction.Stops}"
                 VerticalOptions="FillAndExpand"

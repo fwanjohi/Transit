@@ -127,6 +127,7 @@ namespace FxITransit.Services.NextBus
                         var stop = stops.FirstOrDefault(x => x.Tag == tag);
                         if (stop != null)
                         {
+                            stop.Direction = direction;
                             direction.Stops.Add(stop);
                         }
                     }

@@ -57,7 +57,7 @@ namespace FxITransit.Models
         public string RouteTag { get; set; }
         
         public ObservableRangeCollection<Prediction> Predictions { get; set; }
-
+        public Direction Direction { get; set; }
         internal void RefreshTime()
         {
            foreach(var pred in Predictions)

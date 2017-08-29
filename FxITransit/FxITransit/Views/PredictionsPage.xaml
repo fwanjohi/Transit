@@ -6,14 +6,11 @@
         <StackLayout >
             <Label Text="{Binding Title}"
                        LineBreakMode="NoWrap"
-                       
                        TextColor="Blue"
                        FontSize="16"/>
             
             <StackLayout BackgroundColor="Azure" x:Name="MapHolder" 
                          HeightRequest="300" VerticalOptions="StartAndExpand"/>
-
-
 
             <ListView x:Name="StopsListView"
 				ItemsSource="{Binding Path=Stop.Predictions}"

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
 namespace FxITransit.Views
@@ -14,8 +15,10 @@ namespace FxITransit.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DirectionsListPage : ContentPage
     {
-        DirectionsViewModel viewModel;
-        
+        DirectionsViewModel _viewModel;
+        Route _route;
+
+
         public DirectionsListPage()
         {
             InitializeComponent();
@@ -23,8 +26,9 @@ namespace FxITransit.Views
         public DirectionsListPage(Route route)
         {
             InitializeComponent();
+            _route = route;
+            BindingContext = this._viewModel = new DirectionsViewModel(route);
 
-            BindingContext = this.viewModel = new DirectionsViewModel(route);
         }
 
         async void OnDirectionSelected(object sender, SelectedItemChangedEventArgs args)
@@ -43,8 +47,10 @@ namespace FxITransit.Views
         {
             base.OnAppearing();
 
-            if (!viewModel.Route.IsConfigured)
-                viewModel.PopulateRouteCommand.Execute(null);
+            if (!_viewModel.Route.IsConfigured)
+                _viewModel.PopulateRouteCommand.Execute(null);
+
+            
         }
     }
 }

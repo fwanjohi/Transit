@@ -26,7 +26,7 @@ namespace FxITransit.Views
             InitializeComponent();
             BindingContext = this.viewModel = new PredictionsViewModel(stop);
 
-            var map = new Map
+            var map = new CustomMap
             {
                 IsShowingUser = true,
                 //HeightRequest = 300,
@@ -46,7 +46,13 @@ namespace FxITransit.Views
                 Address = stop.Title
 
             };
-           
+
+            foreach (var dirStop in stop.Direction.Stops)
+            {
+                map.RouteCoordinates.Add(new Position(dirStop.Lat, dirStop.Lon));
+            }
+            
+
             map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
             
 

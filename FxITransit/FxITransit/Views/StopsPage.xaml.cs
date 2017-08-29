@@ -27,6 +27,29 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = new StopsViewModel(direction);
+
+            var map = new CustomMap
+            {
+                IsShowingUser = true,
+                //HeightRequest = 300,
+
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+
+
+            };
+
+            foreach (var position in direction.Stops)
+            {
+                map.RouteCoordinates.Add(new Position(position.Lat, position.Lon));
+            }
+            var firstPos = new Position(direction.Stops[0].Lat, direction.Stops[0].Lat);
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(1.0)));
+            //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
+
+
+            
+            MapHolder.Children.Add(map);
         }
 
         private async void OnStopSelected(object sender, SelectedItemChangedEventArgs args)

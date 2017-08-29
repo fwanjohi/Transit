@@ -45,6 +45,7 @@
     <Compile Include="Helpers\XDoc.cs" />
     <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\BaseDataObject.cs" />
+    <Compile Include="Models\CustomMap.cs" />
     <Compile Include="Models\NotificationBaseObject.cs" />
     <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Route.cs" />
