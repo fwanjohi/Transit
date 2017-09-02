@@ -9,6 +9,7 @@
                        
                        TextColor="Blue"
                        FontSize="16"/>
+            <!--<StackLayout x:Name="MapHolder" HeightRequest="200"/>-->
 
             <ListView x:Name="DirectionsListView"
 				ItemsSource="{Binding Path = Route.Directions}"
@@ -32,6 +33,7 @@
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13"/>-->
                             </StackLayout>
+                            
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

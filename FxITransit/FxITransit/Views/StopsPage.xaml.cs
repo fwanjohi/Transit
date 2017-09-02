@@ -44,7 +44,7 @@ namespace FxITransit.Views
                 map.RouteCoordinates.Add(new Position(position.Lat, position.Lon));
             }
             var firstPos = new Position(direction.Stops[0].Lat, direction.Stops[0].Lat);
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(1.0)));
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
 
 

@@ -47,10 +47,13 @@ namespace FxITransit.Views
 
             };
 
+           // var distance = Xamarin.Forms.Maps.Distance.()
+
             foreach (var dirStop in stop.Direction.Stops)
             {
                 map.RouteCoordinates.Add(new Position(dirStop.Lat, dirStop.Lon));
             }
+
             
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));

@@ -30,20 +30,24 @@ namespace FxITransit.UWP
 
             if (e.NewElement != null)
             {
+
                 var formsMap = (CustomMap)e.NewElement;
                 var nativeMap = Control as MapControl;
 
-                var coordinates = new List<BasicGeoposition>();
-                foreach (var position in formsMap.RouteCoordinates)
+                if (formsMap.RouteCoordinates.Count != 0)
                 {
-                    coordinates.Add(new BasicGeoposition() { Latitude = position.Latitude, Longitude = position.Longitude });
-                }
+                    var coordinates = new List<BasicGeoposition>();
+                    foreach (var position in formsMap.RouteCoordinates)
+                    {
+                        coordinates.Add(new BasicGeoposition() { Latitude = position.Latitude, Longitude = position.Longitude });
+                    }
 
-                var polyline = new MapPolyline();
-                polyline.StrokeColor = Windows.UI.Color.FromArgb(128, 255, 0, 0);
-                polyline.StrokeThickness = 5;
-                polyline.Path = new Geopath(coordinates);
-                nativeMap.MapElements.Add(polyline);
+                    var polyline = new MapPolyline();
+                    polyline.StrokeColor = Windows.UI.Color.FromArgb(128, 255, 0, 0);
+                    polyline.StrokeThickness = 5;
+                    polyline.Path = new Geopath(coordinates);
+                    nativeMap.MapElements.Add(polyline);
+                }
             }
         }
     }
