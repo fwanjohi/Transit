@@ -9,7 +9,8 @@
                        
                        TextColor="Blue"
                        FontSize="16"/>
-            <!--<StackLayout x:Name="MapHolder" HeightRequest="200"/>-->
+            
+            <StackLayout x:Name="MapHolder" HeightRequest="400"/>
 
             <ListView x:Name="DirectionsListView"
 				ItemsSource="{Binding Path = Route.Directions}"
@@ -38,6 +39,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            
             
         </StackLayout>
     </ContentPage.Content>

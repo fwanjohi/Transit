@@ -41,9 +41,19 @@ namespace FxITransit.Views
 
             foreach (var position in direction.Stops)
             {
-                map.RouteCoordinates.Add(new Position(position.Lat, position.Lon));
+                var pos = new Position(position.Lat, position.Lon);
+                map.RouteCoordinates.Add(pos);
+                //var pin = new Pin
+                //{
+                //    Type = PinType.Place,
+                //    Position = pos,
+                //    Label = position.Title,
+                //    Address = position.Title,
+
+                //};
+                //map.Pins.Add(pin);
             }
-            var firstPos = new Position(direction.Stops[0].Lat, direction.Stops[0].Lat);
+            var firstPos = new Position(direction.Stops[0].Lat, direction.Stops[0].Lon);
             map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
 

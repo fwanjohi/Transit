@@ -94,18 +94,19 @@ namespace FxITransit.Services.NextBus
                     {
                         stop.Lat = Convert.ToDouble(stopNode.GetAttribute("lat"));
                         stop.Lon = Convert.ToDouble(stopNode.GetAttribute("lon"));
+                        stop.Tag = stopNode.GetAttribute("tag");
+                        stop.Title = stopNode.GetAttribute("title");
+                        stop.StopId = stopNode.GetAttribute("stopId");
+                        stop.RouteTag = route.Tag;
+                        stop.AgencyTag = route.AgencyTag;
+                        stops.Add(stop);
                     }
                     catch (Exception ex )
                     {
                         var ss = ex.Message;
                     }
 
-                    stop.Tag = stopNode.GetAttribute("tag");
-                    stop.Title = stopNode.GetAttribute("title");
-                    stop.StopId = stopNode.GetAttribute("stopId");
-                    stop.RouteTag = route.Tag;
-                    stop.AgencyTag = route.AgencyTag;
-                    stops.Add(stop);
+                   
                 }
 
                 //directions

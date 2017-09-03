@@ -33,12 +33,18 @@ namespace FxITransit.Views
 
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                
+
 
             };
+            //Xamarin.Forms.Point.Distance
 
-            var position = new Position(stop.Lat, stop.Lon); // Latitude, Longitude
-            var pin = new Pin
+            //CLLocation pointA = new CLLocation(lat, long);
+            //CLLocation pointB = new CLLocation(lat, long);
+            //var distanceToB = pointB.DistanceFrom(pointA);
+            Position position = new Position(0, 0);
+            Pin pin = null;
+            position = new Position(stop.Lat, stop.Lon); // Latitude, Longitude
+            pin = new Pin
             {
                 Type = PinType.Place,
                 Position = position,
@@ -47,23 +53,17 @@ namespace FxITransit.Views
 
             };
 
-           // var distance = Xamarin.Forms.Maps.Distance.()
+            // var distance = Xamarin.Forms.Maps.Distance.()
 
             foreach (var dirStop in stop.Direction.Stops)
             {
                 map.RouteCoordinates.Add(new Position(dirStop.Lat, dirStop.Lon));
             }
 
-            
-
             map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
-            
 
             map.Pins.Add(pin);
             MapHolder.Children.Add(map);
-
-
-
 
         }
 
