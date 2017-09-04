@@ -9,8 +9,9 @@
                        
                        TextColor="Blue"
                        FontSize="16"/>
+            <Entry x:Name="TxtSearch" Placeholder="Search Agency" Text="{Binding Filter, Mode=TwoWay}"/>
             <ListView x:Name="ItemsListView"
-				ItemsSource="{Binding Agencies}"
+				ItemsSource="{Binding FilteredAgencies}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadAgenciesCommand}"

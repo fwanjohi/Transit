@@ -25,14 +25,26 @@
           <Label.FormattedText>
             <FormattedString>
               <FormattedString.Spans>
-                <Span Text="FxiTransit" FontAttributes="Bold" FontSize="22"/>
+                <Span Text="Fxi Transit" FontAttributes="Bold" FontSize="22"/>
                 <Span Text=" "/>
                 <Span Text="1.0" ForegroundColor="{StaticResource LightTextColor}"/>
               </FormattedString.Spans>
             </FormattedString>
           </Label.FormattedText>
         </Label>
-        <Label>
+                <Label FontSize="22">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="Created By "/>
+                                <Span Text="Festus Wanjohi" FontAttributes="Bold" FontSize="22"/>
+                                <Span Text=" "/>
+                                <Span Text="fwanjohi@gmail.com" ForegroundColor="{StaticResource LightTextColor}"/>
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label>
           <Label.FormattedText>
             <FormattedString>
               <FormattedString.Spans>
@@ -40,7 +52,9 @@
                 <Span Text=" "/>
                 <Span Text="Xamarin Platform" FontAttributes="Bold" />
                 <Span Text="." />
-              </FormattedString.Spans>
+                                
+                                
+                            </FormattedString.Spans>
             </FormattedString>
           </Label.FormattedText>
         </Label>

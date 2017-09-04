@@ -10,8 +10,10 @@
                        TextColor="Blue"
                        FontSize="16"/>
             
+            <Entry x:Name="TxtSearch" Placeholder="Search Route" Text="{Binding Filter, Mode=TwoWay}"/>
+            
             <ListView x:Name="RoutesListView"
-				ItemsSource="{Binding Path = Agency.Routes}"
+				ItemsSource="{Binding Path = FilteredRoutes}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadRoutesCommand}"

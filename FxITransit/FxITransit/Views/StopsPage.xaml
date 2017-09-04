@@ -9,10 +9,11 @@
                        
                        TextColor="Blue"
                        FontSize="16"/>
+            <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
             <StackLayout x:Name="MapHolder" HeightRequest="200"/>
             
             <ListView x:Name="StopsListView"
-				ItemsSource="{Binding Path=Direction.Stops}"
+				ItemsSource="{Binding FilteredStops}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadAgenciesCommand}"
