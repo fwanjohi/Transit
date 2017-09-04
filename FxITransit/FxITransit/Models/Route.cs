@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
-
+using Xamarin.Forms.Maps;
 
 namespace FxITransit.Models
 {
@@ -20,15 +20,15 @@ namespace FxITransit.Models
         public string Title { get; set; }
         public ObservableRangeCollection<Direction> Directions { get; set; }
         public ObservableRangeCollection<Point> Path { get; set; }
-        
+
         public string Color { get; set; }
-        
+
         public string OppositeColor { get; set; }
 
         public string LatMin { get; set; }
-        
+
         public string LatMax { get; set; }
-        
+
         public string LonMin { get; set; }
 
         public string LonMax { get; set; }
@@ -38,6 +38,8 @@ namespace FxITransit.Models
 
     public class Stop : ObservableObject
     {
+
+        private double _distance;
         public Stop()
         {
             Predictions = new ObservableRangeCollection<Prediction>();
@@ -55,12 +57,49 @@ namespace FxITransit.Models
         public string AgencyTag { get; set; }
 
         public string RouteTag { get; set; }
-        
+
+        public Position Postion
+        {
+            get
+            {
+                return new Position(Lat, Lon);
+            }
+        }
+
+        public double Distance
+        {
+            get { return _distance; }
+            set
+            {
+                _distance = value;
+                OnPropertyChanged("Display");
+                OnPropertyChanged("TitleDisplay");
+            }
+        }
+
+        public string Display
+        {
+            get
+            {
+                var dist = Distance.ToString("0.##0");
+                return $"{StopId} - ({dist} Miles away)";
+            }
+        }
+
+        public string TitleDisplay
+        {
+            get
+            {
+                var dist = Distance.ToString("0.##0");
+                return $"{Title} - ({dist} Miles away)";
+            }
+        }
+
         public ObservableRangeCollection<Prediction> Predictions { get; set; }
         public Direction Direction { get; set; }
         internal void RefreshTime()
         {
-           foreach(var pred in Predictions)
+            foreach (var pred in Predictions)
             {
                 pred.LocalTime = new DateTime(pred.LocalTime.Value.Ticks);
             }
@@ -73,11 +112,14 @@ namespace FxITransit.Models
         {
             Stops = new ObservableRangeCollection<Stop>();
         }
-        public ObservableRangeCollection<Stop> Stops{ get; set; }
+        public ObservableRangeCollection<Stop> Stops { get; set; }
         public string Tag { get; set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public string UseForUI { get; set; }
+        
+
+        
     }
 
     public class Point

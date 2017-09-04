@@ -1,4 +1,5 @@
-﻿using FxITransit.Models;
+﻿using FxITransit.Helpers;
+using FxITransit.Models;
 using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace FxITransit.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StopsPage : ContentPage
     {
-        StopsViewModel viewModel;
+        StopsViewModel _viewModel;
         public StopsPage()
         {
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace FxITransit.Views
         public StopsPage(Direction direction)
         {
             InitializeComponent();
-            BindingContext = this.viewModel = new StopsViewModel(direction);
+            BindingContext = this._viewModel = new StopsViewModel(direction);
 
             var map = new CustomMap
             {
@@ -39,21 +40,49 @@ namespace FxITransit.Views
 
             };
 
-            foreach (var position in direction.Stops)
-            {
-                var pos = new Position(position.Lat, position.Lon);
-                map.RouteCoordinates.Add(pos);
-                //var pin = new Pin
-                //{
-                //    Type = PinType.Place,
-                //    Position = pos,
-                //    Label = position.Title,
-                //    Address = position.Title,
+            var cur = Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync().Result;
+            var curPoint =  new Xamarin.Forms.Point(cur.Longitude, cur.Latitude);
+            var curStop = new Stop { Lat = cur.Latitude, Lon = cur.Longitude };
 
-                //};
-                //map.Pins.Add(pin);
+            _viewModel.ClosestStop = null;
+            Position firstPos = direction.Stops[0].Postion; 
+            foreach (var stop in direction.Stops)
+            {
+                var pos = new Position(stop.Lat, stop.Lon);
+                map.RouteCoordinates.Add(pos);
+
+                var dist = curPoint.Distance (new Xamarin.Forms.Point(pos.Latitude, pos.Longitude));
+                stop.Distance = TrackingHelper.ToMiles( TrackingHelper.CalculateDistance(curStop, stop));
+                if (_viewModel.ClosestStop == null )
+                {
+                    _viewModel.ClosestStop = stop;
+                }
+                else
+                {
+                    if (_viewModel.ClosestStop.Distance > stop.Distance)
+                    {
+                        _viewModel.ClosestStop = stop;
+                    }
+                }
+
             }
-            var firstPos = new Position(direction.Stops[0].Lat, direction.Stops[0].Lon);
+
+            if (_viewModel.ClosestStop != null)
+            {
+
+                var pin = new Pin
+                {
+                    Type = PinType.Place,
+                    Position = _viewModel.ClosestStop.Postion,
+                    Label = _viewModel.ClosestStop.Title,
+                    Address = _viewModel.ClosestStop.Display,
+
+                };
+                map.Pins.Add(pin);
+                firstPos = _viewModel.ClosestStop.Postion;
+            }
+            
+            
             map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
 
@@ -74,8 +103,23 @@ namespace FxITransit.Views
             StopsListView.SelectedItem = null;
         }
 
-        
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
 
+            
 
+            //var dist = Plugin.Geolocator.CrossGeolocator.Current.
+
+            //MyPosition = new Position(position.Latitude, position.Longitude);
+        }
+
+        private async Task BtnClosest_ClickedAsync(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new PredictionsPage(_viewModel.ClosestStop));
+
+            // Manually select select item
+            StopsListView.SelectedItem = _viewModel.ClosestStop;
+        }
     }
 }

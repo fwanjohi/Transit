@@ -2,9 +2,11 @@
 using FxITransit.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FxITransit.ViewModels
@@ -15,6 +17,7 @@ namespace FxITransit.ViewModels
 
 
         private string _filter;
+        private Stop _closestStop;
         private ObservableRangeCollection<Stop> _filteredStops;
         public string Filter
         {
@@ -25,6 +28,8 @@ namespace FxITransit.ViewModels
                 OnPropertyChanged("FilteredStops");
             }
         }
+
+        
 
         public ObservableRangeCollection<Stop> FilteredStops
         {
@@ -49,7 +54,21 @@ namespace FxITransit.ViewModels
             Direction = direction;
             _filteredStops = new ObservableRangeCollection<Stop>();
             _filteredStops.ReplaceRange(direction.Stops);
+            
             Title = "Stops for  : " + Direction.Title;
+        }
+
+        public Stop ClosestStop
+        {
+            get
+            {
+                return _closestStop;
+            }
+            set
+            {
+                _closestStop = value;
+                OnPropertyChanged("ClosestStop");
+            }
         }
 
 

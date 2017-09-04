@@ -4,11 +4,17 @@
              x:Class="FxITransit.Views.StopsPage">
     <ContentPage.Content>
         <StackLayout>
+            
             <Label Text="{Binding Path= Title}"
                        LineBreakMode="NoWrap"
                        
                        TextColor="Blue"
                        FontSize="16"/>
+            <StackLayout>
+                <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
+                <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay, StringFormat='Go To Closest: {0}'}"/>
+                
+            </StackLayout>
             <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
             <StackLayout x:Name="MapHolder" HeightRequest="200"/>
             
@@ -16,7 +22,6 @@
 				ItemsSource="{Binding FilteredStops}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
-                RefreshCommand="{Binding LoadAgenciesCommand}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 CachingStrategy="RecycleElement"
@@ -30,7 +35,7 @@
                        Style="{DynamicResource ListItemTextStyle}"
                        FontSize="16"/>
                                 <StackLayout Orientation="Horizontal" >
-                                    <Label Text="{Binding StopId}"
+                                    <Label Text="{Binding Display}"
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13"/>
