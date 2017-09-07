@@ -20,6 +20,8 @@ namespace FxITransit.Views
         {
             InitializeComponent();
 
+            
+
             BindingContext = viewModel = new AgenciesViewModel();
         }
 

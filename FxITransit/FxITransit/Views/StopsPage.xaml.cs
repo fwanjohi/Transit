@@ -40,20 +40,20 @@ namespace FxITransit.Views
 
             };
 
-            var cur = Plugin.Geolocator.CrossGeolocator.Current.GetPositionAsync().Result;
-            var curPoint =  new Xamarin.Forms.Point(cur.Longitude, cur.Latitude);
-            var curStop = new Stop { Lat = cur.Latitude, Lon = cur.Longitude };
+
+            var curPoint = BaseViewModel.GetDeviceLocationAsync().Result;
+            var curStop = new Stop { Lat = curPoint.X, Lon = curPoint.Y};
 
             _viewModel.ClosestStop = null;
-            Position firstPos = direction.Stops[0].Postion; 
+            Position firstPos = direction.Stops[0].Postion;
             foreach (var stop in direction.Stops)
             {
                 var pos = new Position(stop.Lat, stop.Lon);
                 map.RouteCoordinates.Add(pos);
 
-                var dist = curPoint.Distance (new Xamarin.Forms.Point(pos.Latitude, pos.Longitude));
-                stop.Distance = TrackingHelper.ToMiles( TrackingHelper.CalculateDistance(curStop, stop));
-                if (_viewModel.ClosestStop == null )
+                var dist = curPoint.Distance(new Xamarin.Forms.Point(pos.Latitude, pos.Longitude));
+                stop.Distance = TrackingHelper.ToMiles(TrackingHelper.CalculateDistance(curStop, stop));
+                if (_viewModel.ClosestStop == null)
                 {
                     _viewModel.ClosestStop = stop;
                 }
@@ -81,13 +81,13 @@ namespace FxITransit.Views
                 map.Pins.Add(pin);
                 firstPos = _viewModel.ClosestStop.Postion;
             }
-            
-            
+
+
             map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
 
 
-            
+
             MapHolder.Children.Add(map);
         }
 

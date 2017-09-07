@@ -2,6 +2,7 @@
 using FxITransit.Models;
 using FxITransit.Services;
 using FxITransit.Services.NextBus;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace FxITransit.ViewModels
@@ -35,6 +36,18 @@ namespace FxITransit.ViewModels
         {
             get { return title; }
             set { SetProperty(ref title, value); }
+        }
+
+        public Xamarin.Forms.Point DeviceLocation
+        {
+            get; set;
+        }
+
+        public static async Task<Xamarin.Forms.Point> GetDeviceLocationAsync()
+        {
+
+            var point = await DependencyService.Get<IDeviceDependencyService>().GetDeviceCurrentLocationAsync();
+            return point; 
         }
 
       
