@@ -1,5 +1,6 @@
 ﻿using FxITransit.Helpers;
 using FxITransit.Models;
+using FxITransit.Services;
 using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -40,9 +41,22 @@ namespace FxITransit.Views
 
             };
 
+            var svc = DependencyService.Get<IDeviceDependencyService>();
+            if (svc != null)
+            {
+                svc.Speak("Hello By Festus");
+            }
 
-            var curPoint = BaseViewModel.GetDeviceLocationAsync().Result;
-            var curStop = new Stop { Lat = curPoint.X, Lon = curPoint.Y};
+            var point =  DependencyService.Get<IDeviceDependencyService>().GetDeviceCurrentLocationAsync();
+
+            GeoPoint geoPoint = point.Result;
+                //GetDeviceLocationAsync().Result;
+
+            //GeoPoint GetCurrentLocation()
+
+            Stop curStop = geoPoint;
+
+            Point xPoint = geoPoint;
 
             _viewModel.ClosestStop = null;
             Position firstPos = direction.Stops[0].Postion;
@@ -51,7 +65,7 @@ namespace FxITransit.Views
                 var pos = new Position(stop.Lat, stop.Lon);
                 map.RouteCoordinates.Add(pos);
 
-                var dist = curPoint.Distance(new Xamarin.Forms.Point(pos.Latitude, pos.Longitude));
+                var dist = xPoint.Distance(geoPoint);
                 stop.Distance = TrackingHelper.ToMiles(TrackingHelper.CalculateDistance(curStop, stop));
                 if (_viewModel.ClosestStop == null)
                 {

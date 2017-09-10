@@ -104,7 +104,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomRenderer.cs" />
-    <Compile Include="DeviceDependencyServicesImplementation.cs" />
+    <Compile Include="DeviceDependencyServicesImplementation_UWP.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

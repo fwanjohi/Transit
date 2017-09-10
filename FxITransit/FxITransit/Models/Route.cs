@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace FxITransit.Models
@@ -12,14 +13,14 @@ namespace FxITransit.Models
         public Route()
         {
             Directions = new ObservableRangeCollection<Direction>();
-            Path = new ObservableRangeCollection<Point>();
+            Path = new ObservableRangeCollection<GeoPoint>();
             IsConfigured = false;
         }
         public string AgencyTag { get; set; }
         public string Tag { get; set; }
         public string Title { get; set; }
         public ObservableRangeCollection<Direction> Directions { get; set; }
-        public ObservableRangeCollection<Point> Path { get; set; }
+        public ObservableRangeCollection<GeoPoint> Path { get; set; }
 
         public string Color { get; set; }
 
@@ -44,6 +45,17 @@ namespace FxITransit.Models
         {
             Predictions = new ObservableRangeCollection<Prediction>();
         }
+
+        public static implicit operator Point(Stop stop)
+        {
+            return new Point { X = stop.Lat, Y = stop.Lon };
+        }
+
+        public static implicit operator GeoPoint(Stop stop)
+        {
+            return new GeoPoint { Lat = stop.Lat, Lon = stop.Lon };
+        }
+
         public string Tag { get; set; }
 
         public string Title { get; set; }
@@ -122,11 +134,7 @@ namespace FxITransit.Models
         
     }
 
-    public class Point
-    {
-        public string Lat { get; set; }
-        public string Lon { get; set; }
-    }
+   
 
 
 }

@@ -11,15 +11,20 @@ using FxITransit.UWP;
 using Windows.UI.Xaml.Controls;
 using Windows.Media.SpeechSynthesis;
 using System.Threading;
+using FxITransit.Models;
 
-[assembly: Dependency(typeof(DeviceDependencyServiceImplementation))]
+[assembly: Dependency(typeof(DeviceDependencyServiceImplementation_UWP))]
 namespace FxITransit.UWP
 {
-    public class DeviceDependencyServiceImplementation : IDeviceDependencyService
+    public class DeviceDependencyServiceImplementation_UWP : IDeviceDependencyService
     {
-        public async Task<Point> GetDeviceCurrentLocationAsync()
+        public event EventHandler<LocationEventArgs> OnlocationObtained;
+
+        public async Task<GeoPoint> GetDeviceCurrentLocationAsync()
         {
             var accessStatus = await Geolocator.RequestAccessAsync();
+
+            var xx = 1;
 
             try
             {
@@ -42,6 +47,7 @@ namespace FxITransit.UWP
                         // Carry out the operation
                         Geoposition pos = await geolocator.GetGeopositionAsync().AsTask(token);
 
+                        return new GeoPoint { Lat = pos.Coordinate.Point.Position.Latitude, Lon = pos.Coordinate.Point.Position.Longitude };
                         //UpdateLocationData(pos);
                         //_rootPage.NotifyUser("Location updated.", NotifyType.StatusMessage);
                         break;
@@ -71,7 +77,7 @@ namespace FxITransit.UWP
                 //_cts = null;
             }
 
-            return new Point(0, 0);
+            return null;
         }
 
         public async void Speak(string text)

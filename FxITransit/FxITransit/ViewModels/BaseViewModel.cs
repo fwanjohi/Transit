@@ -43,7 +43,7 @@ namespace FxITransit.ViewModels
             get; set;
         }
 
-        public static async Task<Xamarin.Forms.Point> GetDeviceLocationAsync()
+        public static async Task<GeoPoint> GetDeviceLocationAsync()
         {
 
             var point = await DependencyService.Get<IDeviceDependencyService>().GetDeviceCurrentLocationAsync();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FxITransit.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,13 @@ namespace FxITransit.Services
     public interface IDeviceDependencyService
     {
         void Speak(string text);
-        Task<Point> GetDeviceCurrentLocationAsync();
+        Task<GeoPoint> GetDeviceCurrentLocationAsync();
+        //event EventHandler<LocationEventArgs> OnlocationObtained;
+    }
+
+   
+
+    public class LocationEventArgs : GeoPoint
+    {
     }
 }
