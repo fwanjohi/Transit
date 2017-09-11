@@ -1,5 +1,6 @@
 ﻿using FxITransit.Helpers;
 using FxITransit.Models;
+using Plugin.Geolocator;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,9 +29,7 @@ namespace FxITransit.ViewModels
                 OnPropertyChanged("FilteredStops");
             }
         }
-
         
-
         public ObservableRangeCollection<Stop> FilteredStops
         {
             get
@@ -58,18 +57,10 @@ namespace FxITransit.ViewModels
             Title = "Stops for  : " + Direction.Title;
         }
 
-        public Stop ClosestStop
-        {
-            get
-            {
-                return _closestStop;
-            }
-            set
-            {
-                _closestStop = value;
-                OnPropertyChanged("ClosestStop");
-            }
-        }
+        
+        
+
+        
 
 
     }

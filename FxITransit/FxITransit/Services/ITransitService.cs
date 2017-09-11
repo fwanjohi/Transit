@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using FxITransit.Models;
 using System.Threading.Tasks;
+using System;
+using Plugin.Geolocator.Abstractions;
 
 namespace FxITransit.Services
 {
@@ -8,9 +10,12 @@ namespace FxITransit.Services
     {
         Task<IEnumerable<Agency>> GetAgencyList();
        
-        Task<IEnumerable<Route>> GetRouteList(string agencyTag);
+        Task<IEnumerable<Route>> GetRouteList(string agencyTag );
         Task GetStopPredictions(Stop stop);
         //Task  PopulateRouteList(Agency agency);
-        Task PopulateRouteDetails(Route route);
+        Task PopulateRouteDetails(Route route, Action callBack);
+
+         Position LastPosition { get;  }
+
     }
 }

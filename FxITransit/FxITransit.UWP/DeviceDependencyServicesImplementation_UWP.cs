@@ -82,14 +82,21 @@ namespace FxITransit.UWP
 
         public async void Speak(string text)
         {
-            MediaElement mediaElement = new MediaElement();
+            try
+            {
+                MediaElement mediaElement = new MediaElement();
 
-            var synth = new SpeechSynthesizer();
+                var synth = new SpeechSynthesizer();
 
-            var stream = await synth.SynthesizeTextToStreamAsync(text);
+                var stream = await synth.SynthesizeTextToStreamAsync(text);
 
-            mediaElement.SetSource(stream, stream.ContentType);
-            mediaElement.Play();
+                mediaElement.SetSource(stream, stream.ContentType);
+                mediaElement.Play();
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
     }
 }

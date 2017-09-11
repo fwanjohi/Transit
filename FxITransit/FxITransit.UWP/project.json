@@ -1,6 +1,10 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
+    "Plugin.Permissions": "2.0.1",
+    "Toasts.Forms.Plugin": "3.2.1",
+    "Xam.Plugin.Geolocator": "4.0.1",
+    "Xam.Plugins.TextToSpeech": "3.0.1",
     "Xamarin.Forms": "2.3.4.270",
     "Xamarin.Forms.Maps": "2.3.4.270"
   },

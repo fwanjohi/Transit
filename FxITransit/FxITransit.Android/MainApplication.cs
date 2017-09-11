@@ -59,5 +59,7 @@ namespace FxITransit.Droid
         public void OnActivityStopped(Activity activity)
         {
         }
+
+        
     }
 }

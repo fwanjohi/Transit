@@ -1,5 +1,7 @@
 ﻿using FxITransit.Helpers;
 using FxITransit.Models;
+using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,16 +17,34 @@ using System.Xml.Serialization;
 
 
 namespace FxITransit.Services.NextBus
-{ 
+{
+
+    //public sealed class Singleton
+    //{
+    //    private static readonly Lazy<Singleton> instance = new Lazy<Singleton>(() => new Singleton());
+    //    private Singleton() { }
+    //    public static Singleton Instance { get { return instance.Value; } }
+    //}
 
     public class NextBusService : ITransitService
     {
-        public NextBusService()
+
+        private static readonly Lazy<NextBusService> instance = new Lazy<NextBusService>(() => new NextBusService());
+        
+        public static NextBusService Instance { get { return instance.Value; } }
+
+        public Position LastPosition { get; private set; }
+
+        private NextBusService()
         {
             _client = GetClient();
+            
+
+
         }
 
         private HttpClient _client;
+
 
 
         public async Task<IEnumerable<Agency>> GetAgencyList()
@@ -36,7 +56,7 @@ namespace FxITransit.Services.NextBus
 
 
 
-            var list = new  List<Agency>();
+            var list = new List<Agency>();
 
             foreach (var node in doc.GetDescendantElements("agency"))
             {
@@ -72,7 +92,7 @@ namespace FxITransit.Services.NextBus
         }
 
 
-        public async Task PopulateRouteDetails(Route route)
+        public async Task PopulateRouteDetails(Route route, Action callBack)
         {
             //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
             if (!route.IsConfigured)
@@ -92,8 +112,13 @@ namespace FxITransit.Services.NextBus
                     var lon = stopNode.GetAttribute("lon");
                     try
                     {
-                        stop.Lat = Convert.ToDouble(stopNode.GetAttribute("lat"));
-                        stop.Lon = Convert.ToDouble(stopNode.GetAttribute("lon"));
+                        try
+                        {
+                            stop.Lat = Convert.ToDouble(stopNode.GetAttribute("lat"));
+                            stop.Lon = Convert.ToDouble(stopNode.GetAttribute("lon"));
+                        }
+                        catch { }
+
                         stop.Tag = stopNode.GetAttribute("tag");
                         stop.Title = stopNode.GetAttribute("title");
                         stop.StopId = stopNode.GetAttribute("stopId");
@@ -101,12 +126,12 @@ namespace FxITransit.Services.NextBus
                         stop.AgencyTag = route.AgencyTag;
                         stops.Add(stop);
                     }
-                    catch (Exception ex )
+                    catch (Exception ex)
                     {
                         var ss = ex.Message;
                     }
 
-                   
+
                 }
 
                 //directions
@@ -137,6 +162,7 @@ namespace FxITransit.Services.NextBus
 
             }
             route.IsConfigured = true;
+            callBack?.Invoke();
 
 
             //?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true
@@ -146,10 +172,10 @@ namespace FxITransit.Services.NextBus
 
         public async Task GetStopPredictions(Stop stop)
         {
-            
+
             var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
 
-            var xml =  _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
+            var xml = _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
 
             var doc = XDoc.LoadXml(xml);
 
@@ -162,7 +188,7 @@ namespace FxITransit.Services.NextBus
              */
             List<Prediction> preds = new List<Prediction>();
 
-            
+
             foreach (var predNode in doc.GetDescendantElements("prediction"))
             {
                 var pred = new Prediction();
@@ -181,6 +207,12 @@ namespace FxITransit.Services.NextBus
 
         
 
+        
+        
+
+
+
+
         private HttpClient GetClient()
         {
             var client = new HttpClient();
@@ -188,9 +220,11 @@ namespace FxITransit.Services.NextBus
             return client;
         }
 
-       
+
+
+
     }
 
-    
-   
+
+
 }

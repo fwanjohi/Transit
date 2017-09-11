@@ -2,21 +2,52 @@
 using FxITransit.Models;
 using FxITransit.Services;
 using FxITransit.Services.NextBus;
+using Plugin.Geolocator;
+using Plugin.TextToSpeech;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms;
+
 
 namespace FxITransit.ViewModels
 {
-    public class BaseViewModel : ObservableObject
+    public  class BaseViewModel : ObservableObject
     {
         /// <summary>
         /// Get the azure service instance
         /// </summary>
-        public ITransitService DataStore { get; private set; }
+        public ITransitService TransitService { get; private set; }
+        public TrackingHelper TrackingHelper { get; private set; }
+
+        Stop _closestStop;
+        public Stop ClosestStop
+        {
+            get
+            {
+                return _closestStop;
+            }
+            set
+            {
+                _closestStop = value;
+                OnPropertyChanged("ClosestStop");
+                try
+                {
+                    
+                    if (_closestStop != null)
+                    {
+                        Speak("The closest stop is " + _closestStop.TitleDisplay);
+                    }
+                }
+                catch { };
+
+            }
+        }
+
 
         public BaseViewModel()
         {
-            DataStore = new NextBusService();
+            TransitService =  NextBusService.Instance;
+            TrackingHelper = TrackingHelper.Instance;
         }
 
         bool isBusy = false;
@@ -43,14 +74,18 @@ namespace FxITransit.ViewModels
             get; set;
         }
 
-        public static async Task<GeoPoint> GetDeviceLocationAsync()
-        {
+        
+        
 
-            var point = await DependencyService.Get<IDeviceDependencyService>().GetDeviceCurrentLocationAsync();
-            return point; 
+        public  void Speak(string text)
+        {
+             CrossTextToSpeech.Current.Speak(text);
+            
         }
 
-      
+        
+
+
     }
 }
 

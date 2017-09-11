@@ -13,8 +13,10 @@ namespace FxITransit.ViewModels
     public class DirectionsViewModel : BaseViewModel
 
     {
+        
         public Route Route { get; private set; }
         public Command PopulateRouteCommand { get; set; }
+        public Action OnPopulateRoutesDone { get; set; }
         public DirectionsViewModel(Route route)
         { 
 
@@ -23,9 +25,7 @@ namespace FxITransit.ViewModels
             PopulateRouteCommand = new Command(async () => await ExecutePopulateRouteCommandCommand());
 
         }
-
-       
-
+        
         async Task ExecutePopulateRouteCommandCommand()
         {
             if (IsBusy)
@@ -37,7 +37,14 @@ namespace FxITransit.ViewModels
             {
                 if (!Route.IsConfigured)
                 {
-                    await DataStore.PopulateRouteDetails(Route);
+                    TransitService.PopulateRouteDetails(Route, OnPopulateRoutesDone);
+                    //await Task.Factory.StartNew(async () =>
+                    // {
+                    //     await DataStore.PopulateRouteDetails(Route, OnPopulateRoutesDone);
+
+                    // });
+                    //var data = 1;
+
                 }
                
             }

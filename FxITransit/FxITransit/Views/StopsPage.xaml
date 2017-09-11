@@ -12,7 +12,7 @@
                        FontSize="16"/>
             <StackLayout>
                 <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
-                <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay, StringFormat='Go To Closest: {0}'}"/>
+                <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}"/>
                 
             </StackLayout>
             <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>

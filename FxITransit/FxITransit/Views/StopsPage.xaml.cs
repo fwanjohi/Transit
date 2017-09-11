@@ -2,6 +2,8 @@
 using FxITransit.Models;
 using FxITransit.Services;
 using FxITransit.ViewModels;
+using Plugin.Geolocator;
+using Plugin.TextToSpeech;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace FxITransit.Views
     public partial class StopsPage : ContentPage
     {
         StopsViewModel _viewModel;
+        CustomMap _map;
         public StopsPage()
         {
             InitializeComponent();
@@ -30,80 +33,46 @@ namespace FxITransit.Views
             InitializeComponent();
             BindingContext = this._viewModel = new StopsViewModel(direction);
 
-            var map = new CustomMap
+             _map = new CustomMap
             {
                 IsShowingUser = true,
                 //HeightRequest = 300,
 
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-
-
             };
-
-            var svc = DependencyService.Get<IDeviceDependencyService>();
-            if (svc != null)
-            {
-                svc.Speak("Hello By Festus");
-            }
-
-            var point =  DependencyService.Get<IDeviceDependencyService>().GetDeviceCurrentLocationAsync();
-
-            GeoPoint geoPoint = point.Result;
-                //GetDeviceLocationAsync().Result;
-
-            //GeoPoint GetCurrentLocation()
-
-            Stop curStop = geoPoint;
-
-            Point xPoint = geoPoint;
-
-            _viewModel.ClosestStop = null;
             Position firstPos = direction.Stops[0].Postion;
             foreach (var stop in direction.Stops)
             {
-                var pos = new Position(stop.Lat, stop.Lon);
-                map.RouteCoordinates.Add(pos);
-
-                var dist = xPoint.Distance(geoPoint);
-                stop.Distance = TrackingHelper.ToMiles(TrackingHelper.CalculateDistance(curStop, stop));
-                if (_viewModel.ClosestStop == null)
-                {
-                    _viewModel.ClosestStop = stop;
-                }
-                else
-                {
-                    if (_viewModel.ClosestStop.Distance > stop.Distance)
-                    {
-                        _viewModel.ClosestStop = stop;
-                    }
-                }
-
+                var mapPos = new Position(stop.Lat, stop.Lon);
+                _map.RouteCoordinates.Add(mapPos);
             }
+            
+            _map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
+            MapHolder.Children.Add(_map);
 
-            if (_viewModel.ClosestStop != null)
+            
+            var closest = _viewModel.TrackingHelper.GetClosestStop(_viewModel.Direction.Stops);
+            _viewModel.ClosestStop = closest;
+            if (closest != null)
             {
-
+                var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
                 var pin = new Pin
                 {
                     Type = PinType.Place,
-                    Position = _viewModel.ClosestStop.Postion,
-                    Label = _viewModel.ClosestStop.Title,
-                    Address = _viewModel.ClosestStop.Display,
+                    Position = position,
+                    Label = closest.Title,
+                    Address = $"{closest.Distance} Miles"
 
                 };
-                map.Pins.Add(pin);
-                firstPos = _viewModel.ClosestStop.Postion;
+                _map.Pins.Add(pin);
+                _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
             }
+   
 
-
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
-            //map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
-
-
-
-            MapHolder.Children.Add(map);
         }
+
+        
 
         private async void OnStopSelected(object sender, SelectedItemChangedEventArgs args)
         {
@@ -120,20 +89,11 @@ namespace FxITransit.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            
-
-            //var dist = Plugin.Geolocator.CrossGeolocator.Current.
-
-            //MyPosition = new Position(position.Latitude, position.Longitude);
         }
 
         private async Task BtnClosest_ClickedAsync(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new PredictionsPage(_viewModel.ClosestStop));
-
-            // Manually select select item
-            StopsListView.SelectedItem = _viewModel.ClosestStop;
         }
     }
 }

@@ -76,7 +76,7 @@ namespace FxITransit.ViewModels
 
             try
             {
-                var routes = await DataStore.GetRouteList(Agency.Tag);
+                var routes = await TransitService.GetRouteList(Agency.Tag);
 
                 Agency.Routes.ReplaceRange(routes);
                 _filteredRoutes.ReplaceRange(routes);

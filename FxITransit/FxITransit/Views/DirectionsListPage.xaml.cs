@@ -1,4 +1,5 @@
-﻿using FxITransit.Models;
+﻿using FxITransit.Helpers;
+using FxITransit.Models;
 using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace FxITransit.Views
     {
         DirectionsViewModel _viewModel;
         Route _route;
-        
+        private CustomMap _map;
 
 
         public DirectionsListPage()
@@ -31,7 +32,7 @@ namespace FxITransit.Views
             BindingContext = this._viewModel = new DirectionsViewModel(route);
 
 
-            var map = new CustomMap
+            _map = new CustomMap
             {
                 IsShowingUser = true,
                 //HeightRequest = 300,
@@ -42,29 +43,56 @@ namespace FxITransit.Views
 
             };
             //MapHolder.Children.Clear();
-            
 
+            MapHolder.Children.Add(_map);
             if (!_viewModel.Route.IsConfigured)
             {
+                _viewModel.OnPopulateRoutesDone = OnRoutesPoulated;
                 _viewModel.PopulateRouteCommand.Execute(null);
-            }
 
-
-
-            foreach (var direction in _route.Directions)
-            {
-                foreach (var position in direction.Stops)
+                Stop closest = null;
+                foreach (var dir in _route.Directions)
                 {
-                    map.RouteCoordinates.Add(new Position(position.Lat, position.Lon));
+                    closest = _viewModel.TrackingHelper.GetClosestStop(dir.Stops);
+                    if (closest != null)
+                    {
+                        var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
+                        var pin = new Pin
+                        {
+                            Type = PinType.Place,
+                            Position = position,
+                            Label = closest.Title,
+                            Address = dir.Title
+
+                        };
+                        _map.Pins.Add(pin);
+                    }
+                }
+
+                if (closest != null)
+                {
+                    _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
                 }
             }
-            Position firstPos = map.RouteCoordinates[0];
 
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(1.0)));
-            MapHolder.Children.Add(map);
+            
 
 
         }
+
+        public void OnRoutesPoulated()
+        {
+            foreach(var dir in _viewModel.Route.Directions)
+            {
+                foreach (var dirStop in dir.Stops)
+                {
+                    _map.RouteCoordinates.Add(new Position(dirStop.Lat, dirStop.Lon));
+                }
+
+            }
+        }
+
+        
 
         async void OnDirectionSelected(object sender, SelectedItemChangedEventArgs args)
         {

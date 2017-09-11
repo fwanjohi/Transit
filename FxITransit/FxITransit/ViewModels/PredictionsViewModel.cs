@@ -30,7 +30,7 @@ namespace FxITransit.ViewModels
             AutoRefresh = true;
             RefreshInterval = 30;
             Stop = stop;
-            Title = $"Predictions : {stop.Title }";
+            Title = $"Predictions - {stop.TitleDisplay }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
             AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
             
@@ -73,7 +73,7 @@ namespace FxITransit.ViewModels
             try
             {
                 
-                await DataStore.GetStopPredictions(Stop);
+                await TransitService.GetStopPredictions(Stop);
 
             }
             catch (Exception ex)

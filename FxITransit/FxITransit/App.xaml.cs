@@ -34,5 +34,10 @@ namespace FxITransit
                 }
             };
         }
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+        }
     }
 }

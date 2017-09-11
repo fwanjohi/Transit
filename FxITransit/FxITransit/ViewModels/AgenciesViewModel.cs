@@ -56,7 +56,7 @@ namespace FxITransit.ViewModels
             Agencies = new ObservableRangeCollection<Agency>();
             _filteredAgencies = new ObservableRangeCollection<Agency>();
             LoadAgenciesCommand = new Command(async () => await ExecuteLoadAgenciesCommand());
-            
+
 
             //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             //{
@@ -76,7 +76,7 @@ namespace FxITransit.ViewModels
             try
             {
                 Agencies.Clear();
-                var agencies = await DataStore.GetAgencyList();
+                var agencies = await TransitService.GetAgencyList();
                 Agencies.ReplaceRange(agencies);
                 _filteredAgencies.ReplaceRange(Agencies);
             }

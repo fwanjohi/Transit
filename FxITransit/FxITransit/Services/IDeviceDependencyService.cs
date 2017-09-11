@@ -11,7 +11,7 @@ namespace FxITransit.Services
     public interface IDeviceDependencyService
     {
         void Speak(string text);
-        Task<GeoPoint> GetDeviceCurrentLocationAsync();
+        //Task<GeoPoint> GetDeviceCurrentLocationAsync();
         //event EventHandler<LocationEventArgs> OnlocationObtained;
     }
 
