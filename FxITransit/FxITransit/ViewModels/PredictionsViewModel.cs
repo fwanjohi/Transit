@@ -23,12 +23,14 @@ namespace FxITransit.ViewModels
         public int RefreshInterval  {get; set;}
 
         private int _elapsedTime;
+        private DateTime nextAlert;
 
         public PredictionsViewModel(Stop stop)
         {
             _elapsedTime = 0;
             AutoRefresh = true;
             RefreshInterval = 30;
+            nextAlert = DateTime.Now;
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
@@ -53,13 +55,47 @@ namespace FxITransit.ViewModels
                 {
                     foreach (var pred in Stop.Predictions)
                     {
-                        pred.LocalTime = Utils.ConvertUnixTimeStamp(pred.EpochTime);
+                        UpdatePrediction(pred,  false);
+
                     }
                 }
 
                 _elapsedTime++;
                 return AutoRefresh; // True = Repeat again, False = Stop the timer
             });
+        }
+
+        private  void UpdatePrediction(Prediction pred, bool alert = false)
+        {
+            pred.LocalTime = Utils.ConvertUnixTimeStamp(pred.EpochTime);
+            if (pred.LocalTime.HasValue)
+            {
+                int diff =(int) pred.LocalTime.Value.Subtract(DateTime.Now).TotalMinutes;
+
+                if (diff <= Settings.Alerts.AlertMinsBefore)
+                {
+                    pred.IsArriving = true;
+                    if (alert && nextAlert <= DateTime.Now)
+                    {
+                        MessagingCenter.Send(new MessagingCenterAlert
+                        {
+                            Title = "Bus arrving",
+                            Message = $"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}",
+                            Cancel = "OK"
+                        }, "message");
+
+                        Speak($"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}");
+                        nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
+
+
+                    }
+                }
+                else
+                {
+                    pred.IsArriving = false;
+                }
+
+            }
         }
 
         async Task ExecuteLoadPredictionsCommand()
@@ -74,6 +110,11 @@ namespace FxITransit.ViewModels
             {
                 
                 await TransitService.GetStopPredictions(Stop);
+                foreach (var pred in Stop.Predictions)
+                {
+                    UpdatePrediction(pred, true);
+
+                }
 
             }
             catch (Exception ex)

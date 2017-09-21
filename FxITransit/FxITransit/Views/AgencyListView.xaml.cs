@@ -1,4 +1,5 @@
-﻿using FxITransit.Models;
+﻿using FxITransit.Helpers;
+using FxITransit.Models;
 using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -46,8 +47,22 @@ namespace FxITransit.Views
         {
             base.OnAppearing();
 
+            try
+            {
+                viewModel.TrackingHelper.Log("OnAppearing()");
+                viewModel.TrackingHelper.InitializeGeoLocator();
+            }
+            catch (Exception ex)
+            {
+                viewModel.TrackingHelper.Log("Error after InitializeGeoLocator()" + ex.Message);
+
+            }
+
             if (viewModel.Agencies.Count == 0)
+            {
+                
                 viewModel.LoadAgenciesCommand.Execute(null);
+            }
         }
     }
 }

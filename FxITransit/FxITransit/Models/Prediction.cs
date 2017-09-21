@@ -9,6 +9,8 @@ namespace FxITransit.Models
     {
         private string _display;
         DateTime? _localTime;
+        private bool _isArriving;
+
         public DateTime? LocalTime
         {
             get { return _localTime; }
@@ -33,7 +35,7 @@ namespace FxITransit.Models
             if (LocalTime.HasValue)
             {
                 var totalSecs = LocalTime.Value.Subtract(DateTime.Now).TotalSeconds;
-                var secs =(int) totalSecs % 60;
+                var secs = (int)totalSecs % 60;
                 var mins = (int)(totalSecs / 60);
 
                 return $"{mins} Mins, {secs} Secs";
@@ -54,6 +56,15 @@ namespace FxITransit.Models
         public string TripTag { get; set; }
         public string AffectedByLayover { get; set; }
         public string VehiclesInConsist { get; set; }
+        public bool IsArriving
+        {
+            get { return _isArriving; }
+            set
+            {
+                _isArriving = value;
+                OnPropertyChanged("IsArriving");
+            }
+        }
     }
 
 

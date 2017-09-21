@@ -19,6 +19,8 @@ namespace FxITransit.ViewModels
         public ITransitService TransitService { get; private set; }
         public TrackingHelper TrackingHelper { get; private set; }
 
+        public SettingsHelper Settings { get; private set; }
+
         Stop _closestStop;
         public Stop ClosestStop
         {
@@ -48,6 +50,7 @@ namespace FxITransit.ViewModels
         {
             TransitService =  NextBusService.Instance;
             TrackingHelper = TrackingHelper.Instance;
+            Settings = SettingsHelper.Instance;
         }
 
         bool isBusy = false;

@@ -26,6 +26,11 @@ namespace FxITransit
                         Title = "Browse",
                         Icon = Device.OnPlatform("tab_feed.png",null,null)
                     },
+                    new NavigationPage(new LogsPage())
+                    {
+                        Title = "Logs",
+                        Icon = Device.OnPlatform("tab_about.png",null,null)
+                    },
                     new NavigationPage(new AboutPage())
                     {
                         Title = "About",

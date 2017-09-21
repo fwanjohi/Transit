@@ -19,17 +19,28 @@ namespace FxITransit.Helpers
         public static TrackingHelper Instance { get { return instance.Value; } }
 
         private IGeolocator _locator;
+        
+        
         private TrackingHelper()
         {
-            
-            InitializeGeoLocator();
-
-
+            Logs = new ObservableRangeCollection<LogItem>();
         }
 
-        private void InitializeGeoLocator()
-        {
+        public ObservableRangeCollection<LogItem> Logs { get; set; }
 
+        public void Log(string message)
+        {
+            Logs.Add(new LogItem { Message = message });
+        }
+
+        public void Log(LogItem item)
+        {
+            Logs.Add(item);
+        }
+
+        public async void InitializeGeoLocator()
+        {
+            Log("InitializeGeoLocator");
             _locator = CrossGeolocator.Current;
 
             if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
@@ -40,14 +51,36 @@ namespace FxITransit.Helpers
                 _locator.PositionError += _locator_PositionError;
 
                 DateTime start = DateTime.Now;
-                LastPosition = AsyncHelper.RunSync(() => _locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, false));
+                Log("GetPositionAsync");
+                LastPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, false);
                 var secs = start.Subtract(DateTime.Now).TotalSeconds;
 
-                _locator.StartListeningAsync(TimeSpan.FromSeconds(10), 10, false);
+                Log("StartListeningAsync");
+                try
+                {
+                    var listen = await _locator.StartListeningAsync(TimeSpan.FromSeconds(60), 1000, false);
+                }
+                catch (Exception ex)
+                {
+                    Log("Error : Awaiting __locator.StartListeningAsync " + ex.Message );
+                }
+
+                Log("Done: StartListeningAsync - No Error");
             }
 
         }
-       
+
+        private void _locator_PositionError(object sender, PositionErrorEventArgs e)
+        {
+            Log("Error: _locator_PositionError() " + e.Error.ToString());
+        }
+
+        private void _locator_PositionChanged(object sender, PositionEventArgs e)
+        {
+            Log("_locator_PositionChanged ");
+            LastPosition = e.Position;
+        }
+
         private  double DegreesToRadians(double degrees)
         {
             return degrees * Math.PI / 180.0;
@@ -112,10 +145,21 @@ namespace FxITransit.Helpers
 
         public Stop GetClosestStop(IEnumerable<Stop> stops)
         {
-
+            Log("Getting GetClosestStop " + LastPosition == null ? "Last postion = null" : LastPosition.Latitude.ToString() );
             Stop closestStop = null;
             var lastPos = LastPosition;
-            Stop curStop = new Stop { Lat = lastPos.Latitude, Lon = lastPos.Longitude };
+
+            Stop curStop;
+
+            if (lastPos != null)
+            {
+                 curStop = new Stop { Lat = lastPos.Latitude, Lon = lastPos.Longitude };
+            }
+            else
+            {
+                curStop = stops.First();
+            }
+            
 
             foreach (var stop in stops)
             {
@@ -138,15 +182,7 @@ namespace FxITransit.Helpers
             //Map.Pins.Add(new Xamarin.Forms.Maps.Pin { Position = xPos, Address = ClosestStop.Title, Label = ClosestStop.TitleDisplay });
         }
 
-        private void _locator_PositionError(object sender, PositionErrorEventArgs e)
-        {
-            var X = 1;
-        }
-
-        private void _locator_PositionChanged(object sender, PositionEventArgs e)
-        {
-            LastPosition = e.Position;
-        }
+        
 
         public Position LastPosition { get; private set; }
         public object TransitService { get; private set; }

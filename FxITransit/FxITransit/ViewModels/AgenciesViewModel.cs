@@ -52,6 +52,7 @@ namespace FxITransit.ViewModels
 
         public AgenciesViewModel() : base()
         {
+
             Title = "Select Agency";
             Agencies = new ObservableRangeCollection<Agency>();
             _filteredAgencies = new ObservableRangeCollection<Agency>();

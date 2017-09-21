@@ -2,13 +2,34 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FxITransit.Views.PredictionsPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="PredictionStyle" TargetType="Label">
+                <Style.Triggers>
+                    <DataTrigger TargetType="Label"
+                    Binding="{Binding IsArriving}"
+                    Value="true">
+                        <Setter Property="TextColor"  Value="Color.Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!--<DataTrigger TargetType="Button"
+         Binding="{Binding Source={x:Reference emailAddress},
+                                           Path=Text.Length}"
+         Value="0">
+        <Setter Property="IsEnabled" Value="False" />
+    </DataTrigger>-->
+
     <ContentPage.Content>
         <StackLayout >
             <Label Text="{Binding Title}"
                        LineBreakMode="NoWrap"
                        TextColor="Blue"
                        FontSize="16"/>
-            
+
             <StackLayout BackgroundColor="Azure" x:Name="MapHolder" 
                          HeightRequest="300" VerticalOptions="StartAndExpand"/>
 
@@ -24,17 +45,17 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="10">
+                            <StackLayout Padding="10" >
                                 <Label Text="{Binding Display}"
                        LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemTextStyle}"
+                       Style="{StaticResource PredictionStyle}" 
                        FontSize="16"/>
                                 <Label  Text="{Binding LocalTime, StringFormat='{}{0: hh:mm:ss tt}'}"
                        LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemTextStyle}"
+                       Style="{StaticResource PredictionStyle}" 
                        FontAttributes="None"
                        FontSize="13"/>
-                                
+
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
