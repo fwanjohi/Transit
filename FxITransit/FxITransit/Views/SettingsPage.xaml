@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FxITransit.Views.SettingsPage">
+    <ContentPage.Content>
+        <TableView Intent="Settings">
+            <TableRoot>
+                <TableSection Title="Alerts">
+                    <SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />
+                    <SwitchCell Text="Voice Alerts" On="{Binding Path=Alerts.Speak}" />
+                    <SwitchCell Text="Vibrate" On="{Binding Path=Alerts.Vibrate}" />
+
+
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" HorizontalTextAlignment ="Start" Label="Alert Mins Before : " Text="{Binding Path=Alerts.AlertMinsBefore}" />
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" Label="Alert Interval : " HorizontalTextAlignment ="Start"  Text="{Binding Path=Alerts.AlertInterval}" />
+
+
+                </TableSection>
+                <!--<TableSection Title="Favorite Routes">
+
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                           <ListView x:Name="StopsListView"
+				                ItemsSource="{Binding Path = Favorites.Stops}"
+                                VerticalOptions="FillAndExpand"
+                                HasUnevenRows="true"
+                                IsPullToRefreshEnabled="true"
+                                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
+                                
+				                ItemSelected="StopsListView_ItemSelected">  
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <StackLayout Padding="10">
+                                                <Label Text="{Binding Title}"
+                                                   LineBreakMode="NoWrap"
+                                                   Style="{DynamicResource ListItemTextStyle}"
+                                                   FontSize="16"/>  
+                                                <StackLayout Orientation="Horizontal" >
+                                                    <Label Text="{Binding Display}"
+                                                       LineBreakMode="NoWrap"
+                                                       Style="{DynamicResource ListItemDetailTextStyle}"
+                                                       FontSize="13"/>      
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackLayout>
+                    </ViewCell>
+
+
+
+                </TableSection>-->
+            </TableRoot>
+        </TableView>
+    </ContentPage.Content>
+</ContentPage>

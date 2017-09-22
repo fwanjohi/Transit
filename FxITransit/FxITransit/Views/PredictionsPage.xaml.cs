@@ -82,11 +82,6 @@ namespace FxITransit.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            if (viewModel.Stop != null)
-            {
-                viewModel.AutoRefresh = false;
-            }
-
         }
     }
 }

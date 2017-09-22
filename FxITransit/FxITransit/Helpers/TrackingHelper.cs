@@ -30,7 +30,7 @@ namespace FxITransit.Helpers
 
         public void Log(string message)
         {
-            Logs.Add(new LogItem { Message = message });
+            //Logs.Add(new LogItem { Message = message });
         }
 
         public void Log(LogItem item)

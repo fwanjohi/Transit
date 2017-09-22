@@ -1,4 +1,7 @@
-﻿using FxITransit.Views;
+﻿using Acr.Settings;
+using FxITransit.Helpers;
+using FxITransit.Models;
+using FxITransit.Views;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,9 +14,17 @@ namespace FxITransit
         public App()
         {
             InitializeComponent();
+            SettingsHelper.Instance.Alerts.AutoRefresh = true;
+            SettingsHelper.Instance.Alerts = Settings.Current.Bind<AlertSettings>();// persisted bidirectionally with 
 
             SetMainPage();
         }
+
+         ~App()
+        {
+            SettingsHelper.Instance.Alerts.AutoRefresh = false;
+        }
+
 
         public static void SetMainPage()
         {
@@ -26,6 +37,13 @@ namespace FxITransit
                         Title = "Browse",
                         Icon = Device.OnPlatform("tab_feed.png",null,null)
                     },
+
+                    new NavigationPage(new SettingsPage())
+                    {
+                        Title = "Settings",
+                        Icon = Device.OnPlatform("tab_feed.png",null,null)
+                    },
+
                     new NavigationPage(new LogsPage())
                     {
                         Title = "Logs",

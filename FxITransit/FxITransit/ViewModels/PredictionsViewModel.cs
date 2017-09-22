@@ -18,7 +18,11 @@ namespace FxITransit.ViewModels
         public Command AutoRefreshPredictionsCommand { get; private set; }
 
         public Stop Stop { get; private set; }
-        public bool AutoRefresh { get; internal set; }
+        public bool AutoRefresh
+        {
+            get { return Settings.Alerts.AutoRefresh; }
+            set { Settings.Alerts.AutoRefresh = value; }
+        }
 
         public int RefreshInterval  {get; set;}
 
@@ -61,7 +65,7 @@ namespace FxITransit.ViewModels
                 }
 
                 _elapsedTime++;
-                return AutoRefresh; // True = Repeat again, False = Stop the timer
+                return AutoRefresh;  // True = Repeat again, False = Stop the timer
             });
         }
 
@@ -84,7 +88,10 @@ namespace FxITransit.ViewModels
                             Cancel = "OK"
                         }, "message");
 
-                        Speak($"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}");
+                        if (Settings.Alerts.Speak)
+                        {
+                            Speak($"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}");
+                        }
                         nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
 
 

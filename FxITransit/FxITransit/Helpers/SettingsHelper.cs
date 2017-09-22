@@ -1,4 +1,5 @@
-﻿using FxITransit.Models;
+﻿using Acr.Settings;
+using FxITransit.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,32 @@ namespace FxITransit.Helpers
 
         public SettingsHelper()
         {
-            Alerts = new AlertSetttings();
+            //Settings.Current.Bind(this);
+            //if (!Settings.Current.Contains("settings"))
+            //{
+
+            //    //Settings.Current.SetValue("settings", this);
+            //    //Settings.Current.Bind<AlertSetttings>();
+
+            Alerts = new AlertSettings();
             Favorites = new FavoriteSettings();
+            Alerts.Alert = true;
+            Alerts.AlertInterval = 1;
+            Alerts.AlertMinsBefore = 5;
+
+            //}
+            //else
+            //{
+            //    var items = Settings.Current.Get< SettingsHelper>("settings");
+            //}
         }
 
-        public AlertSetttings Alerts { get; set; }
+        public AlertSettings Alerts { get; set; }
 
         public FavoriteSettings Favorites { get; set; }
+        ~SettingsHelper ()
+        {
+            Settings.Current.Bind(this);
+        }
     }
-    }
+}
