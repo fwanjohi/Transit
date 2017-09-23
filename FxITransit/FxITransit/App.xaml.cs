@@ -2,7 +2,7 @@
 using FxITransit.Helpers;
 using FxITransit.Models;
 using FxITransit.Views;
-
+using Plugin.Notifications;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,6 +16,8 @@ namespace FxITransit
             InitializeComponent();
             SettingsHelper.Instance.Alerts.AutoRefresh = true;
             SettingsHelper.Instance.Alerts = Settings.Current.Bind<AlertSettings>();// persisted bidirectionally with 
+            var result =  CrossNotifications.Current.RequestPermission().Result;
+            
 
             SetMainPage();
         }

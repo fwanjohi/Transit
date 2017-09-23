@@ -3,6 +3,7 @@ using FxITransit.Models;
 using FxITransit.Services;
 using FxITransit.Services.NextBus;
 using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using Plugin.TextToSpeech;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,23 @@ namespace FxITransit.ViewModels
 {
     public  class BaseViewModel : ObservableObject
     {
-        /// <summary>
-        /// Get the azure service instance
-        /// </summary>
+        private Stop _closestStop;
         public ITransitService TransitService { get; private set; }
-        public TrackingHelper TrackingHelper { get; private set; }
+        public TrackingHelper Tracking { get; private set; }
 
         public SettingsHelper Settings { get; private set; }
+        public UtilsHelper Utils { get; private set; }
 
-        Stop _closestStop;
+        public BaseViewModel()
+        {
+            TransitService = NextBusService.Instance;
+            Tracking = TrackingHelper.Instance;
+            Settings = SettingsHelper.Instance;
+            Utils = UtilsHelper.Instance;
+
+        }
+
+        
         public Stop ClosestStop
         {
             get
@@ -46,12 +55,7 @@ namespace FxITransit.ViewModels
         }
 
 
-        public BaseViewModel()
-        {
-            TransitService =  NextBusService.Instance;
-            TrackingHelper = TrackingHelper.Instance;
-            Settings = SettingsHelper.Instance;
-        }
+       
 
         bool isBusy = false;
         public bool IsBusy
@@ -72,17 +76,14 @@ namespace FxITransit.ViewModels
             set { SetProperty(ref title, value); }
         }
 
-        public Xamarin.Forms.Point DeviceLocation
+        protected Position DeviceLocation
         {
-            get; set;
+            get => Tracking.LastPosition;
         }
-
         
-        
-
-        public  void Speak(string text)
+        protected  void Speak(string text)
         {
-             CrossTextToSpeech.Current.Speak(text);
+            UtilsHelper.Instance.Speak(text);
             
         }
 

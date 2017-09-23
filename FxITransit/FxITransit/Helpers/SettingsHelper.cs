@@ -1,5 +1,6 @@
 ﻿using Acr.Settings;
 using FxITransit.Models;
+using Plugin.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace FxITransit.Helpers
             //    //Settings.Current.SetValue("settings", this);
             //    //Settings.Current.Bind<AlertSetttings>();
 
+
             Alerts = new AlertSettings();
             Favorites = new FavoriteSettings();
             Alerts.Alert = true;
@@ -40,9 +42,37 @@ namespace FxITransit.Helpers
         public AlertSettings Alerts { get; set; }
 
         public FavoriteSettings Favorites { get; set; }
-        ~SettingsHelper ()
+
+
+        public void SendNotification(string message)
         {
-            Settings.Current.Bind(this);
+            try
+            {
+                CrossNotifications.Current.Send(new Notification
+                {
+                    Title = "Alert!",
+                    Message = message,
+                    Vibrate = true,
+                    When = TimeSpan.FromSeconds(10)
+                });
+            }
+            catch (Exception ex)
+            {
+                UtilsHelper.Instance.Log(ex.Message);
+
+                try
+                {
+                    UtilsHelper.Instance.Speak(ex.Message);
+                }
+                catch (Exception ex2)
+                {
+                    UtilsHelper.Instance.Log(ex2.Message);
+                }
+            }
+        }
+        ~SettingsHelper()
+        {
+            Settings.Current.UnBind(this);
         }
     }
 }

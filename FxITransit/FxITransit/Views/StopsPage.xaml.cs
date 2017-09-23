@@ -52,7 +52,7 @@ namespace FxITransit.Views
             MapHolder.Children.Add(_map);
 
             
-            var closest = _viewModel.TrackingHelper.GetClosestStop(_viewModel.Direction.Stops);
+            var closest = TrackingHelper.Instance.GetClosestStop(_viewModel.Direction.Stops);
             _viewModel.ClosestStop = closest;
             if (closest != null)
             {

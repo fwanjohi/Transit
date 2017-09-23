@@ -23,20 +23,9 @@ namespace FxITransit.Helpers
         
         private TrackingHelper()
         {
-            Logs = new ObservableRangeCollection<LogItem>();
+            
         }
 
-        public ObservableRangeCollection<LogItem> Logs { get; set; }
-
-        public void Log(string message)
-        {
-            //Logs.Add(new LogItem { Message = message });
-        }
-
-        public void Log(LogItem item)
-        {
-            Logs.Add(item);
-        }
 
         public async void InitializeGeoLocator()
         {
@@ -182,6 +171,10 @@ namespace FxITransit.Helpers
             //Map.Pins.Add(new Xamarin.Forms.Maps.Pin { Position = xPos, Address = ClosestStop.Title, Label = ClosestStop.TitleDisplay });
         }
 
+        private void Log(string message)
+        {
+            UtilsHelper.Instance.Log(message);
+        }
         
 
         public Position LastPosition { get; private set; }

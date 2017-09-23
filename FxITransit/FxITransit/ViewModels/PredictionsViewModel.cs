@@ -71,7 +71,7 @@ namespace FxITransit.ViewModels
 
         private  void UpdatePrediction(Prediction pred, bool alert = false)
         {
-            pred.LocalTime = Utils.ConvertUnixTimeStamp(pred.EpochTime);
+            pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
             if (pred.LocalTime.HasValue)
             {
                 int diff =(int) pred.LocalTime.Value.Subtract(DateTime.Now).TotalMinutes;
@@ -81,18 +81,21 @@ namespace FxITransit.ViewModels
                     pred.IsArriving = true;
                     if (alert && nextAlert <= DateTime.Now)
                     {
-                        MessagingCenter.Send(new MessagingCenterAlert
-                        {
-                            Title = "Bus arrving",
-                            Message = $"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}",
-                            Cancel = "OK"
-                        }, "message");
+
+                        var msg = $"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}";
+                        Settings.SendNotification(msg);
 
                         if (Settings.Alerts.Speak)
                         {
-                            Speak($"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}");
+                            Speak(msg);
                         }
-                        nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
+
+                        if (Settings.Alerts.Vibrate)
+                        {
+                           
+                        }
+
+                            nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
 
 
                     }

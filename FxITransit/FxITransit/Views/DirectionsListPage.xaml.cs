@@ -53,7 +53,7 @@ namespace FxITransit.Views
                 Stop closest = null;
                 foreach (var dir in _route.Directions)
                 {
-                    closest = _viewModel.TrackingHelper.GetClosestStop(dir.Stops);
+                    closest = TrackingHelper.Instance.GetClosestStop(dir.Stops);
                     if (closest != null)
                     {
                         var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude

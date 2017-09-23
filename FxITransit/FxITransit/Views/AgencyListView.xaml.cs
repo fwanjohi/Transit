@@ -49,12 +49,12 @@ namespace FxITransit.Views
 
             try
             {
-                viewModel.TrackingHelper.Log("OnAppearing()");
-                viewModel.TrackingHelper.InitializeGeoLocator();
+                UtilsHelper.Instance.Log("OnAppearing()");
+                TrackingHelper.Instance.InitializeGeoLocator();
             }
             catch (Exception ex)
             {
-                viewModel.TrackingHelper.Log("Error after InitializeGeoLocator()" + ex.Message);
+                UtilsHelper.Instance.Log("Error after InitializeGeoLocator()" + ex.Message);
 
             }
 

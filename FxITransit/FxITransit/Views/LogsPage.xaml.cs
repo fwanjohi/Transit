@@ -16,7 +16,7 @@ namespace FxITransit.Views
         public LogsPage()
         {
             InitializeComponent();
-            BindingContext = TrackingHelper.Instance;
+            BindingContext = UtilsHelper.Instance;
         }
 
         private void ItemsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

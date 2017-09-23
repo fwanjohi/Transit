@@ -6,18 +6,32 @@ using System.Threading.Tasks;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
+using Plugin.TextToSpeech;
+using FxITransit.Models;
 
 namespace FxITransit.Helpers
 {
-    public static class Utils
+    public  class UtilsHelper : ObservableObject
     {
-        public static DateTime? ConvertUnixTimeStamp(string unixTimeStamp)
+        private static readonly Lazy<UtilsHelper> instance = new Lazy<UtilsHelper>(() => new UtilsHelper());
+
+        public static UtilsHelper Instance { get { return instance.Value; } }
+
+
+        private UtilsHelper()
+        {
+            Logs = new ObservableRangeCollection<LogItem>();
+        }
+        public ObservableRangeCollection<LogItem> Logs { get; set; }
+
+
+        public  DateTime? ConvertUnixTimeStamp(string unixTimeStamp)
         {
             var UTC = new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(unixTimeStamp));
             var date = UTC.ToLocalTime();
             return date;
         }
-        public static async Task<bool> CheckPermissions(Permission permission)
+        public  async Task<bool> CheckPermissions(Permission permission)
         {
             var permissionStatus = await CrossPermissions.Current.CheckPermissionStatusAsync(permission);
             bool request = false;
@@ -70,6 +84,22 @@ namespace FxITransit.Helpers
             }
 
             return true;
+        }
+
+        public  void Speak(string text)
+        {
+            CrossTextToSpeech.Current.Speak(text);
+        }
+        
+        public void Log(string message)
+        {
+            var msg = new LogItem { Message = message };
+            Log(msg);
+        }
+
+        public void Log(LogItem item)
+        {
+            Logs.Insert(0, item);
         }
     }
 }
