@@ -197,6 +197,7 @@ namespace FxITransit.Services.NextBus
                 pred.EpochTime = predNode.GetAttribute("epochTime");
                 pred.IsDeparture = predNode.GetAttribute("isDeparture");
                 pred.DirTag = predNode.GetAttribute("dirTag");
+                pred.Vehicle = predNode.GetAttribute("vehicle");
                 pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
                 preds.Add(pred);
             }

@@ -23,12 +23,22 @@
         <Setter Property="IsEnabled" Value="False" />
     </DataTrigger>-->
 
+    
+
     <ContentPage.Content>
         <StackLayout >
+            
             <Label Text="{Binding Title}"
-                       LineBreakMode="NoWrap"
+                       LineBreakMode="WordWrap"
                        TextColor="Blue"
                        FontSize="16"/>
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>
+                <Button Text="Add to Favourites"></Button>
+                <Button Text="Stop Settings"></Button>
+                <SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />
+            </StackLayout>
 
             <StackLayout BackgroundColor="Azure" x:Name="MapHolder" 
                          HeightRequest="300" VerticalOptions="StartAndExpand"/>

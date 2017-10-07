@@ -1,9 +1,11 @@
 ﻿using FxITransit.Models;
+using FxITransit.Services.NextBus;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,38 +28,54 @@ namespace FxITransit.Helpers
             
         }
 
+        private bool _isInitialized = false;
 
         public async void InitializeGeoLocator()
         {
-            Log("InitializeGeoLocator");
-            _locator = CrossGeolocator.Current;
-
-            if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
+            if (!_isInitialized)
             {
-                _locator.DesiredAccuracy = 500; //meters
+                Log("InitializeGeoLocator");
+                _locator = CrossGeolocator.Current;
 
-                _locator.PositionChanged += _locator_PositionChanged;
-                _locator.PositionError += _locator_PositionError;
-
-                DateTime start = DateTime.Now;
-                Log("GetPositionAsync");
-                LastPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, false);
-                var secs = start.Subtract(DateTime.Now).TotalSeconds;
-
-                Log("StartListeningAsync");
-                try
+                if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
                 {
-                    var listen = await _locator.StartListeningAsync(TimeSpan.FromSeconds(60), 1000, false);
-                }
-                catch (Exception ex)
-                {
-                    Log("Error : Awaiting __locator.StartListeningAsync " + ex.Message );
-                }
+                    _locator.DesiredAccuracy = 500; //meters
 
-                Log("Done: StartListeningAsync - No Error");
+                    _locator.PositionChanged += _locator_PositionChanged;
+                    _locator.PositionError += _locator_PositionError;
+
+                    DateTime start = DateTime.Now;
+                    Log("GetPositionAsync");
+                    LastPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, false);
+                    var secs = start.Subtract(DateTime.Now).TotalSeconds;
+
+                    Log("StartListeningAsync");
+                    try
+                    {
+                        var listen = await _locator.StartListeningAsync(TimeSpan.FromSeconds(60), 1000, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log("Error : Awaiting __locator.StartListeningAsync " + ex.Message);
+                    }
+
+                    Log("Done: StartListeningAsync - No Error - IsInitialized = true");
+                    _isInitialized = true;
+                }
+            }
+            else
+            {
+                Log("tracker already initialized");
             }
 
         }
+
+        //public Task<GoogleDirections> GetDirections(Stop start, Stop destination)
+        //{
+        //    var client = new HttpClient();
+        //    client.BaseAddress = new Uri(EndPoints.);
+        //    return client;
+        //}
 
         private void _locator_PositionError(object sender, PositionErrorEventArgs e)
         {
@@ -66,7 +84,7 @@ namespace FxITransit.Helpers
 
         private void _locator_PositionChanged(object sender, PositionEventArgs e)
         {
-            Log("_locator_PositionChanged ");
+            Log($"_locator_PositionChanged to {e.Position.Latitude} , {e.Position.Longitude}" );
             LastPosition = e.Position;
         }
 
@@ -134,7 +152,7 @@ namespace FxITransit.Helpers
 
         public Stop GetClosestStop(IEnumerable<Stop> stops)
         {
-            Log("Getting GetClosestStop " + LastPosition == null ? "Last postion = null" : LastPosition.Latitude.ToString() );
+            Log("Getting GetClosestStop " + LastPosition == null ? "Last postion = null" : LastPosition.Longitude.ToString() + "," + LastPosition.Latitude.ToString());
             Stop closestStop = null;
             var lastPos = LastPosition;
 

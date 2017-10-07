@@ -1,27 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FxITransit.Views.StopsPage">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem  Text="Add To Favorites" Clicked="OnFavorite" />
-    </ContentPage.ToolbarItems>
+             x:Class="FxITransit.Views.StopDirections">
     <ContentPage.Content>
         <StackLayout>
-            
-            <Label Text="{Binding Path= Title}"
-                       LineBreakMode="NoWrap"
-                       
-                       TextColor="Blue"
-                       FontSize="16"/>
-            <StackLayout>
-                <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
-                <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}"/>
-                
-            </StackLayout>
-            <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
             <StackLayout x:Name="MapHolder" HeightRequest="200"/>
-            
-            <ListView x:Name="StopsListView"
+            <!--<ListView x:Name="StopsListView"
 				ItemsSource="{Binding FilteredStops}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
@@ -35,7 +19,7 @@
                             <ViewCell.ContextActions>
                                 <MenuItem Clicked="MenuItem_Clicked"  CommandParameter="{Binding .}"
                                     Text="Add To fave" />
-                                
+
                             </ViewCell.ContextActions>
                             <StackLayout Padding="10">
                                 <Label Text="{Binding Title}"
@@ -52,7 +36,7 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

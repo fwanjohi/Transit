@@ -95,5 +95,15 @@ namespace FxITransit.Views
         {
             await Navigation.PushAsync(new PredictionsPage(_viewModel.ClosestStop));
         }
+
+        private void MenuItem_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        async void OnFavorite(object sender, EventArgs e)
+        {
+            //await Navigation.PushAsync(new NewItemPage());
+        }
     }
 }

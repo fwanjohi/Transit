@@ -14,14 +14,32 @@ namespace FxITransit.ViewModels
     {
         //private Timer _refreshTimer;
         //private Timer _timeTimer;
+
+        public PredictionsViewModel() : base ()
+        {
+            StopAlerts = new AlertSettings
+            {
+                Alert = true,
+                AlertInterval = 1,
+                AlertMinsBefore = 5
+
+            };
+        }
         public Command LoadPredictionsCommand { get; private set; }
         public Command AutoRefreshPredictionsCommand { get; private set; }
+
+        public Command GoogleDirectionsCommand { get; set; }
 
         public Stop Stop { get; private set; }
         public bool AutoRefresh
         {
             get { return Settings.Alerts.AutoRefresh; }
             set { Settings.Alerts.AutoRefresh = value; }
+        }
+
+        public AlertSettings StopAlerts
+        {
+            get; set;
         }
 
         public int RefreshInterval  {get; set;}
@@ -39,8 +57,8 @@ namespace FxITransit.ViewModels
             Title = $"Predictions - {stop.TitleDisplay }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
             AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
+            GoogleDirectionsCommand = new  Command(async () => await ExecuteGoogleDirectionCommand(stop));
             
-
 
         }
         async Task ExecuteRefreshCommand()
@@ -81,8 +99,9 @@ namespace FxITransit.ViewModels
                     pred.IsArriving = true;
                     if (alert && nextAlert <= DateTime.Now)
                     {
+                        var vehicle = pred.Vehicle ?? "";
 
-                        var msg = $"Your bus is arriving in {diff} Minutes at {Stop.TitleDisplay}";
+                        var msg = $"Your transit vehicle {vehicle} is arriving in {diff} Minutes at {Stop.TitleDisplay}";
                         Settings.SendNotification(msg);
 
                         if (Settings.Alerts.Speak)
@@ -141,6 +160,11 @@ namespace FxITransit.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        async Task ExecuteGoogleDirectionCommand(Stop currentStop)
+        {
+            
         }
 
 

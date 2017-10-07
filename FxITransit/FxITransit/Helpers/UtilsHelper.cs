@@ -93,13 +93,17 @@ namespace FxITransit.Helpers
         
         public void Log(string message)
         {
-            var msg = new LogItem { Message = message };
+            var msg = new LogItem { Message = $"{DateTime.Now} : {message }" };
             Log(msg);
         }
 
         public void Log(LogItem item)
         {
-            Logs.Insert(0, item);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Logs.Insert(0,item);
+            });
+            
         }
     }
 }

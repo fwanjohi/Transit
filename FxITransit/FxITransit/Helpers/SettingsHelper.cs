@@ -53,12 +53,12 @@ namespace FxITransit.Helpers
                     Title = "Alert!",
                     Message = message,
                     Vibrate = true,
-                    When = TimeSpan.FromSeconds(10)
+                    When = TimeSpan.FromSeconds(2)
                 });
             }
             catch (Exception ex)
             {
-                UtilsHelper.Instance.Log(ex.Message);
+                UtilsHelper.Instance.Log("Send Notification Failed : " +ex.Message);
 
                 try
                 {

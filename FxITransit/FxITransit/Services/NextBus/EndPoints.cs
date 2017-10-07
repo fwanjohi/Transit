@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FxITransit.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,22 @@ namespace FxITransit.Services.NextBus
         public static string PredictionsUrl(string agencyTag, string routeTag, string stopTag)
         {
             return $"?command=predictions&a={agencyTag}&r={routeTag}&s={stopTag}&useShortTitles=true";
+        }
+
+        public static string StopDirectionsUrl(Stop start, Stop destination)
+        {
+            // https://maps.googleapis.com/maps/api/directions/json?origin=New+York,+NY&destination=Boston,+MA&waypoints=optimize:true|Providence,+RI|Hartford,+CT&key=AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk
+
+            var uri = $"maps.googleapis.com/maps/api/directions/json?origin={start.Lat},{start.Lon}&waypoints=optimize:true|{destination.Lat},{destination.Lon}&key=AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk";
+            return "https://" +uri;
+        }
+
+        public static string StopDirectionsUrl(string start, string destination)
+        {
+            // https://maps.googleapis.com/maps/api/directions/json?origin=New+York,+NY&destination=Boston,+MA&waypoints=optimize:true|Providence,+RI|Hartford,+CT&key=AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk
+
+            var uri = $"maps.googleapis.com/maps/api/directions/json?origin={start}&waypoints=optimize:true|{destination}&key=AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk";
+            return "https://" + uri;
         }
 
     }
