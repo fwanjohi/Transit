@@ -13,6 +13,19 @@ namespace FxITransit.Models
     {
 
         private double _distance;
+        private bool _isFavorited;
+
+        private string _routeTag;
+        private string _agencyTag;
+        private string _stopTag;
+        private string _display;
+        private string _fullTitle;
+
+        private string _agencyTitle;
+        private string _directionTitle;
+        private string _routeTitle;
+
+
         public Stop()
         {
             Predictions = new ObservableRangeCollection<Prediction>();
@@ -28,7 +41,66 @@ namespace FxITransit.Models
             return new GeoPoint { Lat = stop.Lat, Lon = stop.Lon };
         }
 
-        public string Tag { get; set; }
+        public string RouteTag
+        {
+            get { return _routeTag; }
+            set { _routeTag = value; OnPropertyChanged("RouteTag"); }
+        }
+
+        public string AgencyTag
+        {
+            get { return _agencyTag; }
+            set { _agencyTag = value; OnPropertyChanged("AgencyTag"); }
+        }
+
+        public string Tag
+        {
+            get { return _stopTag; }
+            set { _stopTag = value; OnPropertyChanged("Tag"); }
+        }
+
+        public string FullTitle
+        {
+            get { return $"{AgencyTitle} - {RouteTitle} - {Title} ({DirectionTitle})"; }
+            //set
+            //{
+            //    _fullTitle = value;
+            //    OnPropertyChanged("FullTitle");
+            //}
+        }
+
+        public string RouteTitle
+        {
+            get => _routeTitle;
+            set
+            {
+                _routeTitle = value;
+                OnPropertyChanged("RouteTitle");
+                OnPropertyChanged("FullTitle");
+            }
+        }
+
+        public string AgencyTitle
+        {
+            get => _agencyTitle;
+            set
+            {
+                _agencyTitle = value;
+                OnPropertyChanged("AgencyTitle");
+                OnPropertyChanged("FullTitle");
+            }
+        }
+
+        public string DirectionTitle
+        {
+            get => _directionTitle;
+            set
+            {
+                _directionTitle = value;
+                OnPropertyChanged("AgencyTitle");
+                OnPropertyChanged("FullTitle");
+            }
+        }
 
         public string Title { get; set; }
 
@@ -38,9 +110,18 @@ namespace FxITransit.Models
 
         public string StopId { get; set; }
 
-        public string AgencyTag { get; set; }
 
-        public string RouteTag { get; set; }
+
+        public bool IsFavorited
+        {
+            get => _isFavorited;
+            set
+            {
+                _isFavorited = value;
+                OnPropertyChanged("IsFavorited");
+            }
+        }
+
 
         public Position Postion
         {
@@ -56,6 +137,7 @@ namespace FxITransit.Models
             set
             {
                 _distance = value;
+                OnPropertyChanged("Distance");
                 OnPropertyChanged("Display");
                 OnPropertyChanged("TitleDisplay");
             }

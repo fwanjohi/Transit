@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace FxITransit.Models
 {
     //https://github.com/aritchie/settings
-    public class AlertSettings : ObservableObject
+    public class Alerts : ObservableObject
     {
         private int _alertMinsBefore;
         private bool _alert;
@@ -17,12 +18,30 @@ namespace FxITransit.Models
         private bool _vibrate;
         private bool _speak;
         private bool _autoRefresh;
+        private ObservableRangeCollection<Stop> _favoriteStops;
 
-        public AlertSettings()
+
+
+
+        public Alerts()
         {
-
+            //Stops = new ObservableRangeCollection<FavoriteStop>();
             //Vibrate = true;
             //Speak = true;
+        }
+
+        public void Update()
+        {
+            //OnPropertyChanged("Stops");
+        }
+        public ObservableRangeCollection<Stop> Stops
+        {
+            get => _favoriteStops;
+            set
+            {
+                _favoriteStops = value;
+                OnPropertyChanged("Stops");
+            }
         }
 
         public int AlertMinsBefore
@@ -89,31 +108,7 @@ namespace FxITransit.Models
 
     }
 
-    public class FavoriteSettings : ObservableObject
-    {
-        private ObservableRangeCollection<Stop> _stops;
+    
 
-        public FavoriteSettings()
-        {
-            Stops = new ObservableRangeCollection<Stop>();
 
-            var stops = new List<Stop>();
-            stops.Add(new Stop { Title = "Test 1", Distance = 1, StopId = "1", Tag = "10001" });
-            stops.Add(new Stop { Title = "Test 2", Distance = 1, StopId = "1", Tag = "10001" });
-            stops.Add(new Stop { Title = "Test 3", Distance = 1, StopId = "1", Tag = "10001" });
-            stops.Add(new Stop { Title = "Test 4", Distance = 1, StopId = "1", Tag = "10001" });
-
-            Stops.AddRange(stops);
-        }
-        public ObservableRangeCollection<Stop> Stops
-        {
-            get { return _stops; }
-            set
-            {
-                _stops = value;
-                OnPropertyChanged("Stops");
-            }
-        }
-
-    }
 }

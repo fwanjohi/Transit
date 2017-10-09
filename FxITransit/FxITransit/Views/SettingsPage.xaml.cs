@@ -16,8 +16,10 @@ namespace FxITransit.Views
         public SettingsPage()
         {
             InitializeComponent();
-            BindingContext =  SettingsHelper.Instance;
+            BindingContext =  OptionsHelper.Instance;
         }
+
+        
 
         private void StopsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {

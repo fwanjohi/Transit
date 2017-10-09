@@ -15,9 +15,9 @@ namespace FxITransit.ViewModels
         //private Timer _refreshTimer;
         //private Timer _timeTimer;
 
-        public PredictionsViewModel() : base ()
+        public PredictionsViewModel() : base()
         {
-            StopAlerts = new AlertSettings
+            StopAlerts = new Alerts
             {
                 Alert = true,
                 AlertInterval = 1,
@@ -29,6 +29,7 @@ namespace FxITransit.ViewModels
         public Command AutoRefreshPredictionsCommand { get; private set; }
 
         public Command GoogleDirectionsCommand { get; set; }
+        public Command MakeFavoriteCommand { get; set; }
 
         public Stop Stop { get; private set; }
         public bool AutoRefresh
@@ -37,12 +38,12 @@ namespace FxITransit.ViewModels
             set { Settings.Alerts.AutoRefresh = value; }
         }
 
-        public AlertSettings StopAlerts
+        public Alerts StopAlerts
         {
             get; set;
         }
 
-        public int RefreshInterval  {get; set;}
+        public int RefreshInterval { get; set; }
 
         private int _elapsedTime;
         private DateTime nextAlert;
@@ -57,9 +58,9 @@ namespace FxITransit.ViewModels
             Title = $"Predictions - {stop.TitleDisplay }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
             AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
-            GoogleDirectionsCommand = new  Command(async () => await ExecuteGoogleDirectionCommand(stop));
-            
+            GoogleDirectionsCommand = new Command(async () => await ExecuteGoogleDirectionCommand(stop));
 
+            MakeFavoriteCommand = new Command(async () => await ExecuteFavoriteCommand());
         }
         async Task ExecuteRefreshCommand()
         {
@@ -77,7 +78,7 @@ namespace FxITransit.ViewModels
                 {
                     foreach (var pred in Stop.Predictions)
                     {
-                        UpdatePrediction(pred,  false);
+                        UpdatePrediction(pred, false);
 
                     }
                 }
@@ -87,12 +88,18 @@ namespace FxITransit.ViewModels
             });
         }
 
-        private  void UpdatePrediction(Prediction pred, bool alert = false)
+        async Task ExecuteFavoriteCommand()
+        {
+            OptionsHelper.Instance.ChangeFavourite(Stop);
+
+        }
+
+        private void UpdatePrediction(Prediction pred, bool alert = false)
         {
             pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
             if (pred.LocalTime.HasValue)
             {
-                int diff =(int) pred.LocalTime.Value.Subtract(DateTime.Now).TotalMinutes;
+                int diff = (int)pred.LocalTime.Value.Subtract(DateTime.Now).TotalMinutes;
 
                 if (diff <= Settings.Alerts.AlertMinsBefore)
                 {
@@ -111,10 +118,10 @@ namespace FxITransit.ViewModels
 
                         if (Settings.Alerts.Vibrate)
                         {
-                           
+
                         }
 
-                            nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
+                        nextAlert = nextAlert.AddMinutes(Settings.Alerts.AlertInterval);
 
 
                     }
@@ -137,7 +144,7 @@ namespace FxITransit.ViewModels
 
             try
             {
-                
+
                 await TransitService.GetStopPredictions(Stop);
                 foreach (var pred in Stop.Predictions)
                 {
@@ -164,7 +171,7 @@ namespace FxITransit.ViewModels
 
         async Task ExecuteGoogleDirectionCommand(Stop currentStop)
         {
-            
+
         }
 
 

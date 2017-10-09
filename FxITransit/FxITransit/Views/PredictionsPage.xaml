@@ -34,10 +34,12 @@
                        FontSize="16"/>
 
             <StackLayout Orientation="Horizontal">
-                <Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>
-                <Button Text="Add to Favourites"></Button>
-                <Button Text="Stop Settings"></Button>
-                <SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />
+                <!--<Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>-->
+                <Button Text="Fave" Command="{Binding MakeFavoriteCommand}"></Button>
+                <!--<Button Text="Stop Settings"></Button>-->
+                <!--<SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />-->
+                
+                
             </StackLayout>
 
             <StackLayout BackgroundColor="Azure" x:Name="MapHolder" 

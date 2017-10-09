@@ -16,43 +16,9 @@
 
 
                 </TableSection>
-                <!--<TableSection Title="Favorite Routes">
+                <TableSection Title="Favorite Routes" x:Name="FavesSection">
 
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                           <ListView x:Name="StopsListView"
-				                ItemsSource="{Binding Path = Favorites.Stops}"
-                                VerticalOptions="FillAndExpand"
-                                HasUnevenRows="true"
-                                IsPullToRefreshEnabled="true"
-                                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
-                                
-				                ItemSelected="StopsListView_ItemSelected">  
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <ViewCell>
-                                            <StackLayout Padding="10">
-                                                <Label Text="{Binding Title}"
-                                                   LineBreakMode="NoWrap"
-                                                   Style="{DynamicResource ListItemTextStyle}"
-                                                   FontSize="16"/>  
-                                                <StackLayout Orientation="Horizontal" >
-                                                    <Label Text="{Binding Display}"
-                                                       LineBreakMode="NoWrap"
-                                                       Style="{DynamicResource ListItemDetailTextStyle}"
-                                                       FontSize="13"/>      
-                                                </StackLayout>
-                                            </StackLayout>
-                                        </ViewCell>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackLayout>
-                    </ViewCell>
-
-
-
-                </TableSection>-->
+                </TableSection>
             </TableRoot>
         </TableView>
     </ContentPage.Content>

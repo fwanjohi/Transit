@@ -71,11 +71,13 @@ namespace FxITransit.Services.NextBus
 
             return list;
         }
-        public async Task<IEnumerable<Route>> GetRouteList(string agencyTag)
+
+        
+        public async Task<IEnumerable<Route>> GetRouteList(Agency agency)
         {
             var routes = new List<Route>();
 
-            var xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agencyTag));
+            var xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agency.Tag));
 
             var doc = XDoc.LoadXml(xml);
 
@@ -84,8 +86,9 @@ namespace FxITransit.Services.NextBus
                 var route = new Route();
                 route.Tag = node.GetAttribute("tag");
                 route.Title = node.GetAttribute("title");
+                route.AgencyTitle = agency.Title;
                 routes.Add(route);
-                route.AgencyTag = agencyTag;
+                route.AgencyTag = agency.Tag;
             }
             return routes;
 
@@ -122,8 +125,13 @@ namespace FxITransit.Services.NextBus
                         stop.Tag = stopNode.GetAttribute("tag");
                         stop.Title = stopNode.GetAttribute("title");
                         stop.StopId = stopNode.GetAttribute("stopId");
+                       
                         stop.RouteTag = route.Tag;
                         stop.AgencyTag = route.AgencyTag;
+                        stop.RouteTitle = route.Title;
+                        stop.AgencyTitle = route.AgencyTitle;
+                        
+
                         stops.Add(stop);
                     }
                     catch (Exception ex)
@@ -154,6 +162,7 @@ namespace FxITransit.Services.NextBus
                         if (stop != null)
                         {
                             stop.Direction = direction;
+                            stop.DirectionTitle = direction.Title;
                             direction.Stops.Add(stop);
                         }
                     }

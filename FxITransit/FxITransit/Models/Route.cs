@@ -35,6 +35,7 @@ namespace FxITransit.Models
         public string LonMax { get; set; }
 
         public bool IsConfigured { get; set; }
+        public string AgencyTitle { get; internal set; }
     }
 
    

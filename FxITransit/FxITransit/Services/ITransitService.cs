@@ -10,7 +10,8 @@ namespace FxITransit.Services
     {
         Task<IEnumerable<Agency>> GetAgencyList();
        
-        Task<IEnumerable<Route>> GetRouteList(string agencyTag );
+        Task<IEnumerable<Route>> GetRouteList(Agency agency);
+        
         Task GetStopPredictions(Stop stop);
         //Task  PopulateRouteList(Agency agency);
         Task PopulateRouteDetails(Route route, Action callBack);

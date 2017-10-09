@@ -14,8 +14,23 @@ namespace FxITransit
         public App()
         {
             InitializeComponent();
-            SettingsHelper.Instance.Alerts.AutoRefresh = true;
-            SettingsHelper.Instance.Alerts = Settings.Current.Bind<AlertSettings>();// persisted bidirectionally with 
+            
+            OptionsHelper.Instance.Alerts = Settings.Current.Bind<Alerts>();// persisted bidirectionally with 
+            if (OptionsHelper.Instance.Alerts.AlertMinsBefore == 0)
+            {
+                OptionsHelper.Instance.Alerts.AlertMinsBefore = 5;
+                OptionsHelper.Instance.Alerts.AlertInterval = 1;
+                OptionsHelper.Instance.Alerts.Speak = true;
+                OptionsHelper.Instance.Alerts.Alert = true;
+
+
+            }
+            OptionsHelper.Instance.Alerts.AutoRefresh = true;
+
+            if (OptionsHelper.Instance.Alerts.Stops == null)
+            {
+                OptionsHelper.Instance.Alerts.Stops=  new ObservableRangeCollection<Stop>();
+            }
             var result =  CrossNotifications.Current.RequestPermission().Result;
             
 
@@ -24,7 +39,7 @@ namespace FxITransit
 
          ~App()
         {
-            SettingsHelper.Instance.Alerts.AutoRefresh = false;
+            OptionsHelper.Instance.Alerts.AutoRefresh = false;
         }
 
 
@@ -37,6 +52,12 @@ namespace FxITransit
                     new NavigationPage(new AgencyListView())
                     {
                         Title = "Browse",
+                        Icon = Device.OnPlatform("tab_feed.png",null,null)
+                    },
+
+                    new NavigationPage(new FavouritesPage())
+                    {
+                        Title = "Favorites",
                         Icon = Device.OnPlatform("tab_feed.png",null,null)
                     },
 
