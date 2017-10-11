@@ -110,6 +110,7 @@ namespace FxITransit.Models
 
         public string StopId { get; set; }
 
+        //		Message	"Self referencing loop detected with type 'FxITransit.Models.Stop'. Path '[0].Direction.Stops'."	string
 
 
         public bool IsFavorited

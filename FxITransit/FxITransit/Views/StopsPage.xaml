@@ -7,7 +7,7 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            
+
             <Label Text="{Binding Path= Title}"
                        LineBreakMode="NoWrap"
                        
@@ -16,11 +16,11 @@
             <StackLayout>
                 <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
                 <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}"/>
-                
+
             </StackLayout>
             <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
             <StackLayout x:Name="MapHolder" HeightRequest="200"/>
-            
+
             <ListView x:Name="StopsListView"
 				ItemsSource="{Binding FilteredStops}"
                 VerticalOptions="FillAndExpand"
@@ -32,23 +32,28 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <ViewCell.ContextActions>
-                                <MenuItem Clicked="MenuItem_Clicked"  CommandParameter="{Binding .}"
-                                    Text="Add To fave" />
-                                
-                            </ViewCell.ContextActions>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Title}"
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemTextStyle}"
-                       FontSize="16"/>
-                                <StackLayout Orientation="Horizontal" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width ="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Vertical" Padding="10">
+                                    <Label Text="{Binding Title}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        FontSize="16"/>
+
                                     <Label Text="{Binding Display}"
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemDetailTextStyle}"
-                       FontSize="13"/>
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemDetailTextStyle}"
+                                        FontSize="13"/>
                                 </StackLayout>
-                            </StackLayout>
+                                <Button Grid.Column ="1"
+                                        Text ="Fave"
+                                        Clicked="Button_OnClicked"
+                                        />
+
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

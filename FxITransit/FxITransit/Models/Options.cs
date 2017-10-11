@@ -18,6 +18,8 @@ namespace FxITransit.Models
         private bool _vibrate;
         private bool _speak;
         private bool _autoRefresh;
+        private string _faveStopsString;
+
         private ObservableRangeCollection<Stop> _favoriteStops;
 
 
@@ -30,18 +32,34 @@ namespace FxITransit.Models
             //Speak = true;
         }
 
+        public string FaveStopsString
+        {
+            get { return _faveStopsString; }
+            set
+            {
+                _faveStopsString = value;
+                OnPropertyChanged("FaveStopsString");
+            }
+        }
+
+
         public void Update()
         {
-            //OnPropertyChanged("Stops");
+           OnPropertyChanged("FavoriteStops");
         }
-        public ObservableRangeCollection<Stop> Stops
+        public ObservableRangeCollection<Stop> FavoriteStops
         {
-            get => _favoriteStops;
+            get { return _favoriteStops; }
             set
             {
                 _favoriteStops = value;
-                OnPropertyChanged("Stops");
+                OnPropertyChanged("FavoriteStops");
             }
+        }
+
+        private void UpdateFaveStops()
+        {
+            
         }
 
         public int AlertMinsBefore

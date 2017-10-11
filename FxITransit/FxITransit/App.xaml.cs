@@ -27,9 +27,9 @@ namespace FxITransit
             }
             OptionsHelper.Instance.Alerts.AutoRefresh = true;
 
-            if (OptionsHelper.Instance.Alerts.Stops == null)
+            if (OptionsHelper.Instance.Alerts.FavoriteStops == null)
             {
-                OptionsHelper.Instance.Alerts.Stops=  new ObservableRangeCollection<Stop>();
+                OptionsHelper.Instance.Alerts.FavoriteStops=  new ObservableRangeCollection<Stop>();
             }
             var result =  CrossNotifications.Current.RequestPermission().Result;
             

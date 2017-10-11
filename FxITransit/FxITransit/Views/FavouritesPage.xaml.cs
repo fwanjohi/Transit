@@ -16,33 +16,36 @@ namespace FxITransit.Views
         public FavouritesPage()
         {
             InitializeComponent();
-            
+            BindingContext = OptionsHelper.Instance;
+            var items = OptionsHelper.Instance.Alerts;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            var section = FavesSection;
-            section.Clear();
-            foreach (var stop in OptionsHelper.Instance.Alerts.Stops)
-            {
+            //var section = FavesSection;
+            //section.Clear();
+            //foreach (var stop in OptionsHelper.Instance.Alerts.Stops)
+            //{
 
-                var content = new SwitchCell();
-                content.BindingContext = stop;
-                content.Text = stop.Display;
+            //    var content = new SwitchCell();
+            //    content.BindingContext = stop;
+            //    content.Text = stop.Display;
 
-                content.SetBinding(SwitchCell.TextProperty, "FullTitle", BindingMode.TwoWay);
-                content.SetBinding(SwitchCell.OnProperty, "IsFavorited", BindingMode.TwoWay);
+            //    content.SetBinding(SwitchCell.TextProperty, "FullTitle", BindingMode.TwoWay);
+            //    content.SetBinding(SwitchCell.OnProperty, "IsFavorited", BindingMode.TwoWay);
 
-                section.Add(content);
+            //    section.Add(content);
 
-                var Button = new Button
-                {
-                    Text = "Delete"
-                };
+            //    var Button = new Button
+            //    {
+            //        Text = "Delete"
+            //    };
+
+                
                 
 
-            }
+            //}
         }
     }
 }

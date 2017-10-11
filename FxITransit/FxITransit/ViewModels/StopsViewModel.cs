@@ -15,11 +15,19 @@ namespace FxITransit.ViewModels
     public class StopsViewModel : BaseViewModel
     {
         public Direction Direction { get; private set; }
-
-
+        public Command<Stop> FavoriteCommand { get; set; } 
+        public Command RandomCommand { get; set; }
         private string _filter;
-        private Stop _closestStop;
         private ObservableRangeCollection<Stop> _filteredStops;
+
+        public StopsViewModel(Direction direction)
+        {
+            Direction = direction;
+            _filteredStops = new ObservableRangeCollection<Stop>();
+            _filteredStops.ReplaceRange(direction.Stops);
+
+            Title = "Stops for  : " + Direction.Title;
+        }
         public string Filter
         {
             get { return _filter; }
@@ -48,14 +56,7 @@ namespace FxITransit.ViewModels
             }
 
         }
-        public StopsViewModel(Direction direction)
-        {
-            Direction = direction;
-            _filteredStops = new ObservableRangeCollection<Stop>();
-            _filteredStops.ReplaceRange(direction.Stops);
-            
-            Title = "Stops for  : " + Direction.Title;
-        }
+        
 
         
         

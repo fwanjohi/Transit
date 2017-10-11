@@ -105,5 +105,15 @@ namespace FxITransit.Views
         {
             //await Navigation.PushAsync(new NewItemPage());
         }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            if ((sender as Button).BindingContext is Stop stop)
+            {
+                stop.IsFavorited = !stop.IsFavorited;
+                OptionsHelper.Instance.ChangeFavourite(stop);
+
+            }
+        }
     }
 }

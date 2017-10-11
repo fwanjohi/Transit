@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -38,11 +39,10 @@ namespace FxITransit.Helpers
         private Alerts _alerts;
 
 
-
         public OptionsHelper()
         {
             Alerts = new Alerts();
-
+            FavoriteCommand = new Command<Stop>(ChangeFavourite);
         }
 
         public Alerts Alerts
@@ -55,36 +55,35 @@ namespace FxITransit.Helpers
             }
         }
 
-
-
-
+        public Command<Stop> FavoriteCommand { get; set; }
 
         public void ChangeFavourite(Stop stop)
         {
+            var s = stop;
             Device.BeginInvokeOnMainThread(() =>
             {
 
-
-                if (Alerts.Stops == null)
+                if (Alerts.FavoriteStops == null)
                 {
-                    Alerts.Stops = new ObservableRangeCollection<Stop>();
+                    Alerts.FavoriteStops = new ObservableRangeCollection<Stop>();
 
                 }
 
-                stop.IsFavorited = !stop.IsFavorited;
+                
 
-                var fav = Alerts.Stops.FirstOrDefault(x => x.Tag == stop.Tag);
+                var fav = Alerts.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
 
                 if (fav == null && stop.IsFavorited)
                 {
-                    Alerts.Stops.Add(stop);
+                    Alerts.FavoriteStops.Add(stop);
                 }
 
                 else if (fav != null && !stop.IsFavorited)
                 {
-                    Alerts.Stops.Remove(fav);
+                    Alerts.FavoriteStops.Remove(fav);
                 }
                 Alerts.Update();
+                OnPropertyChanged("Alerts");
             });
         }
 

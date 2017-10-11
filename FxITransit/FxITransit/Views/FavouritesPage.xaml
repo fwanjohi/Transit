@@ -3,6 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FxITransit.Views.FavouritesPage">
     <ContentPage.Content>
+        <!--ItemTapped="OnItemSelected"-->
+        <ListView x:Name="FavesListView"  
+                  ItemsSource="{Binding Path=Alerts.FavoriteStops}" 
+                   RowHeight="55">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"></RowDefinition>
+                                <!--<RowDefinition Height="20"></RowDefinition>-->
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition  Width="60"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding FullTitle}"
+                                   LineBreakMode="WordWrap"
+                                   Style="{DynamicResource ListItemTextStyle}"
+                                   FontSize="16"/>
+                            <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding IsFavorited}"></Switch>
+                            <!--<Label Grid.Row="0" Grid.Column="0" Text="{Binding FullTitle}" LineBreakMode="TailTruncation"></Label>-->
+                            <!--<Button Grid.Row="0" Grid.Column="1" Text="Remove" Font="Small"  TextColor="Gray" ></Button>-->
+                            <!--<Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Source="{Binding Image}" Aspect="AspectFill"/>-->
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
         <!--<ListView x:Name="FaveStopsListView"
                   ItemsSource="{Binding Path = Alerts.Stops}"
                   VerticalOptions="FillAndExpand"
@@ -29,13 +59,13 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>-->
-        <TableView Intent="Settings">
+        <!--<TableView Intent="Settings">
             <TableRoot>
           
                 <TableSection Title="Favorite Routes" x:Name="FavesSection">
                     
                 </TableSection>
             </TableRoot>
-        </TableView>
+        </TableView>-->
     </ContentPage.Content>
 </ContentPage>
