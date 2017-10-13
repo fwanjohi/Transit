@@ -164,6 +164,10 @@ namespace FxITransit.Services.NextBus
                             
                             stop.DirectionTitle = direction.Title;
                             direction.Stops.Add(stop);
+                            if (stop.Tag != tag)
+                            {
+                                stop.OtherStops.Add(stop.Postion);
+                            }
                         }
                     }
 
@@ -211,14 +215,23 @@ namespace FxITransit.Services.NextBus
                 preds.Add(pred);
             }
             stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
+            stop.NextPrediction = preds.FirstOrDefault();
 
 
         }
 
-        
+        public void UpdatePredictions(IList<Stop> stops)
+        {
+            foreach (Stop stop in stops)
+            {
+                GetStopPredictions(stop);
+            }
+        }
 
-        
-        
+
+
+
+
 
 
 
@@ -230,9 +243,7 @@ namespace FxITransit.Services.NextBus
             return client;
         }
 
-
-
-
+       
     }
 
 

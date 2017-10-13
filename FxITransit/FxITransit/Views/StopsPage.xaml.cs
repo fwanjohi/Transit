@@ -110,7 +110,7 @@ namespace FxITransit.Views
         {
             if ((sender as Button).BindingContext is Stop stop)
             {
-                stop.IsFavorited = !stop.IsFavorited;
+                
                 OptionsHelper.Instance.ChangeFavourite(stop);
 
             }

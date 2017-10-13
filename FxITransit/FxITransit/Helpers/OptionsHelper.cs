@@ -56,10 +56,13 @@ namespace FxITransit.Helpers
         }
 
         public Command<Stop> FavoriteCommand { get; set; }
+        public object TransitService { get; private set; }
+        
 
         public void ChangeFavourite(Stop stop)
         {
-            var s = stop;
+            stop.IsFavorited = !stop.IsFavorited;
+
             Device.BeginInvokeOnMainThread(() =>
             {
 
@@ -85,6 +88,12 @@ namespace FxITransit.Helpers
                 Alerts.Update();
                 OnPropertyChanged("Alerts");
             });
+        }
+
+        public void UpdatePredictions(IList<Stop> stops)
+        {
+
+            
         }
 
         public void SendNotification(string message)

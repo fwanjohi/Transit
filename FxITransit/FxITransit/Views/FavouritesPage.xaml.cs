@@ -1,4 +1,5 @@
 ﻿using FxITransit.Helpers;
+using FxITransit.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,35 +18,36 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = OptionsHelper.Instance;
-            var items = OptionsHelper.Instance.Alerts;
+            var items = OptionsHelper.Instance.Alerts.FavoriteStops;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            //var section = FavesSection;
-            //section.Clear();
-            //foreach (var stop in OptionsHelper.Instance.Alerts.Stops)
-            //{
+            
+        }
 
-            //    var content = new SwitchCell();
-            //    content.BindingContext = stop;
-            //    content.Text = stop.Display;
+        private void RemoveFave_OnClicked(object sender, EventArgs e)
+        {
+            var b = sender as Button;
+            var stop = b.BindingContext as Stop;
+            if (stop != null)
+            {
+                stop.IsFavorited = true;
+                OptionsHelper.Instance.ChangeFavourite(stop);
+            }
+        }
 
-            //    content.SetBinding(SwitchCell.TextProperty, "FullTitle", BindingMode.TwoWay);
-            //    content.SetBinding(SwitchCell.OnProperty, "IsFavorited", BindingMode.TwoWay);
-
-            //    section.Add(content);
-
-            //    var Button = new Button
-            //    {
-            //        Text = "Delete"
-            //    };
-
+        private void FavesListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var stop = e.Item;
+            if (stop is Stop)
+            {
                 
-                
+                Navigation.PushAsync(new PredictionsPage(stop as Stop));
 
-            //}
+            }
+
         }
     }
 }

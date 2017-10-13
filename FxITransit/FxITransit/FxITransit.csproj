@@ -44,6 +44,7 @@
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\ObservableRangeCollection.cs" />
     <Compile Include="Helpers\OptionsHelper.cs" />
+    <Compile Include="Helpers\PredictionsHelper.cs" />
     <Compile Include="Helpers\TrackingHelper.cs" />
     <Compile Include="Helpers\UtilsHelper.cs" />
     <Compile Include="Helpers\XDoc.cs" />

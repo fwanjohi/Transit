@@ -9,14 +9,16 @@ namespace FxITransit.Services
     public interface ITransitService
     {
         Task<IEnumerable<Agency>> GetAgencyList();
-       
+
         Task<IEnumerable<Route>> GetRouteList(Agency agency);
-        
+
         Task GetStopPredictions(Stop stop);
         //Task  PopulateRouteList(Agency agency);
         Task PopulateRouteDetails(Route route, Action callBack);
 
-         Position LastPosition { get;  }
+        Position LastPosition { get; }
+
+        void UpdatePredictions(IList<Stop> stop);
 
     }
 }

@@ -35,7 +35,7 @@
 
             <StackLayout Orientation="Horizontal">
                 <!--<Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>-->
-                <Button Text="Fave" Command="{Binding MakeFavoriteCommand}"></Button>
+                <Button Text="Fave" Command="{Binding ChangeFavoriteCommand}"></Button>
                 <!--<Button Text="Stop Settings"></Button>-->
                 <!--<SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />-->
                 

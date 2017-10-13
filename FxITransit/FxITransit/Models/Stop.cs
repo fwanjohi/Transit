@@ -24,11 +24,14 @@ namespace FxITransit.Models
         private string _agencyTitle;
         private string _directionTitle;
         private string _routeTitle;
+        private Prediction _nextPrediction;
+        private ObservableRangeCollection<Position> _otherStops;
 
 
         public Stop()
         {
             Predictions = new ObservableRangeCollection<Prediction>();
+            _otherStops = new ObservableRangeCollection<Position>();
         }
 
         public static implicit operator Point(Stop stop)
@@ -61,7 +64,7 @@ namespace FxITransit.Models
 
         public string FullTitle
         {
-            get { return $"{AgencyTitle} - {RouteTitle} - {Title} ({DirectionTitle})"; }
+            get { return $"{AgencyTitle} - {RouteTitle} - {Title} to {DirectionTitle}"; }
             //set
             //{
             //    _fullTitle = value;
@@ -162,8 +165,27 @@ namespace FxITransit.Models
             }
         }
 
+        public Prediction NextPrediction
+        {
+            get => _nextPrediction;
+            set
+            {
+                _nextPrediction = value; 
+                OnPropertyChanged("NextPrediction");
+            }
+        }
+
         public ObservableRangeCollection<Prediction> Predictions { get; set; }
-        public Direction Direction { get; set; }
+        public ObservableRangeCollection<Position> OtherStops
+        {
+            get => _otherStops;
+            set
+            {
+                _otherStops = value;
+                OnPropertyChanged("OtherStops");
+                
+            }
+        }
         internal void RefreshTime()
         {
             foreach (var pred in Predictions)

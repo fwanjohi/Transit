@@ -29,7 +29,7 @@ namespace FxITransit.ViewModels
         public Command AutoRefreshPredictionsCommand { get; private set; }
 
         public Command GoogleDirectionsCommand { get; set; }
-        public Command MakeFavoriteCommand { get; set; }
+        public Command ChangeFavoriteCommand { get; set; }
 
         public Stop Stop { get; private set; }
         public bool AutoRefresh
@@ -56,37 +56,13 @@ namespace FxITransit.ViewModels
             nextAlert = DateTime.Now;
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
-            LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
-            AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
+            //LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
+            //AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
             GoogleDirectionsCommand = new Command(async () => await ExecuteGoogleDirectionCommand(stop));
 
-            MakeFavoriteCommand = new Command(async () => await ExecuteFavoriteCommand());
+            ChangeFavoriteCommand = new Command(async () => await ExecuteFavoriteCommand());
         }
-        async Task ExecuteRefreshCommand()
-        {
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-            {
-                if (!AutoRefresh) return false;
-                if (_elapsedTime >= RefreshInterval)
-                {
-                    ExecuteLoadPredictionsCommand();
-                    _elapsedTime = 0;
-
-
-                }
-                else
-                {
-                    foreach (var pred in Stop.Predictions)
-                    {
-                        UpdatePrediction(pred, false);
-
-                    }
-                }
-
-                _elapsedTime++;
-                return AutoRefresh;  // True = Repeat again, False = Stop the timer
-            });
-        }
+        
 
         async Task ExecuteFavoriteCommand()
         {
@@ -134,40 +110,7 @@ namespace FxITransit.ViewModels
             }
         }
 
-        async Task ExecuteLoadPredictionsCommand()
-        {
-
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
-            try
-            {
-
-                await TransitService.GetStopPredictions(Stop);
-                foreach (var pred in Stop.Predictions)
-                {
-                    UpdatePrediction(pred, true);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                MessagingCenter.Send(new MessagingCenterAlert
-                {
-                    Title = "Error",
-                    Message = "Unable to load Predictions.",
-                    Cancel = "OK"
-                }, "message");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
+        
 
         async Task ExecuteGoogleDirectionCommand(Stop currentStop)
         {
