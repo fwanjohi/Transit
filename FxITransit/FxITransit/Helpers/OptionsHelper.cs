@@ -36,16 +36,16 @@ namespace FxITransit.Helpers
 
         public static OptionsHelper Instance { get { return instance.Value; } }
 
-        private Alerts _alerts;
+        private MySettings _alerts;
 
 
         public OptionsHelper()
         {
-            Alerts = new Alerts();
+            Alerts = new MySettings();
             FavoriteCommand = new Command<Stop>(ChangeFavourite);
         }
 
-        public Alerts Alerts
+        public MySettings Alerts
         {
             get { return _alerts; }
             set
@@ -75,7 +75,7 @@ namespace FxITransit.Helpers
                 
 
                 var fav = Alerts.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
-
+                var index = Alerts.FavoriteStops.IndexOf(fav);
                 if (fav == null && stop.IsFavorited)
                 {
                     Alerts.FavoriteStops.Add(stop);
@@ -83,7 +83,14 @@ namespace FxITransit.Helpers
 
                 else if (fav != null && !stop.IsFavorited)
                 {
-                    Alerts.FavoriteStops.Remove(fav);
+                    try
+                    {
+                        Alerts.FavoriteStops.RemoveAt(index);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                    
                 }
                 Alerts.Update();
                 OnPropertyChanged("Alerts");

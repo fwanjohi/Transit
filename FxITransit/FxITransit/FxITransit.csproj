@@ -39,6 +39,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AsyncHelper.cs" />
+    <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\FilterableCollection.cs" />
     <Compile Include="Helpers\MessengingCenterAlert.cs" />
     <Compile Include="Helpers\ObservableObject.cs" />

@@ -15,7 +15,7 @@ namespace FxITransit
         {
             InitializeComponent();
             
-            OptionsHelper.Instance.Alerts = Settings.Current.Bind<Alerts>();// persisted bidirectionally with 
+            OptionsHelper.Instance.Alerts = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
             if (OptionsHelper.Instance.Alerts.AlertMinsBefore == 0)
             {
                 OptionsHelper.Instance.Alerts.AlertMinsBefore = 5;

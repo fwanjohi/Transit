@@ -10,7 +10,7 @@ using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 namespace FxITransit.Models
 {
     //https://github.com/aritchie/settings
-    public class Alerts : ObservableObject
+    public class MySettings : ObservableObject
     {
         private int _alertMinsBefore;
         private bool _alert;
@@ -25,7 +25,7 @@ namespace FxITransit.Models
 
 
 
-        public Alerts()
+        public MySettings()
         {
             //Stops = new ObservableRangeCollection<FavoriteStop>();
             //Vibrate = true;
@@ -56,6 +56,8 @@ namespace FxITransit.Models
                 OnPropertyChanged("FavoriteStops");
             }
         }
+
+        
 
         private void UpdateFaveStops()
         {

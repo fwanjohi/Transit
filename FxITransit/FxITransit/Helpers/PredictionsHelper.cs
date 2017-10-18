@@ -9,12 +9,7 @@ namespace FxITransit.Helpers
 {
     public class PredictionsHelper
     {
-       
 
-        public PredictionsHelper(Stop stop)
-        {
-
-        }
 
     }
 }

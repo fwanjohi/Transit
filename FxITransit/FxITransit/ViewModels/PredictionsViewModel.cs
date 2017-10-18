@@ -17,7 +17,7 @@ namespace FxITransit.ViewModels
 
         public PredictionsViewModel() : base()
         {
-            StopAlerts = new Alerts
+            StopAlerts = new MySettings
             {
                 Alert = true,
                 AlertInterval = 1,
@@ -38,7 +38,7 @@ namespace FxITransit.ViewModels
             set { Settings.Alerts.AutoRefresh = value; }
         }
 
-        public Alerts StopAlerts
+        public MySettings StopAlerts
         {
             get; set;
         }
@@ -56,7 +56,7 @@ namespace FxITransit.ViewModels
             nextAlert = DateTime.Now;
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
-            //LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
+            LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
             //AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
             GoogleDirectionsCommand = new Command(async () => await ExecuteGoogleDirectionCommand(stop));
 
@@ -110,9 +110,38 @@ namespace FxITransit.ViewModels
             }
         }
 
-        
+        private async Task ExecuteLoadPredictionsCommand()
+        {
 
-        async Task ExecuteGoogleDirectionCommand(Stop currentStop)
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try
+            {
+
+                await TransitService.GetStopPredictions(Stop);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                MessagingCenter.Send(new MessagingCenterAlert
+                {
+                    Title = "Error",
+                    Message = "Unable to load Predictions.",
+                    Cancel = "OK"
+                }, "message");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+
+        private async Task ExecuteGoogleDirectionCommand(Stop currentStop)
         {
 
         }
