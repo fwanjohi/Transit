@@ -57,17 +57,45 @@ namespace FxITransit.ViewModels
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
             LoadPredictionsCommand = new Command(async () => await ExecuteLoadPredictionsCommand());
-            //AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
+            AutoRefreshPredictionsCommand = new Command(async () => await ExecuteRefreshCommand());
             GoogleDirectionsCommand = new Command(async () => await ExecuteGoogleDirectionCommand(stop));
 
             ChangeFavoriteCommand = new Command(async () => await ExecuteFavoriteCommand());
         }
         
 
-        async Task ExecuteFavoriteCommand()
+        private async Task ExecuteFavoriteCommand()
         {
             OptionsHelper.Instance.ChangeFavourite(Stop);
 
+        }
+
+
+        private async Task ExecuteRefreshCommand()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                if (!AutoRefresh) return false;
+                if (_elapsedTime >= RefreshInterval)
+                {
+
+                    ExecuteLoadPredictionsCommand();
+                    _elapsedTime = 0;
+
+
+                }
+                else
+                {
+                    foreach (var pred in Stop.Predictions)
+                    {
+                        UpdatePrediction(pred, false);
+
+                    }
+                }
+
+                _elapsedTime++;
+                return AutoRefresh;  // True = Repeat again, False = Stop the timer
+            });
         }
 
         private void UpdatePrediction(Prediction pred, bool alert = false)

@@ -38,11 +38,16 @@ namespace FxITransit.Helpers
 
         private MySettings _alerts;
 
+        public Command<Stop> FavoriteCommand { get; set; }
+        public Command<Route> FavoriteRouteCommand { get; set; }
+        public object TransitService { get; private set; }
+
 
         public OptionsHelper()
         {
             Alerts = new MySettings();
             FavoriteCommand = new Command<Stop>(ChangeFavourite);
+            FavoriteRouteCommand = new Command<Route>(ChangeFavouriteRoute);
         }
 
         public MySettings Alerts
@@ -55,9 +60,44 @@ namespace FxITransit.Helpers
             }
         }
 
-        public Command<Stop> FavoriteCommand { get; set; }
-        public object TransitService { get; private set; }
-        
+        public void ChangeFavouriteRoute(Route route)
+        {
+            //route.IsFavorited = !route.IsFavorited;
+
+            //Device.BeginInvokeOnMainThread(() =>
+            //{
+
+            //    if (Alerts.FavoriteStops == null)
+            //    {
+            //        Alerts.FavoriteStops = new ObservableRangeCollection<Stop>();
+
+            //    }
+
+
+
+            //    var fav = Alerts.FavoriteStops.FirstOrDefault(x => x.Tag == route.Tag);
+            //    var index = Alerts.FavoriteStops.IndexOf(fav);
+            //    if (fav == null && route.IsFavorited)
+            //    {
+            //        Alerts.FavoriteStops.Add(route);
+            //    }
+
+            //    else if (fav != null && !route.IsFavorited)
+            //    {
+            //        try
+            //        {
+            //            Alerts.FavoriteStops.RemoveAt(index);
+            //        }
+            //        catch (Exception e)
+            //        {
+            //        }
+
+            //    }
+            //    Alerts.Update();
+            //    OnPropertyChanged("Alerts");
+            //});
+        }
+
 
         public void ChangeFavourite(Stop stop)
         {

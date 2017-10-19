@@ -76,7 +76,7 @@ namespace FxITransit.Views
             if (viewModel.Stop != null)
             {
                 viewModel.LoadPredictionsCommand.Execute(null);
-                //viewModel.AutoRefreshPredictionsCommand.Execute(null);
+                viewModel.AutoRefreshPredictionsCommand.Execute(null);
             }
         }
 

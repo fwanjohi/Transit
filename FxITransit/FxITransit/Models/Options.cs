@@ -21,6 +21,7 @@ namespace FxITransit.Models
         private string _faveStopsString;
 
         private ObservableRangeCollection<Stop> _favoriteStops;
+        private ObservableRangeCollection<Route> _favoriteRoutes;
 
 
 
@@ -46,6 +47,8 @@ namespace FxITransit.Models
         public void Update()
         {
            OnPropertyChanged("FavoriteStops");
+            OnPropertyChanged("FavoriteRoutes");
+
         }
         public ObservableRangeCollection<Stop> FavoriteStops
         {
@@ -57,7 +60,17 @@ namespace FxITransit.Models
             }
         }
 
-        
+        public ObservableRangeCollection<Route> FavoriRoutes
+        {
+            get { return _favoriteRoutes; }
+            set
+            {
+                _favoriteRoutes = value;
+                OnPropertyChanged("FavoriRoutes");
+            }
+        }
+
+
 
         private void UpdateFaveStops()
         {

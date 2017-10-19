@@ -40,13 +40,34 @@ namespace FxITransit.Views
 
         private void FavesListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            var stop = e.Item;
-            if (stop is Stop)
+            var stop = e.Item as Stop;
+            if (stop != null)
             {
-                
-                Navigation.PushAsync(new PredictionsPage(stop as Stop));
+                var page = Application.Current.MainPage as MainLaunchPage;
+
+                var browse = page.Children.FirstOrDefault(x => (x as NavigationPage).Title == "Browse");
+
+                if (browse != null)
+                {
+                    page.CurrentPage = browse;
+
+                    browse.Navigation.PushAsync(new PredictionsPage(stop));
+                }
+
+
+
 
             }
+
+        }
+
+        private void BackButtio_OnClicked(object sender, EventArgs e)
+        {
+           //// var cur = sender.
+           // var cur = Application.Current.MainPage as TabbedPage;
+           // cur.SendBackButtonPressed();
+
+
 
         }
     }
