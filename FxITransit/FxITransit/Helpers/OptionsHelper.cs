@@ -40,13 +40,17 @@ namespace FxITransit.Helpers
 
         public Command<Stop> FavoriteCommand { get; set; }
         public Command<Route> FavoriteRouteCommand { get; set; }
+
+        public Command LoadPredictionsCommand { get; private set; }
+        public Command AutoRefreshPredictionsCommand { get; private set; }
+
         public object TransitService { get; private set; }
 
 
         public OptionsHelper()
         {
             Alerts = new MySettings();
-            FavoriteCommand = new Command<Stop>(ChangeFavourite);
+            FavoriteCommand = new Command<Stop>(ChangeFavouriteStop);
             FavoriteRouteCommand = new Command<Route>(ChangeFavouriteRoute);
         }
 
@@ -99,7 +103,9 @@ namespace FxITransit.Helpers
         }
 
 
-        public void ChangeFavourite(Stop stop)
+
+
+        public void ChangeFavouriteStop(Stop stop)
         {
             stop.IsFavorited = !stop.IsFavorited;
 

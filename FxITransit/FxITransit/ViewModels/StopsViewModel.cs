@@ -20,6 +20,8 @@ namespace FxITransit.ViewModels
         private string _filter;
         private ObservableRangeCollection<Stop> _filteredStops;
 
+        public Command ChangeFavoriteCommand { get; set; }
+
         public StopsViewModel(Direction direction)
         {
             Direction = direction;
@@ -27,6 +29,8 @@ namespace FxITransit.ViewModels
             _filteredStops.ReplaceRange(direction.Stops);
 
             Title = "Stops for  : " + Direction.Title;
+
+            ChangeFavoriteCommand =  OptionsHelper.Instance.FavoriteCommand;
         }
         public string Filter
         {

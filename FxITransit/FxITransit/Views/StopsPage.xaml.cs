@@ -111,7 +111,7 @@ namespace FxITransit.Views
             if ((sender as Button).BindingContext is Stop stop)
             {
                 
-                OptionsHelper.Instance.ChangeFavourite(stop);
+                OptionsHelper.Instance.ChangeFavouriteStop(stop);
 
             }
         }

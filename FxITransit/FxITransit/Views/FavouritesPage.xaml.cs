@@ -34,7 +34,7 @@ namespace FxITransit.Views
             if (stop != null)
             {
                 stop.IsFavorited = true;
-                OptionsHelper.Instance.ChangeFavourite(stop);
+                OptionsHelper.Instance.ChangeFavouriteStop(stop);
             }
         }
 

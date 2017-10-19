@@ -183,49 +183,52 @@ namespace FxITransit.Services.NextBus
 
         }
 
-        public async Task GetStopPredictions(Stop stop)
+        public async Task GetStopPredictions(List<Stop> stops)
         {
-
-            var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
-
-            var xml = _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
-
-            var doc = XDoc.LoadXml(xml);
-
-            /*
-             * <prediction tripTag="7679393" 
-             * block="9718" 
-             * vehicle="1537" 
-             * dirTag="N____O_F00" 
-             * isDeparture="false" minutes="20" seconds="1220" epochTime="1503625693370" vehiclesInConsist="2"/>
-             */
-            List<Prediction> preds = new List<Prediction>();
-
-
-            foreach (var predNode in doc.GetDescendantElements("prediction"))
+            foreach (var stop in stops)
             {
-                var pred = new Prediction();
-                pred.Minutes = predNode.GetAttribute("minutes");
-                pred.Seconds = predNode.GetAttribute("seconds");
-                pred.EpochTime = predNode.GetAttribute("epochTime");
-                pred.IsDeparture = predNode.GetAttribute("isDeparture");
-                pred.DirTag = predNode.GetAttribute("dirTag");
-                pred.Vehicle = predNode.GetAttribute("vehicle");
-                pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
-                preds.Add(pred);
-            }
-            stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
-            stop.NextPrediction = preds.FirstOrDefault();
 
+
+                var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
+
+                var xml = _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
+
+                var doc = XDoc.LoadXml(xml);
+
+                /*
+                 * <prediction tripTag="7679393" 
+                 * block="9718" 
+                 * vehicle="1537" 
+                 * dirTag="N____O_F00" 
+                 * isDeparture="false" minutes="20" seconds="1220" epochTime="1503625693370" vehiclesInConsist="2"/>
+                 */
+                List<Prediction> preds = new List<Prediction>();
+
+
+                foreach (var predNode in doc.GetDescendantElements("prediction"))
+                {
+                    var pred = new Prediction();
+                    pred.Minutes = predNode.GetAttribute("minutes");
+                    pred.Seconds = predNode.GetAttribute("seconds");
+                    pred.EpochTime = predNode.GetAttribute("epochTime");
+                    pred.IsDeparture = predNode.GetAttribute("isDeparture");
+                    pred.DirTag = predNode.GetAttribute("dirTag");
+                    pred.Vehicle = predNode.GetAttribute("vehicle");
+                    pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
+                    preds.Add(pred);
+                }
+                stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
+                stop.NextPrediction = preds.FirstOrDefault();
+
+            }
 
         }
 
-        public void UpdatePredictions(IList<Stop> stops)
+        public void UpdatePredictions(List<Stop> stops)
         {
-            foreach (Stop stop in stops)
-            {
-                GetStopPredictions(stop);
-            }
+            
+                GetStopPredictions(stops);
+            
         }
 
 

@@ -66,7 +66,7 @@ namespace FxITransit.ViewModels
 
         private async Task ExecuteFavoriteCommand()
         {
-            OptionsHelper.Instance.ChangeFavourite(Stop);
+            OptionsHelper.Instance.ChangeFavouriteStop(Stop);
 
         }
 
@@ -148,8 +148,8 @@ namespace FxITransit.ViewModels
 
             try
             {
-
-                await TransitService.GetStopPredictions(Stop);
+                var stops = new List<Stop> {Stop};
+                await TransitService.GetStopPredictions(stops);
 
             }
             catch (Exception ex)
