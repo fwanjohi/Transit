@@ -95,7 +95,7 @@ namespace FxITransit.Services.NextBus
         }
 
 
-        public async Task PopulateRouteDetails(Route route, Action callBack)
+        public async Task GetRouteDetailsFromService(Route route, Action callBack)
         {
             //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
             if (!route.IsConfigured)
@@ -183,11 +183,12 @@ namespace FxITransit.Services.NextBus
 
         }
 
-        public async Task GetStopPredictions(List<Stop> stops)
+       
+
+        public void GetPredictionsFromService(IList<Stop> stops)
         {
             foreach (var stop in stops)
             {
-
 
                 var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
 
@@ -222,13 +223,6 @@ namespace FxITransit.Services.NextBus
 
             }
 
-        }
-
-        public void UpdatePredictions(List<Stop> stops)
-        {
-            
-                GetStopPredictions(stops);
-            
         }
 
 

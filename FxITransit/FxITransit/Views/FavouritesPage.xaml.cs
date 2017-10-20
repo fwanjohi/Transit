@@ -17,8 +17,8 @@ namespace FxITransit.Views
         public FavouritesPage()
         {
             InitializeComponent();
-            BindingContext = OptionsHelper.Instance;
-            var items = OptionsHelper.Instance.Alerts.FavoriteStops;
+            BindingContext = StopOptionsHelper.Instance;
+            var items = StopOptionsHelper.Instance.MySettings.FavoriteStops;
         }
 
         protected override void OnAppearing()
@@ -34,7 +34,7 @@ namespace FxITransit.Views
             if (stop != null)
             {
                 stop.IsFavorited = true;
-                OptionsHelper.Instance.ChangeFavouriteStop(stop);
+                StopOptionsHelper.Instance.ChangeFavouriteStop(stop);
             }
         }
 

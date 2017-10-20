@@ -23,14 +23,12 @@ namespace FxITransit.Models
         private ObservableRangeCollection<Stop> _favoriteStops;
         private ObservableRangeCollection<Route> _favoriteRoutes;
 
-
-
-
         public MySettings()
         {
             //Stops = new ObservableRangeCollection<FavoriteStop>();
             //Vibrate = true;
             //Speak = true;
+            RefreshInterval = 30; //refresh every second
         }
 
         public string FaveStopsString
@@ -46,7 +44,7 @@ namespace FxITransit.Models
 
         public void Update()
         {
-           OnPropertyChanged("FavoriteStops");
+            OnPropertyChanged("FavoriteStops");
             OnPropertyChanged("FavoriteRoutes");
 
         }
@@ -72,10 +70,6 @@ namespace FxITransit.Models
 
 
 
-        private void UpdateFaveStops()
-        {
-            
-        }
 
         public int AlertMinsBefore
         {
@@ -102,7 +96,6 @@ namespace FxITransit.Models
             get { return _alert; }
             set
             {
-                AutoRefresh = true;
                 _alert = value;
                 OnPropertyChanged("Alert");
             }
@@ -137,11 +130,10 @@ namespace FxITransit.Models
             }
         }
 
-
-
+        public int RefreshInterval { get; private set; }
     }
 
-    
+
 
 
 }

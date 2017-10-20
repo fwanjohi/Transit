@@ -12,13 +12,13 @@ namespace FxITransit.Services
 
         Task<IEnumerable<Route>> GetRouteList(Agency agency);
 
-        Task GetStopPredictions(List<Stop> stops);
+        
         //Task  PopulateRouteList(Agency agency);
-        Task PopulateRouteDetails(Route route, Action callBack);
+        Task GetRouteDetailsFromService(Route route, Action callBack);
 
         Position LastPosition { get; }
 
-        void UpdatePredictions(List<Stop> stop);
+        void GetPredictionsFromService(IList<Stop> stop);
 
     }
 }

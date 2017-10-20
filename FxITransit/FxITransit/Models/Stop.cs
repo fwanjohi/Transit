@@ -123,6 +123,7 @@ namespace FxITransit.Models
             {
                 _isFavorited = value;
                 OnPropertyChanged("IsFavorited");
+
             }
         }
 
@@ -142,8 +143,6 @@ namespace FxITransit.Models
             {
                 _distance = value;
                 OnPropertyChanged("Distance");
-                OnPropertyChanged("Display");
-                OnPropertyChanged("TitleDisplay");
             }
         }
 
@@ -171,7 +170,7 @@ namespace FxITransit.Models
             set
             {
                 _nextPrediction = value; 
-                OnPropertyChanged("NextPrediction");
+                UpdateDiaplay();
             }
         }
 
@@ -186,11 +185,16 @@ namespace FxITransit.Models
                 
             }
         }
-        internal void RefreshTime()
+        internal void UpdateDiaplay()
         {
             foreach (var pred in Predictions)
             {
                 pred.LocalTime = new DateTime(pred.LocalTime.Value.Ticks);
+                
+                OnPropertyChanged("Display");
+                OnPropertyChanged("TitleDisplay");
+                OnPropertyChanged("NextPrediction");
+                
             }
         }
     }

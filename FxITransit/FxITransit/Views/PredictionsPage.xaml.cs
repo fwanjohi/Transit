@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using FxITransit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
@@ -75,14 +75,23 @@ namespace FxITransit.Views
 
             if (viewModel.Stop != null)
             {
-                viewModel.LoadPredictionsCommand.Execute(null);
-                viewModel.AutoRefreshPredictionsCommand.Execute(null);
+                // make this the only stop to watch
+                StopOptionsHelper.Instance.OnPredictionsChanged = viewModel.OnPredictionsChanged;
+                StopOptionsHelper.Instance.ViewStopsToUpdate = new List<Stop>{viewModel.Stop};
+                StopOptionsHelper.Instance.LoadPredictions();
+                StopOptionsHelper.Instance.StartAutoRefresh();
             }
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            //since you could be in another view, clear what has to be watched 
+            StopOptionsHelper.Instance.ViewStopsToUpdate = new List<Stop>();
+
+           
         }
+
+        
     }
 }

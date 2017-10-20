@@ -37,7 +37,7 @@ namespace FxITransit.ViewModels
             {
                 if (!Route.IsConfigured)
                 {
-                    TransitService.PopulateRouteDetails(Route, OnPopulateRoutesDone);
+                    TransitService.GetRouteDetailsFromService(Route, OnPopulateRoutesDone);
                     //await Task.Factory.StartNew(async () =>
                     // {
                     //     await DataStore.PopulateRouteDetails(Route, OnPopulateRoutesDone);

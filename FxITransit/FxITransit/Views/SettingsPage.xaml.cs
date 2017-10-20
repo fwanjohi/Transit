@@ -16,7 +16,7 @@ namespace FxITransit.Views
         public SettingsPage()
         {
             InitializeComponent();
-            BindingContext =  OptionsHelper.Instance;
+            BindingContext =  StopOptionsHelper.Instance;
         }
 
         

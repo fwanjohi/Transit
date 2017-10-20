@@ -30,22 +30,7 @@ namespace FxITransit.Models
             }
         }
 
-        private string GetTime()
-        {
-            if (LocalTime.HasValue)
-            {
-                var totalSecs = LocalTime.Value.Subtract(DateTime.Now).TotalSeconds;
-                var secs = (int)totalSecs % 60;
-                var mins = (int)(totalSecs / 60);
-
-                return $"{mins} Mins, {secs} Secs";
-            }
-            else
-            {
-                return "-";
-
-            }
-        }
+       
         public string EpochTime { get; set; }
         public string Seconds { get; set; }
         public string Minutes { get; set; }
@@ -63,6 +48,23 @@ namespace FxITransit.Models
             {
                 _isArriving = value;
                 OnPropertyChanged("IsArriving");
+            }
+        }
+
+        private string GetTime()
+        {
+            if (LocalTime.HasValue)
+            {
+                var totalSecs = LocalTime.Value.Subtract(DateTime.Now).TotalSeconds;
+                var secs = (int)totalSecs % 60;
+                var mins = (int)(totalSecs / 60);
+
+                return $"{mins} Mins, {secs} Secs";
+            }
+            else
+            {
+                return "-";
+
             }
         }
     }

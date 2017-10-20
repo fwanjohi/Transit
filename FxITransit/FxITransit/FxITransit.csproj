@@ -44,7 +44,7 @@
     <Compile Include="Helpers\MessengingCenterAlert.cs" />
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\ObservableRangeCollection.cs" />
-    <Compile Include="Helpers\OptionsHelper.cs" />
+    <Compile Include="Helpers\StopOptionsHelper.cs" />
     <Compile Include="Helpers\PageNavigationHelper.cs" />
     <Compile Include="Helpers\TrackingHelper.cs" />
     <Compile Include="Helpers\UtilsHelper.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\Schedule.cs" />
-    <Compile Include="Models\Options.cs" />
+    <Compile Include="Models\MySettings.cs" />
     <Compile Include="Models\Stop.cs" />
     <Compile Include="Models\StopDirections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\PredictionsViewModel.cs" />
     <Compile Include="ViewModels\RoutesViewModel.cs" />
+    <Compile Include="ViewModels\StopPredictionBaseViewModel.cs" />
     <Compile Include="ViewModels\StopsViewModel.cs" />
     <Compile Include="Views\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>

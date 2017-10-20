@@ -15,21 +15,21 @@ namespace FxITransit
         {
             InitializeComponent();
             
-            OptionsHelper.Instance.Alerts = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
-            if (OptionsHelper.Instance.Alerts.AlertMinsBefore == 0)
+            StopOptionsHelper.Instance.MySettings = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
+            if (StopOptionsHelper.Instance.MySettings.AlertMinsBefore == 0)
             {
-                OptionsHelper.Instance.Alerts.AlertMinsBefore = 5;
-                OptionsHelper.Instance.Alerts.AlertInterval = 1;
-                OptionsHelper.Instance.Alerts.Speak = true;
-                OptionsHelper.Instance.Alerts.Alert = true;
+                StopOptionsHelper.Instance.MySettings.AlertMinsBefore = 5;
+                StopOptionsHelper.Instance.MySettings.AlertInterval = 1;
+                StopOptionsHelper.Instance.MySettings.Speak = true;
+                StopOptionsHelper.Instance.MySettings.Alert = true;
 
 
             }
-            OptionsHelper.Instance.Alerts.AutoRefresh = true;
+            StopOptionsHelper.Instance.MySettings.AutoRefresh = true;
 
-            if (OptionsHelper.Instance.Alerts.FavoriteStops == null)
+            if (StopOptionsHelper.Instance.MySettings.FavoriteStops == null)
             {
-                OptionsHelper.Instance.Alerts.FavoriteStops=  new ObservableRangeCollection<Stop>();
+                StopOptionsHelper.Instance.MySettings.FavoriteStops=  new ObservableRangeCollection<Stop>();
             }
             var result =  CrossNotifications.Current.RequestPermission().Result;
             
@@ -39,7 +39,7 @@ namespace FxITransit
 
          ~App()
         {
-            OptionsHelper.Instance.Alerts.AutoRefresh = false;
+            StopOptionsHelper.Instance.MySettings.AutoRefresh = false;
         }
 
 

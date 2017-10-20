@@ -30,7 +30,7 @@ namespace FxITransit.ViewModels
 
             Title = "Stops for  : " + Direction.Title;
 
-            ChangeFavoriteCommand =  OptionsHelper.Instance.FavoriteCommand;
+            ChangeFavoriteCommand =  StopOptionsHelper.Instance.FavoriteCommand;
         }
         public string Filter
         {

@@ -18,14 +18,14 @@ namespace FxITransit.ViewModels
         public ITransitService TransitService { get; private set; }
         public TrackingHelper Tracking { get; private set; }
 
-        public OptionsHelper Settings { get; private set; }
+        public StopOptionsHelper Settings { get; private set; }
         public UtilsHelper Utils { get; private set; }
 
         public BaseViewModel()
         {
             TransitService = NextBusService.Instance;
             Tracking = TrackingHelper.Instance;
-            Settings = OptionsHelper.Instance;
+            Settings = StopOptionsHelper.Instance;
             Utils = UtilsHelper.Instance;
 
         }
