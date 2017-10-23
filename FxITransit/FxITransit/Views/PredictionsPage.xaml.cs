@@ -77,7 +77,7 @@ namespace FxITransit.Views
             {
                 // make this the only stop to watch
                 StopOptionsHelper.Instance.OnPredictionsChanged = viewModel.OnPredictionsChanged;
-                StopOptionsHelper.Instance.ViewStopsToUpdate = new List<Stop>{viewModel.Stop};
+                StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop> {viewModel.Stop};
                 StopOptionsHelper.Instance.LoadPredictions();
                 StopOptionsHelper.Instance.StartAutoRefresh();
             }
@@ -87,9 +87,10 @@ namespace FxITransit.Views
         {
             base.OnDisappearing();
             //since you could be in another view, clear what has to be watched 
-            StopOptionsHelper.Instance.ViewStopsToUpdate = new List<Stop>();
+            StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>();
 
-           
+
+
         }
 
         

@@ -31,13 +31,14 @@ namespace FxITransit.Models
             RefreshInterval = 30; //refresh every second
         }
 
-        public string FaveStopsString
+        private string _agencyCache;
+        public string  AgencyCache
         {
-            get { return _faveStopsString; }
+            get => _agencyCache;
             set
             {
-                _faveStopsString = value;
-                OnPropertyChanged("FaveStopsString");
+                _agencyCache = value;
+                OnPropertyChanged("AgencyCache");
             }
         }
 
@@ -45,7 +46,7 @@ namespace FxITransit.Models
         public void Update()
         {
             OnPropertyChanged("FavoriteStops");
-            OnPropertyChanged("FavoriteRoutes");
+            //OnPropertyChanged("FavoriteRoutes");
 
         }
         public ObservableRangeCollection<Stop> FavoriteStops

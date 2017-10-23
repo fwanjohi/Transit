@@ -8,14 +8,15 @@ using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 using Plugin.TextToSpeech;
 using FxITransit.Models;
+using PCLStorage;
 
 namespace FxITransit.Helpers
 {
     public  class UtilsHelper : ObservableObject
     {
-        private static readonly Lazy<UtilsHelper> instance = new Lazy<UtilsHelper>(() => new UtilsHelper());
+        private static readonly Lazy<UtilsHelper> _instance = new Lazy<UtilsHelper>(() => new UtilsHelper());
 
-        public static UtilsHelper Instance { get { return instance.Value; } }
+        public static UtilsHelper Instance { get { return _instance.Value; } }
 
 
         private UtilsHelper()
@@ -105,5 +106,7 @@ namespace FxITransit.Helpers
             });
             
         }
+
+       
     }
 }

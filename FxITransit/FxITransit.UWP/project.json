@@ -4,6 +4,7 @@
     "Acr.Settings": "6.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
     "Newtonsoft.Json": "10.0.3",
+    "PCLStorage": "1.0.2",
     "Plugin.Permissions": "2.0.1",
     "Toasts.Forms.Plugin": "3.2.1",
     "Xam.Plugin.Geolocator": "4.0.1",

@@ -42,7 +42,7 @@ namespace FxITransit.Helpers
         private ITransitService _transitService;
 
         public static StopOptionsHelper Instance => _instance.Value;
-
+        public ObservableRangeCollection<Stop> _stopsToUpdate;
         public Command<Stop> FavoriteCommand { get; set; }
         public Command<Route> FavoriteRouteCommand { get; set; }
         
@@ -52,11 +52,19 @@ namespace FxITransit.Helpers
         private StopOptionsHelper()
         {
             MySettings = new MySettings();
-            ViewStopsToUpdate = new List<Stop>();
+            _stopsToUpdate = new ObservableRangeCollection<Stop>();
             _transitService = NextBusService.Instance;
         }
 
-        public List<Stop> ViewStopsToUpdate { get; set; }
+        public ObservableRangeCollection<Stop> ViewStopsToUpdate
+        {
+            get => _stopsToUpdate;
+            set
+            {
+                _stopsToUpdate = value;
+                OnPropertyChanged("ViewStopsToUpdate");
+            }
+        }
 
         public MySettings MySettings
         {
@@ -64,7 +72,7 @@ namespace FxITransit.Helpers
             set
             {
                 _mySettings = value;
-                OnPropertyChanged("Alerts");
+                OnPropertyChanged("MySettings");
             }
         }
         public ITransitService TransitService
@@ -76,6 +84,8 @@ namespace FxITransit.Helpers
                 OnPropertyChanged("TransitService");
             }
         }
+
+       
 
 
 
@@ -115,7 +125,7 @@ namespace FxITransit.Helpers
 
                 }
                 MySettings.Update();
-                OnPropertyChanged("Alerts");
+                OnPropertyChanged("MySettings");
             });
         }
 

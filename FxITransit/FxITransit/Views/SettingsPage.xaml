@@ -6,13 +6,13 @@
         <TableView Intent="Settings">
             <TableRoot>
                 <TableSection Title="Alerts">
-                    <SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />
-                    <SwitchCell Text="Voice Alerts" On="{Binding Path=Alerts.Speak}" />
-                    <SwitchCell Text="Vibrate" On="{Binding Path=Alerts.Vibrate}" />
+                    <SwitchCell    Text="Send Alerts" On="{Binding Path=MySettings.Alert}" />
+                    <SwitchCell Text="Voice Alerts" On="{Binding Path=MySettings.Speak}" />
+                    <SwitchCell Text="Vibrate" On="{Binding Path=MySettings.Vibrate}" />
 
 
-                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" HorizontalTextAlignment ="Start" Label="Alert Mins Before : " Text="{Binding Path=Alerts.AlertMinsBefore}" />
-                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" Label="Alert Interval : " HorizontalTextAlignment ="Start"  Text="{Binding Path=Alerts.AlertInterval}" />
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" HorizontalTextAlignment ="Start" Label="Alert Mins Before : " Text="{Binding Path=MySettings.AlertMinsBefore}" />
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" Label="Alert Interval : " HorizontalTextAlignment ="Start"  Text="{Binding Path=MySettings.AlertInterval}" />
 
 
                 </TableSection>

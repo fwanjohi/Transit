@@ -3,6 +3,7 @@ using FxITransit.Helpers;
 using FxITransit.Models;
 using FxITransit.Views;
 using Plugin.Notifications;
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,7 +15,7 @@ namespace FxITransit
         public App()
         {
             InitializeComponent();
-            
+
             StopOptionsHelper.Instance.MySettings = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
             if (StopOptionsHelper.Instance.MySettings.AlertMinsBefore == 0)
             {
@@ -29,15 +30,15 @@ namespace FxITransit
 
             if (StopOptionsHelper.Instance.MySettings.FavoriteStops == null)
             {
-                StopOptionsHelper.Instance.MySettings.FavoriteStops=  new ObservableRangeCollection<Stop>();
+                StopOptionsHelper.Instance.MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
             }
-            var result =  CrossNotifications.Current.RequestPermission().Result;
-            
+            var result = CrossNotifications.Current.RequestPermission().Result;
+
 
             SetMainPage();
         }
 
-         ~App()
+        ~App()
         {
             StopOptionsHelper.Instance.MySettings.AutoRefresh = false;
         }
@@ -45,17 +46,17 @@ namespace FxITransit
 
         public static void SetMainPage()
         {
-            Current.MainPage = new MainLaunchPage()
+            var main = new MainLaunchPage()
             {
                 Children =
                 {
-                    
+
                     new NavigationPage(new AgencyListView())
                     {
                         Title = "Browse",
                         Icon = Device.OnPlatform("tab_feed.png",null,null),
-                        
-                        
+
+
                     },
 
                     new NavigationPage(new FavouritesPage())
@@ -82,6 +83,21 @@ namespace FxITransit
                     },
                 }
             };
+            Current.MainPage = main;
+
+
+            if (StopOptionsHelper.Instance.MySettings.FavoriteStops.Count > 0)
+            {
+                var faves = main.Children.FirstOrDefault(x => (x as NavigationPage).Title == "Favorites");
+
+                if (faves != null)
+                {
+                    main.CurrentPage = faves;
+                }
+            }
+
+
+
         }
         protected override void OnStart()
         {

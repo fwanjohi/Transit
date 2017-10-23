@@ -24,7 +24,9 @@ namespace FxITransit.Models
         private string _agencyTitle;
         private string _directionTitle;
         private string _routeTitle;
-        private Prediction _nextPrediction;
+        private Prediction _prediction1;
+        private Prediction _prediction2;
+        private Prediction _prediction3;
         private ObservableRangeCollection<Position> _otherStops;
 
 
@@ -64,12 +66,17 @@ namespace FxITransit.Models
 
         public string FullTitle
         {
-            get { return $"{AgencyTitle} - {RouteTitle} - {Title} to {DirectionTitle}"; }
+            get { return $"{AgencyTitle} - {Title}"; }
             //set
             //{
             //    _fullTitle = value;
             //    OnPropertyChanged("FullTitle");
             //}
+        }
+
+        public string MediumTitle
+        {
+            get { return $"{RouteTitle}, {DirectionTitle }, {Title}"; }
         }
 
         public string RouteTitle
@@ -80,6 +87,7 @@ namespace FxITransit.Models
                 _routeTitle = value;
                 OnPropertyChanged("RouteTitle");
                 OnPropertyChanged("FullTitle");
+                OnPropertyChanged("MediumTitle");
             }
         }
 
@@ -91,6 +99,7 @@ namespace FxITransit.Models
                 _agencyTitle = value;
                 OnPropertyChanged("AgencyTitle");
                 OnPropertyChanged("FullTitle");
+                OnPropertyChanged("MediumTitle");
             }
         }
 
@@ -102,6 +111,7 @@ namespace FxITransit.Models
                 _directionTitle = value;
                 OnPropertyChanged("AgencyTitle");
                 OnPropertyChanged("FullTitle");
+                OnPropertyChanged("MediumTitle");
             }
         }
 
@@ -164,12 +174,32 @@ namespace FxITransit.Models
             }
         }
 
-        public Prediction NextPrediction
+        public Prediction Prediction1
         {
-            get => _nextPrediction;
+            get => _prediction1;
             set
             {
-                _nextPrediction = value; 
+                _prediction1 = value; 
+                UpdateDiaplay();
+            }
+        }
+
+        public Prediction Prediction2
+        {
+            get => _prediction2;
+            set
+            {
+                _prediction2 = value;
+                UpdateDiaplay();
+            }
+        }
+
+        public Prediction Prediction3
+        {
+            get => _prediction3;
+            set
+            {
+                _prediction3 = value;
                 UpdateDiaplay();
             }
         }
@@ -193,9 +223,15 @@ namespace FxITransit.Models
                 
                 OnPropertyChanged("Display");
                 OnPropertyChanged("TitleDisplay");
-                OnPropertyChanged("NextPrediction");
+                pred.UpdatePreditionDisplay();
+
                 
+                //var isArriving 
+
             }
+            OnPropertyChanged("Prediction1");
+            OnPropertyChanged("Prediction2");
+            OnPropertyChanged("Prediction3");
         }
     }
 }

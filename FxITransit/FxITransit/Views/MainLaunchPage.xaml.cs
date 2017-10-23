@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FxITransit.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,19 @@ namespace FxITransit.Views
         public MainLaunchPage()
         {
             InitializeComponent();
+
+            
             
         }
 
+       
         protected override void OnCurrentPageChanged()
         {
             base.OnCurrentPageChanged();
-            var cur = this.CurrentPage;
+            
 
         }
+
+        
     }
 }

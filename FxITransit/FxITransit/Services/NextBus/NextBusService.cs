@@ -1,5 +1,6 @@
 ﻿using FxITransit.Helpers;
 using FxITransit.Models;
+using PCLStorage;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using System;
@@ -13,7 +14,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-
+using Xamarin.Forms.Xaml;
 
 
 namespace FxITransit.Services.NextBus
@@ -30,7 +31,7 @@ namespace FxITransit.Services.NextBus
     {
 
         private static readonly Lazy<NextBusService> instance = new Lazy<NextBusService>(() => new NextBusService());
-        
+
         public static NextBusService Instance { get { return instance.Value; } }
 
         public Position LastPosition { get; private set; }
@@ -38,7 +39,7 @@ namespace FxITransit.Services.NextBus
         private NextBusService()
         {
             _client = GetClient();
-            
+
 
 
         }
@@ -49,10 +50,48 @@ namespace FxITransit.Services.NextBus
 
         public async Task<IEnumerable<Agency>> GetAgencyList()
         {
-            var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
-            //var doc = new XDocument();
+            string xml = string.Empty;
+            var root = FileSystem.Current.LocalStorage;
+            var myFolder = root.CreateFolder("fxitransit");
+            IFile myFile = null;
+            if (myFolder != null)
+            {
+                myFile = myFolder.CreateFile("agencies.xml");
+                if (myFile != null)
+                {
+                    UtilsHelper.Instance.Log("Loading agencies from file " + myFile.Path);
+                    xml = await myFile.ReadAllTextAsync();
+                }
+            }
+            
+            
 
-            XDocument doc = XDoc.LoadXml(data);
+            XDocument doc;
+            if (xml.HasValue())
+            {
+                
+                doc = XDoc.LoadXml(xml);
+
+            }
+            else
+            {
+                try
+                {
+                    UtilsHelper.Instance.Log("Loading agencies from Internet");
+                    var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
+                    //var doc = new XDocument();
+                    doc = XDoc.LoadXml(data);
+
+                    await myFile.WriteAllTextAsync(data);
+                }
+                catch (Exception e)
+                {
+                    string err = e.Message;
+                    throw;
+                }
+
+            }
+
 
 
 
@@ -72,12 +111,28 @@ namespace FxITransit.Services.NextBus
             return list;
         }
 
-        
+
         public async Task<IEnumerable<Route>> GetRouteList(Agency agency)
         {
             var routes = new List<Route>();
 
-            var xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agency.Tag));
+            string xml = string.Empty;
+            var root = FileSystem.Current.LocalStorage;
+            var myFolder = root.CreateFolder("fxitransit");
+            IFile myFile = null;
+            if (myFolder != null)
+            {
+                myFile = myFolder.CreateFile($"{agency.Tag}.routes.xml");
+                if (myFile != null)
+                {
+                    xml = await myFile.ReadAllTextAsync();
+                }
+            }
+            if (!xml.HasValue())
+            {
+                xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agency.Tag));
+                myFile.WriteAllTextAsync(xml);
+            }
 
             var doc = XDoc.LoadXml(xml);
 
@@ -100,8 +155,28 @@ namespace FxITransit.Services.NextBus
             //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
             if (!route.IsConfigured)
             {
-                var xml = _client.GetStringAsync(EndPoints.RouteConfigUrl(route.AgencyTag, route.Tag)).Result;
 
+
+                string xml = string.Empty;
+                var root = FileSystem.Current.LocalStorage;
+                var myFolder = root.CreateFolder("fxitransit");
+                IFile myFile = null;
+                if (myFolder != null)
+                {
+                    myFile = myFolder.CreateFile($"{route.AgencyTag}.{route.Tag}.stops.xml");
+                    if (myFile != null)
+                    {
+                        xml = await myFile.ReadAllTextAsync();
+
+                    }
+                }
+                if (!xml.HasValue())
+                {
+                    xml = _client.GetStringAsync(
+                        EndPoints.RouteConfigUrl(route.AgencyTag, route.Tag)).Result;
+
+                    await myFile.WriteAllTextAsync(xml);
+                }
                 var doc = XDoc.LoadXml(xml);
 
 
@@ -125,12 +200,12 @@ namespace FxITransit.Services.NextBus
                         stop.Tag = stopNode.GetAttribute("tag");
                         stop.Title = stopNode.GetAttribute("title");
                         stop.StopId = stopNode.GetAttribute("stopId");
-                       
+
                         stop.RouteTag = route.Tag;
                         stop.AgencyTag = route.AgencyTag;
                         stop.RouteTitle = route.Title;
                         stop.AgencyTitle = route.AgencyTitle;
-                        
+
 
                         stops.Add(stop);
                     }
@@ -161,7 +236,7 @@ namespace FxITransit.Services.NextBus
                         var stop = stops.FirstOrDefault(x => x.Tag == tag);
                         if (stop != null)
                         {
-                            
+
                             stop.DirectionTitle = direction.Title;
                             direction.Stops.Add(stop);
                             if (stop.Tag != tag)
@@ -183,7 +258,7 @@ namespace FxITransit.Services.NextBus
 
         }
 
-       
+
 
         public void GetPredictionsFromService(IList<Stop> stops)
         {
@@ -219,7 +294,9 @@ namespace FxITransit.Services.NextBus
                     preds.Add(pred);
                 }
                 stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
-                stop.NextPrediction = preds.FirstOrDefault();
+                stop.Prediction1 = preds.Count >= 1 ? preds[0] : null;
+                stop.Prediction2 = preds.Count >= 2 ? preds[1] : null;
+                stop.Prediction3 = preds.Count >= 3 ? preds[2] : null;
 
             }
 
@@ -240,7 +317,7 @@ namespace FxITransit.Services.NextBus
             return client;
         }
 
-       
+
     }
 
 

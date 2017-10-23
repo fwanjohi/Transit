@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCLStorage;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,36 @@ namespace FxITransit.Helpers
         {
             return xDocument.Descendants().Where(p => p.Name.LocalName == nodeName);
         }
+
+        public static bool HasValue(this string item)
+        {
+           return !string.IsNullOrWhiteSpace(item);
+        }
+
+        public static bool FileExists(this IFolder folder, string name)
+        {
+            return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FileExists;
+
+        }
+
+        public static bool FolderExists(this IFolder folder, string name)
+        {
+            return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FolderExists;
+
+        }
+
+        public static IFolder CreateFolder(this IFolder folder, string name)
+        {
+            return folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists).Result;
+
+        }
+
+        public static IFile CreateFile(this IFolder folder, string name)
+        {
+            return folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists).Result;
+
+        }
+
 
         public static string GetAttribute(this XElement xElement, string attName)
         {

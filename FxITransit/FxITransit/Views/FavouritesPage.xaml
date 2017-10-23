@@ -2,10 +2,24 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FxITransit.Views.FavouritesPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="PredictionStyle" TargetType="Label">
+                <Style.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding IsArriving, Mode=TwoWay}"
+                                 Value="true">
+                        <Setter Property="TextColor"  Value="Color.Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="FavesListView"  
-                  ItemsSource="{Binding Path=Alerts.FavoriteStops, Mode=TwoWay}" 
+                  ItemsSource="{Binding Path=FavoriteStops, Mode=TwoWay}" 
                   ItemTapped="FavesListView_OnItemTapped"
                    HasUnevenRows="true">
                 <ListView.ItemTemplate>
@@ -17,19 +31,28 @@
                                     <ColumnDefinition Width ="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding Title}"
-                                       LineBreakMode="NoWrap"
+                                    <Label Text="{Binding MediumTitle}"
+                                       LineBreakMode="WordWrap"
                                        Style="{DynamicResource ListItemTextStyle}"
                                        FontSize="16"/>
+                                    <!--<Label Text="{Binding Title}"
+                                       LineBreakMode="WordWrap"
+                                       Style="{DynamicResource ListItemTextStyle}"
+                                       FontSize="16"/>-->
 
-                                    <Label Text="{Binding FullTitle}"
+                                    <Label Text="{Binding AgencyTitle}"
                                        LineBreakMode="CharacterWrap"
                                        Style="{DynamicResource ListItemDetailTextStyle}"
                                        FontSize="13"/>
-                                    <Label Text="Next bus in :"/>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Margin="2,0,0,0" TextColor="{Binding Path Prediction1.ForeColor}" Text ="{Binding Path=  Prediction1.Display}"/>
+                                        <Label Margin="2,0,0,0" Text ="{Binding Path= Prediction2.Display} " Style="{DynamicResource PredictionStyle}" />
+                                        <Label Margin="2,0,0,0" Text ="{Binding Path= Prediction3.Display} " Style="{DynamicResource PredictionStyle}" />
+                                        
+                                    </StackLayout>
 
                                 </StackLayout>
-                                <Button x:Name ="RemoveFave"  Grid.Column ="1"
+                                <Button x:Name ="Remove"  Grid.Column ="1" HeightRequest="20"
                                     Text ="Remove"
                                     Clicked="RemoveFave_OnClicked"
                             />

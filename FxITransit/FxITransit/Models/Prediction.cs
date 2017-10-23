@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using FxITransit.Helpers;
+using Xamarin.Forms;
 
 namespace FxITransit.Models
 {
@@ -11,26 +12,7 @@ namespace FxITransit.Models
         DateTime? _localTime;
         private bool _isArriving;
 
-        public DateTime? LocalTime
-        {
-            get { return _localTime; }
-            set
-            {
-                _localTime = value;
-                OnPropertyChanged("Display");
-            }
-        }
-        public string Display
-        {
-            get { return GetTime(); }
-            set
-            {
-                _display = value;
-                OnPropertyChanged("Display");
-            }
-        }
 
-       
         public string EpochTime { get; set; }
         public string Seconds { get; set; }
         public string Minutes { get; set; }
@@ -41,15 +23,38 @@ namespace FxITransit.Models
         public string TripTag { get; set; }
         public string AffectedByLayover { get; set; }
         public string VehiclesInConsist { get; set; }
+
+        public DateTime? LocalTime
+        {
+            get { return _localTime; }
+            set
+            {
+                _localTime = value;
+                UpdatePreditionDisplay();
+            }
+        }
+        public string Display
+        {
+            get { return GetTime(); }
+            set
+            {
+                _display = value;
+                UpdatePreditionDisplay();
+            }
+        }
+
+       
         public bool IsArriving
         {
             get { return _isArriving; }
             set
             {
                 _isArriving = value;
-                OnPropertyChanged("IsArriving");
+                UpdatePreditionDisplay();
             }
         }
+
+        public Color ForeColor { get => IsArriving ? Color.Red : Color.Blue; }
 
         private string GetTime()
         {
@@ -66,6 +71,14 @@ namespace FxITransit.Models
                 return "-";
 
             }
+        }
+
+        internal void UpdatePreditionDisplay()
+        {
+            OnPropertyChanged("IsArriving");
+            OnPropertyChanged("Display");
+            OnPropertyChanged("ForeColor");
+
         }
     }
 

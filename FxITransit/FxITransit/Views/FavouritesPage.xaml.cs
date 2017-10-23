@@ -1,5 +1,6 @@
 ﻿using FxITransit.Helpers;
 using FxITransit.Models;
+using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +15,31 @@ namespace FxITransit.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FavouritesPage : ContentPage
     {
+        FavoritesViewModel _viewModel;
+        
         public FavouritesPage()
         {
             InitializeComponent();
-            BindingContext = StopOptionsHelper.Instance;
-            var items = StopOptionsHelper.Instance.MySettings.FavoriteStops;
+            BindingContext = _viewModel = new FavoritesViewModel();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            
+
+            StopOptionsHelper.Instance.OnPredictionsChanged = _viewModel.OnPredictionsChanged;
+            StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>(
+               StopOptionsHelper.Instance.MySettings.FavoriteStops);
+
+            StopOptionsHelper.Instance.LoadPredictions();
+            StopOptionsHelper.Instance.StartAutoRefresh();
+
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            StopOptionsHelper.Instance.StopAutoRefresh();
         }
 
         private void RemoveFave_OnClicked(object sender, EventArgs e)
@@ -53,9 +68,6 @@ namespace FxITransit.Views
 
                     browse.Navigation.PushAsync(new PredictionsPage(stop));
                 }
-
-
-
 
             }
 
