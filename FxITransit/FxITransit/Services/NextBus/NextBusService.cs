@@ -52,11 +52,11 @@ namespace FxITransit.Services.NextBus
         {
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
-            var myFolder = root.CreateFolder("fxitransit");
+            var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists) ;
             IFile myFile = null;
             if (myFolder != null)
             {
-                myFile = myFolder.CreateFile("agencies.xml");
+                myFile = await myFolder.CreateFileAsync("agencies.xml", CreationCollisionOption.OpenIfExists);
                 if (myFile != null)
                 {
                     UtilsHelper.Instance.Log("Loading agencies from file " + myFile.Path);
@@ -118,11 +118,11 @@ namespace FxITransit.Services.NextBus
 
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
-            var myFolder = root.CreateFolder("fxitransit");
+            var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists);
             IFile myFile = null;
             if (myFolder != null)
             {
-                myFile = myFolder.CreateFile($"{agency.Tag}.routes.xml");
+                myFile = await myFolder.CreateFileAsync($"{agency.Tag}.routes.xml", CreationCollisionOption.OpenIfExists);
                 if (myFile != null)
                 {
                     xml = await myFile.ReadAllTextAsync();
@@ -131,7 +131,7 @@ namespace FxITransit.Services.NextBus
             if (!xml.HasValue())
             {
                 xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agency.Tag));
-                myFile.WriteAllTextAsync(xml);
+                await myFile.WriteAllTextAsync(xml);
             }
 
             var doc = XDoc.LoadXml(xml);
@@ -159,11 +159,11 @@ namespace FxITransit.Services.NextBus
 
                 string xml = string.Empty;
                 var root = FileSystem.Current.LocalStorage;
-                var myFolder = root.CreateFolder("fxitransit");
+                var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists);
                 IFile myFile = null;
                 if (myFolder != null)
                 {
-                    myFile = myFolder.CreateFile($"{route.AgencyTag}.{route.Tag}.stops.xml");
+                    myFile = await myFolder.CreateFileAsync($"{route.AgencyTag}.{route.Tag}.stops.xml", CreationCollisionOption.OpenIfExists);
                     if (myFile != null)
                     {
                         xml = await myFile.ReadAllTextAsync();

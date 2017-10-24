@@ -116,6 +116,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="fave_off.png" />
+    <Content Include="fave_on.png" />
     <Content Include="profile_generic.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="slideout.png" />

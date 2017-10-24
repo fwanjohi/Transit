@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using FxITransit.Services;
 using FxITransit.Services.NextBus;
 using Xamarin.Forms;
+using Newtonsoft.Json;
+using PCLStorage;
 
 namespace FxITransit.Helpers
 {
@@ -45,7 +47,7 @@ namespace FxITransit.Helpers
         public ObservableRangeCollection<Stop> _stopsToUpdate;
         public Command<Stop> FavoriteCommand { get; set; }
         public Command<Route> FavoriteRouteCommand { get; set; }
-        
+
 
         public Action<List<Prediction>> OnPredictionsChanged { get; set; }
 
@@ -73,6 +75,7 @@ namespace FxITransit.Helpers
             {
                 _mySettings = value;
                 OnPropertyChanged("MySettings");
+                _mySettings.Update();
             }
         }
         public ITransitService TransitService
@@ -85,20 +88,16 @@ namespace FxITransit.Helpers
             }
         }
 
-       
-
-
-
-        public async Task ChangeFavouriteStop(Stop stop)
+        public async Task ChangeFavouriteStop(Stop stop, bool isFave = true)
         {
-            stop.IsFavorited = !stop.IsFavorited;
+            stop.IsFavorited = isFave;
 
             Device.BeginInvokeOnMainThread(() =>
             {
 
                 if (MySettings.FavoriteStops == null)
                 {
-                    MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
+                    MySettings.FavoriteStops = new List<Stop>();
 
                 }
                 var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
@@ -129,8 +128,8 @@ namespace FxITransit.Helpers
             });
         }
 
-        
-        public void  StartAutoRefresh()
+
+        public void StartAutoRefresh()
         {
             _viewUpdates = true;
 
@@ -161,7 +160,7 @@ namespace FxITransit.Helpers
         }
 
 
-        public void  LoadPredictions()
+        public void LoadPredictions()
         {
             try
             {
@@ -172,7 +171,7 @@ namespace FxITransit.Helpers
                     {
                         OnPredictionsChanged.Invoke(stop.Predictions.ToList());
                     }
-                    
+
                 }
 
             }
@@ -194,7 +193,7 @@ namespace FxITransit.Helpers
             foreach (var stop in this.ViewStopsToUpdate)
             {
                 stop.UpdateDiaplay();
-                
+
             }
 
         }
@@ -225,9 +224,120 @@ namespace FxITransit.Helpers
                 }
             }
         }
+
+        public async void SaveSttingsToFile()
+        {
+            UtilsHelper.Instance.Log("----------saving---------");
+            string json = JsonConvert.SerializeObject(MySettings);
+            var root = FileSystem.Current.LocalStorage;
+
+            var folderName = "fxitransit";
+            IFolder myFolder = null;
+            if (await root.CheckExistsAsync(folderName) == ExistenceCheckResult.FolderExists)
+            {
+                UtilsHelper.Instance.Log($"{folderName} exits");
+                myFolder = await root.GetFolderAsync(folderName);
+            }
+            else
+            {
+                UtilsHelper.Instance.Log($"{folderName} DOES NOT exit... creating one at {root.Path}, {root.Name}");
+            }
+            if (myFolder == null)
+            {
+                UtilsHelper.Instance.Log($"Error creating folder at {root.Path}, {root.Name}");
+                return;
+            }
+
+            IFile myFile = null;
+
+            var fileName = "settings.json";
+
+
+            if ( await myFolder.CheckExistsAsync(fileName) == ExistenceCheckResult.FileExists)
+            {
+                myFile = await myFolder.GetFileAsync(fileName);
+                UtilsHelper.Instance.Log($"The File {fileName} exits at, {myFolder.Name}");
+            }
+            else
+            {
+                UtilsHelper.Instance.Log($"The File does NOT EXIST at, {myFolder.Name} LET ME CREATE IT");
+                myFile = await myFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+                if (myFile == null)
+                {
+                    UtilsHelper.Instance.Log($"Error creating file");
+                    return;
+                }
+
+
+            }
+            UtilsHelper.Instance.Log(json);
+            await myFile.WriteAllTextAsync(json);
+            UtilsHelper.Instance.Log("----------DONE SAVING---------");
+
+        }
+
+
+        public async void LoadSettingsFromFile()
+        {
+            UtilsHelper.Instance.Log("----------START LOADING---------");
+            var fileName = "settings.json";
+            var root = FileSystem.Current.LocalStorage;
+            var folderName = "fxitransit";
+            IFolder myFolder = null;
+            if (await root.CheckExistsAsync(folderName) == ExistenceCheckResult.FolderExists )
+            {
+                UtilsHelper.Instance.Log($"{folderName} exits");
+                myFolder = await root.GetFolderAsync(folderName);
+            }
+            else
+            {
+                UtilsHelper.Instance.Log($"{folderName} DOES NOT exiSt... at {root.Path}, {root.Name}");
+                return;
+            }
+
+
+            IFile myFile = null;
+
+            myFile = await myFolder.GetFileAsync(fileName);
+
+            if (myFile != null)
+            {
+                UtilsHelper.Instance.Log("Loading settings from file " + myFile.Path);
+                var json = await myFile.ReadAllTextAsync();
+                if (json.HasValue())
+                {
+                    UtilsHelper.Instance.Log(json);
+                    var settings = JsonConvert.DeserializeObject<MySettings>(json);
+                    if (settings != null)
+                    {
+
+                        MySettings = settings;
+                        UtilsHelper.Instance.Log("loaded the settings... " + settings.FavoriteStops.Count);
+
+                        //MySettings = new MySettings();
+                        MySettings.FavoriteStops = new List<Stop>(settings.FavoriteStops);
+
+
+                    }
+                    else
+                    {
+                        UtilsHelper.Instance.Log("FUCK... could not load settings...");
+                    }
+                    
+
+                    var items = settings.FavoriteStops.Count;
+                }
+                UtilsHelper.Instance.Log("----------DONE LOADING---------");
+            }
+            else
+            {
+                UtilsHelper.Instance.Log("ERROR GETTING settings from file " + myFile.Path);
+            }
+        }
+
         ~StopOptionsHelper()
         {
-            Acr.Settings.Settings.Current.UnBind(this);
+
         }
 
     }

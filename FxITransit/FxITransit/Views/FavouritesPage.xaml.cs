@@ -20,16 +20,18 @@ namespace FxITransit.Views
         public FavouritesPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new FavoritesViewModel();
+            BindingContext = _viewModel = new FavoritesViewModel(new List<Stop>());
+            _viewModel.FavoriteStops = new List<Stop>(StopOptionsHelper.Instance.MySettings.FavoriteStops);
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
+            _viewModel.FavoriteStops = new List<Stop>(StopOptionsHelper.Instance.MySettings.FavoriteStops);
             StopOptionsHelper.Instance.OnPredictionsChanged = _viewModel.OnPredictionsChanged;
             StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>(
                StopOptionsHelper.Instance.MySettings.FavoriteStops);
+            
 
             StopOptionsHelper.Instance.LoadPredictions();
             StopOptionsHelper.Instance.StartAutoRefresh();
@@ -40,6 +42,8 @@ namespace FxITransit.Views
         {
             base.OnDisappearing();
             StopOptionsHelper.Instance.StopAutoRefresh();
+            base.OnDisappearing();
+            StopOptionsHelper.Instance.SaveSttingsToFile();
         }
 
         private void RemoveFave_OnClicked(object sender, EventArgs e)
@@ -48,8 +52,7 @@ namespace FxITransit.Views
             var stop = b.BindingContext as Stop;
             if (stop != null)
             {
-                stop.IsFavorited = true;
-                StopOptionsHelper.Instance.ChangeFavouriteStop(stop);
+                StopOptionsHelper.Instance.ChangeFavouriteStop(stop, false);
             }
         }
 

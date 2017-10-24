@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FxITransit.Helpers"
              x:Class="FxITransit.Views.FavouritesPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -13,6 +14,8 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+            
+            
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -28,7 +31,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width ="Auto"/>
+                                    <ColumnDefinition Width ="40"/>
                                 </Grid.ColumnDefinitions>
                                 <StackLayout Orientation="Vertical" Padding="10">
                                     <Label Text="{Binding MediumTitle}"
@@ -52,10 +55,23 @@
                                     </StackLayout>
 
                                 </StackLayout>
-                                <Button x:Name ="Remove"  Grid.Column ="1" HeightRequest="20"
+                                <AbsoluteLayout Grid.Column="1">
+                                    <Image Source="fave_on.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                                    <Button AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                            AbsoluteLayout.LayoutFlags="PositionProportional" 
+                                            BorderColor="Transparent" BackgroundColor="Transparent" 
+                                            />
+                                </AbsoluteLayout>
+
+                                <!--<local:CustomImage Source="fave_on.png" Grid.Column ="1"
+                                                   OnClick="RemoveFave_OnClicked" 
+                                                   WidthRequest="20" 
+                                                   HeightRequest="20" Aspect="AspectFit"/>-->
+                                <!--<Image  Grid.Column ="1" Source="fave_on.png" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />-->
+                                <!--<Button x:Name ="Remove" Image="fave_on.png"  Grid.Column ="1" HeightRequest="20" WidthRequest="20"
                                     Text ="Remove"
-                                    Clicked="RemoveFave_OnClicked"
-                            />
+                                    Clicked="RemoveFave_OnClicked"/>-->
+
 
                             </Grid>
                         </ViewCell>

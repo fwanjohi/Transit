@@ -1,4 +1,5 @@
 ﻿using FxITransit.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,12 +74,13 @@ namespace FxITransit.Models
             //    OnPropertyChanged("FullTitle");
             //}
         }
-
+        [JsonIgnore]
         public string MediumTitle
         {
             get { return $"{RouteTitle}, {DirectionTitle }, {Title}"; }
         }
 
+        
         public string RouteTitle
         {
             get => _routeTitle;
@@ -137,7 +139,7 @@ namespace FxITransit.Models
             }
         }
 
-
+        [JsonIgnore]
         public Position Postion
         {
             get
@@ -174,6 +176,7 @@ namespace FxITransit.Models
             }
         }
 
+        [JsonIgnore]
         public Prediction Prediction1
         {
             get => _prediction1;
@@ -183,7 +186,7 @@ namespace FxITransit.Models
                 UpdateDiaplay();
             }
         }
-
+        [JsonIgnore]
         public Prediction Prediction2
         {
             get => _prediction2;
@@ -193,7 +196,7 @@ namespace FxITransit.Models
                 UpdateDiaplay();
             }
         }
-
+        [JsonIgnore]
         public Prediction Prediction3
         {
             get => _prediction3;
@@ -203,8 +206,10 @@ namespace FxITransit.Models
                 UpdateDiaplay();
             }
         }
-
+        [JsonIgnore]
         public ObservableRangeCollection<Prediction> Predictions { get; set; }
+
+        [JsonIgnore]
         public ObservableRangeCollection<Position> OtherStops
         {
             get => _otherStops;

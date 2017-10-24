@@ -18,7 +18,7 @@
                         <ViewCell>
                             <StackLayout Padding="10">
                                 <Label Text="{Binding Message}"
-                       LineBreakMode="NoWrap"
+                       LineBreakMode="WordWrap"
                        Style="{DynamicResource ListItemTextStyle}"
                        FontSize="10"/>
                                 <Label Text="{Binding Stack}"

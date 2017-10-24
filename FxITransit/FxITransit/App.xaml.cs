@@ -3,6 +3,7 @@ using FxITransit.Helpers;
 using FxITransit.Models;
 using FxITransit.Views;
 using Plugin.Notifications;
+using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,7 +17,9 @@ namespace FxITransit
         {
             InitializeComponent();
 
-            StopOptionsHelper.Instance.MySettings = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
+            StopOptionsHelper.Instance.LoadSettingsFromFile();
+
+            //StopOptionsHelper.Instance.MySettings = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
             if (StopOptionsHelper.Instance.MySettings.AlertMinsBefore == 0)
             {
                 StopOptionsHelper.Instance.MySettings.AlertMinsBefore = 5;
@@ -30,7 +33,7 @@ namespace FxITransit
 
             if (StopOptionsHelper.Instance.MySettings.FavoriteStops == null)
             {
-                StopOptionsHelper.Instance.MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
+                StopOptionsHelper.Instance.MySettings.FavoriteStops = new List<Stop>();
             }
             var result = CrossNotifications.Current.RequestPermission().Result;
 
@@ -62,7 +65,7 @@ namespace FxITransit
                     new NavigationPage(new FavouritesPage())
                     {
                         Title = "Favorites",
-                        Icon = Device.OnPlatform("tab_feed.png",null,null)
+                        Icon = Device.OnPlatform("fave_on.png",null,null)
                     },
 
                     new NavigationPage(new SettingsPage())
@@ -85,6 +88,7 @@ namespace FxITransit
             };
             Current.MainPage = main;
 
+            UtilsHelper.Instance.Log("AFTER CHECKING SETTINGS, FAVE STOPS = " + StopOptionsHelper.Instance.MySettings.FavoriteStops.Count);
 
             if (StopOptionsHelper.Instance.MySettings.FavoriteStops.Count > 0)
             {
@@ -96,6 +100,8 @@ namespace FxITransit
                 }
             }
 
+            
+
 
 
         }
@@ -104,5 +110,7 @@ namespace FxITransit
             base.OnStart();
 
         }
+
+        
     }
 }

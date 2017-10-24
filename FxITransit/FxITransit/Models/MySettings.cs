@@ -1,5 +1,6 @@
 ﻿using Acr.Settings;
 using FxITransit.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,30 +19,16 @@ namespace FxITransit.Models
         private bool _vibrate;
         private bool _speak;
         private bool _autoRefresh;
-        private string _faveStopsString;
 
-        private ObservableRangeCollection<Stop> _favoriteStops;
+        private List<Stop> _favoriteStops;
         private ObservableRangeCollection<Route> _favoriteRoutes;
 
         public MySettings()
         {
-            //Stops = new ObservableRangeCollection<FavoriteStop>();
-            //Vibrate = true;
-            //Speak = true;
-            RefreshInterval = 30; //refresh every second
+            RefreshInterval = 30;
         }
 
-        private string _agencyCache;
-        public string  AgencyCache
-        {
-            get => _agencyCache;
-            set
-            {
-                _agencyCache = value;
-                OnPropertyChanged("AgencyCache");
-            }
-        }
-
+       
 
         public void Update()
         {
@@ -49,26 +36,7 @@ namespace FxITransit.Models
             //OnPropertyChanged("FavoriteRoutes");
 
         }
-        public ObservableRangeCollection<Stop> FavoriteStops
-        {
-            get { return _favoriteStops; }
-            set
-            {
-                _favoriteStops = value;
-                OnPropertyChanged("FavoriteStops");
-            }
-        }
-
-        public ObservableRangeCollection<Route> FavoriRoutes
-        {
-            get { return _favoriteRoutes; }
-            set
-            {
-                _favoriteRoutes = value;
-                OnPropertyChanged("FavoriRoutes");
-            }
-        }
-
+        
 
 
 
@@ -132,6 +100,18 @@ namespace FxITransit.Models
         }
 
         public int RefreshInterval { get; private set; }
+
+        public List<Stop> FavoriteStops
+        {
+            get { return _favoriteStops; }
+            set
+            {
+                _favoriteStops = value;
+                OnPropertyChanged("FavoriteStops");
+            }
+        }
+
+
     }
 
 

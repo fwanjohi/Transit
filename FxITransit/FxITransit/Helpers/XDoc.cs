@@ -21,29 +21,29 @@ namespace FxITransit.Helpers
            return !string.IsNullOrWhiteSpace(item);
         }
 
-        public static bool FileExists(this IFolder folder, string name)
-        {
-            return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FileExists;
+        //public static bool FileExists(this IFolder folder, string name)
+        //{
+        //    return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FileExists;
 
-        }
+        //}
 
-        public static bool FolderExists(this IFolder folder, string name)
-        {
-            return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FolderExists;
+        //public static bool FolderExists(this IFolder folder, string name)
+        //{
+        //    return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FolderExists;
 
-        }
+        //}
 
-        public static IFolder CreateFolder(this IFolder folder, string name)
-        {
-            return folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists).Result;
+        //public static IFolder CreateFolder(this IFolder folder, string name)
+        //{
+        //    return folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists).Result;
 
-        }
+        //}
 
-        public static IFile CreateFile(this IFolder folder, string name)
-        {
-            return folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists).Result;
+        //public static IFile CreateFile(this IFolder folder, string name)
+        //{
+        //    return folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists).Result;
 
-        }
+        //}
 
 
         public static string GetAttribute(this XElement xElement, string attName)

@@ -10,9 +10,20 @@ namespace FxITransit.ViewModels
 {
     public class FavoritesViewModel : StopPredictionBaseViewModel
     {
-        public ObservableRangeCollection<Stop> FavoriteStops { get => StopOptionsHelper.Instance.MySettings.FavoriteStops; }
-        public FavoritesViewModel()
+        private List<Stop> _faves; 
+        public List<Stop> FavoriteStops
         {
+            get => _faves;
+            set
+            {
+                _faves = value;
+                OnPropertyChanged("FavoriteStops");
+            }
+        }
+
+        public FavoritesViewModel( List<Stop> faves)
+        {
+            _faves = faves;
             OnPredictionsChanged = UpdatePredictions;
         }
 
