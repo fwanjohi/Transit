@@ -24,7 +24,7 @@ namespace FxITransit.ViewModels
             
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
-            ChangeFavoriteCommand = new Command(async () => await StopOptionsHelper.Instance.ChangeFavouriteStop(Stop));
+            //ChangeFavoriteCommand = new Command(async () => await StopOptionsHelper.Instance.ChangeFavouriteStop(Stop));
         }
         
         

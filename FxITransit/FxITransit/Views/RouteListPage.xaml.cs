@@ -1,4 +1,5 @@
-﻿using FxITransit.Models;
+﻿using Acr.UserDialogs;
+using FxITransit.Models;
 using FxITransit.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -41,9 +42,9 @@ namespace FxITransit.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
             if (viewModel.Agency.Routes.Count == 0)
                 viewModel.LoadRoutessCommand.Execute(null);
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FxITransit.Helpers;
+﻿using Acr.UserDialogs;
+using FxITransit.Helpers;
 using FxITransit.Models;
 using PCLStorage;
 using Plugin.Geolocator;
@@ -14,6 +15,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 
@@ -50,9 +52,10 @@ namespace FxITransit.Services.NextBus
 
         public async Task<IEnumerable<Agency>> GetAgencyList()
         {
+            Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Loading Agencies", MaskType.Black));
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
-            var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists) ;
+            var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists);
             IFile myFile = null;
             if (myFolder != null)
             {
@@ -63,13 +66,11 @@ namespace FxITransit.Services.NextBus
                     xml = await myFile.ReadAllTextAsync();
                 }
             }
-            
-            
 
             XDocument doc;
             if (xml.HasValue())
             {
-                
+
                 doc = XDoc.LoadXml(xml);
 
             }
@@ -107,6 +108,7 @@ namespace FxITransit.Services.NextBus
                 agency.Tag = node.GetAttribute("tag");
                 list.Add(agency);
             }
+            UserDialogs.Instance.HideLoading();
 
             return list;
         }
@@ -115,6 +117,7 @@ namespace FxITransit.Services.NextBus
         public async Task<IEnumerable<Route>> GetRouteList(Agency agency)
         {
             var routes = new List<Route>();
+            Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Loading routes", MaskType.Black));
 
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
@@ -145,18 +148,25 @@ namespace FxITransit.Services.NextBus
                 routes.Add(route);
                 route.AgencyTag = agency.Tag;
             }
+
+
+            UserDialogs.Instance.HideLoading();
+
+
+
             return routes;
+
 
         }
 
 
         public async Task GetRouteDetailsFromService(Route route, Action callBack)
         {
+            Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("configuring route details", MaskType.Black));
+
             //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
             if (!route.IsConfigured)
             {
-
-
                 string xml = string.Empty;
                 var root = FileSystem.Current.LocalStorage;
                 var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists);
@@ -249,6 +259,8 @@ namespace FxITransit.Services.NextBus
                 }
 
             }
+
+            UserDialogs.Instance.HideLoading();
             route.IsConfigured = true;
             callBack?.Invoke();
 

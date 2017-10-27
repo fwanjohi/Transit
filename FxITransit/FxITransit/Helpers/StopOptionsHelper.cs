@@ -87,46 +87,54 @@ namespace FxITransit.Helpers
                 OnPropertyChanged("TransitService");
             }
         }
-
-        public async Task ChangeFavouriteStop(Stop stop, bool isFave = true)
+        public void RemoveFavorite(Stop stop)
         {
-            stop.IsFavorited = isFave;
+            var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
+            if (fav != null)
+            {
+                stop.IsFavorited = false;
+                MySettings.FavoriteStops.Remove(stop);
+                var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
+                if (inWatch != null)
+                {
+                    StopOptionsHelper.Instance.ViewStopsToUpdate.Remove(stop);
+                }
+                MySettings.Update();
+                OnPropertyChanged("MySettings");
+            }
+        }
 
+        public void AddFavorite(Stop stop)
+        {
             Device.BeginInvokeOnMainThread(() =>
             {
-
                 if (MySettings.FavoriteStops == null)
                 {
-                    MySettings.FavoriteStops = new List<Stop>();
+                    MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
 
                 }
+
+
                 var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
-                var index = MySettings.FavoriteStops.IndexOf(fav);
-                if (fav == null && stop.IsFavorited)
+                fav.IsFavorited = true;
+
+                if (fav == null)
                 {
+                    fav.IsFavorited = true;
                     MySettings.FavoriteStops.Add(stop);
+                    var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
+                    if (inWatch != null)
+                    {
+                        StopOptionsHelper.Instance.ViewStopsToUpdate.Add(stop);
+                    }
                 }
 
-                else if (fav != null && !stop.IsFavorited)
-                {
-                    try
-                    {
-                        MySettings.FavoriteStops.RemoveAt(index);
-                        var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
-                        if (inWatch != null)
-                        {
-                            StopOptionsHelper.Instance.ViewStopsToUpdate.Remove(stop);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                    }
-
-                }
                 MySettings.Update();
                 OnPropertyChanged("MySettings");
             });
         }
+        
+        
 
 
         public void StartAutoRefresh()
@@ -277,7 +285,7 @@ namespace FxITransit.Helpers
         }
 
 
-        public async void LoadSettingsFromFile()
+        public async Task LoadSettingsFromFile()
         {
             UtilsHelper.Instance.Log("----------START LOADING---------");
             var fileName = "settings.json";
@@ -315,7 +323,7 @@ namespace FxITransit.Helpers
                         UtilsHelper.Instance.Log("loaded the settings... " + settings.FavoriteStops.Count);
 
                         //MySettings = new MySettings();
-                        MySettings.FavoriteStops = new List<Stop>(settings.FavoriteStops);
+                        MySettings.FavoriteStops = new ObservableRangeCollection<Stop>(settings.FavoriteStops);
 
 
                     }

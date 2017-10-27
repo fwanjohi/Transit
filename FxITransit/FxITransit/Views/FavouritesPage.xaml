@@ -57,9 +57,10 @@
                                 </StackLayout>
                                 <AbsoluteLayout Grid.Column="1">
                                     <Image Source="fave_on.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" AbsoluteLayout.LayoutFlags="PositionProportional"/>
-                                    <Button AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                    <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
                                             AbsoluteLayout.LayoutFlags="PositionProportional" 
                                             BorderColor="Transparent" BackgroundColor="Transparent" 
+                                            Clicked="btnFave_Clicked"
                                             />
                                 </AbsoluteLayout>
 

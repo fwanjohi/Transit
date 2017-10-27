@@ -20,12 +20,12 @@ namespace FxITransit.Models
         private bool _speak;
         private bool _autoRefresh;
 
-        private List<Stop> _favoriteStops;
-        private ObservableRangeCollection<Route> _favoriteRoutes;
+        private ObservableRangeCollection<Stop> _favoriteStops;
 
         public MySettings()
         {
             RefreshInterval = 30;
+            _favoriteStops = new ObservableRangeCollection<Stop>();
         }
 
        
@@ -101,7 +101,7 @@ namespace FxITransit.Models
 
         public int RefreshInterval { get; private set; }
 
-        public List<Stop> FavoriteStops
+        public ObservableRangeCollection<Stop> FavoriteStops
         {
             get { return _favoriteStops; }
             set

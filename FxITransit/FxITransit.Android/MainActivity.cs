@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Plugin.Permissions;
@@ -17,7 +18,7 @@ namespace FxITransit.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             global::Xamarin.FormsMaps.Init(this, bundle);
-
+            UserDialogs.Init(this);
             LoadApplication(new App());
         }
 

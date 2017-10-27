@@ -1,4 +1,5 @@
 ﻿using Acr.Settings;
+using Acr.UserDialogs;
 using FxITransit.Helpers;
 using FxITransit.Models;
 using FxITransit.Views;
@@ -17,29 +18,10 @@ namespace FxITransit
         {
             InitializeComponent();
 
-            StopOptionsHelper.Instance.LoadSettingsFromFile();
-
-            //StopOptionsHelper.Instance.MySettings = Settings.Current.Bind<MySettings>();// persisted bidirectionally with 
-            if (StopOptionsHelper.Instance.MySettings.AlertMinsBefore == 0)
-            {
-                StopOptionsHelper.Instance.MySettings.AlertMinsBefore = 5;
-                StopOptionsHelper.Instance.MySettings.AlertInterval = 1;
-                StopOptionsHelper.Instance.MySettings.Speak = true;
-                StopOptionsHelper.Instance.MySettings.Alert = true;
-
-
-            }
-            StopOptionsHelper.Instance.MySettings.AutoRefresh = true;
-
-            if (StopOptionsHelper.Instance.MySettings.FavoriteStops == null)
-            {
-                StopOptionsHelper.Instance.MySettings.FavoriteStops = new List<Stop>();
-            }
             var result = CrossNotifications.Current.RequestPermission().Result;
-
-
             SetMainPage();
         }
+
 
         ~App()
         {

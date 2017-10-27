@@ -11,6 +11,7 @@ using FxITransit.Services.NextBus;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Acr.UserDialogs;
 
 namespace FxITransit.ViewModels
 {
@@ -52,11 +53,20 @@ namespace FxITransit.ViewModels
 
         public AgenciesViewModel() : base()
         {
-
             Title = "Select Agency";
             Agencies = new ObservableRangeCollection<Agency>();
             _filteredAgencies = new ObservableRangeCollection<Agency>();
-            LoadAgenciesCommand = new Command(async () => await ExecuteLoadAgenciesCommand());
+
+            LoadAgenciesCommand = new Command(async () =>
+            {
+
+                var agencies = await TransitService.GetAgencyList();
+                Agencies.ReplaceRange(agencies);
+                _filteredAgencies.ReplaceRange(Agencies);
+                OnPropertyChanged("FilteredAgencies");
+
+
+            });
 
 
             //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
@@ -67,34 +77,51 @@ namespace FxITransit.ViewModels
             //});
         }
 
-        async Task ExecuteLoadAgenciesCommand()
-        {
-            if (IsBusy)
-                return;
+        //async Task ExecuteLoadAgenciesCommand()
+        //{
+        //    if (IsBusy)
+        //        return;
 
-            IsBusy = true;
+        //    IsBusy = true;
 
-            try
-            {
-                Agencies.Clear();
-                var agencies = await TransitService.GetAgencyList();
-                Agencies.ReplaceRange(agencies);
-                _filteredAgencies.ReplaceRange(Agencies);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                MessagingCenter.Send(new MessagingCenterAlert
-                {
-                    Title = "Error",
-                    Message = "Unable to load agencies.",
-                    Cancel = "OK"
-                }, "message");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
+        //    try
+        //    {
+        //        Agencies.Clear();
+        //        IEnumerable<Agency> agencies = null;
+        //        Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Loading Agencies", MaskType.Black));
+        //        await Task.Run(async () =>
+        //        {
+        //            agencies = await TransitService.GetAgencyList();
+
+        //            await Task.Delay(1000 * 10);
+
+        //        }).ContinueWith(result => Device.BeginInvokeOnMainThread(() =>
+        //        {
+
+        //            Agencies.ReplaceRange(agencies);
+
+        //            _filteredAgencies.ReplaceRange(Agencies);
+        //            OnPropertyChanged("FilteredAgencies");
+
+        //            UserDialogs.Instance.HideLoading();
+
+        //        }));
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //        MessagingCenter.Send(new MessagingCenterAlert
+        //        {
+        //            Title = "Error",
+        //            Message = "Unable to load agencies.",
+        //            Cancel = "OK"
+        //        }, "message");
+        //    }
+        //    finally
+        //    {
+        //        IsBusy = false;
+        //    }
+        //}
     }
 }

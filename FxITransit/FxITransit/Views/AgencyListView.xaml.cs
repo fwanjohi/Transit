@@ -1,4 +1,5 @@
-﻿using FxITransit.Helpers;
+﻿using Acr.UserDialogs;
+using FxITransit.Helpers;
 using FxITransit.Models;
 using FxITransit.ViewModels;
 using System;
@@ -34,8 +35,7 @@ namespace FxITransit.Views
 
             await Navigation.PushAsync(new RouteListPage(agency));
 
-            // Manually deselect item
-            ItemsListView.SelectedItem = null;
+           
         }
 
         async void AddItem_Clicked(object sender, EventArgs e)
@@ -64,5 +64,6 @@ namespace FxITransit.Views
                 viewModel.LoadAgenciesCommand.Execute(null);
             }
         }
+       
     }
 }
