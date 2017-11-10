@@ -21,6 +21,24 @@ namespace FxITransit.ViewModels
 
         private string _filter;
         private ObservableRangeCollection<Route> _filteredRoutes;
+
+        public RoutesViewModel(Agency agency)
+        {
+            Agency = agency;
+            Title = "Routes - " + Agency.Title;
+            _filteredRoutes = new ObservableRangeCollection<Route>();
+
+            LoadRoutessCommand = new Command(async () => await ExecuteLoadRoutesCommand());
+
+
+            //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
+            //{
+            //    var _item = item as Item;
+            //    Items.Add(_item);
+            //    await DataStore.AddItemAsync(_item);
+            //});
+        }
+
         public string Filter
         {
             get { return _filter; }
@@ -50,29 +68,8 @@ namespace FxITransit.ViewModels
 
         }
 
-        public RoutesViewModel(Agency agency)
-        {
-            Agency = agency;
-            Title = "Routes - " + Agency.Title;
-            _filteredRoutes = new ObservableRangeCollection<Route>();
-
-            LoadRoutessCommand = new Command(async () => await ExecuteLoadRoutesCommand());
-
-
-            //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
-            //{
-            //    var _item = item as Item;
-            //    Items.Add(_item);
-            //    await DataStore.AddItemAsync(_item);
-            //});
-        }
-
         async Task ExecuteLoadRoutesCommand()
         {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
 
             try
             {
@@ -91,10 +88,7 @@ namespace FxITransit.ViewModels
                     Cancel = "OK"
                 }, "message");
             }
-            finally
-            {
-                IsBusy = false;
-            }
+            
         }
     }
 }

@@ -59,7 +59,6 @@ namespace FxITransit.ViewModels
 
             LoadAgenciesCommand = new Command(async () =>
             {
-
                 var agencies = await TransitService.GetAgencyList();
                 Agencies.ReplaceRange(agencies);
                 _filteredAgencies.ReplaceRange(Agencies);

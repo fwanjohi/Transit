@@ -97,8 +97,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="fave_on.scale-100.png" />
-    <Content Include="wide_bus._stop.png" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -119,10 +117,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bus.png" />
-    <Content Include="fave_add.png" />
-    <Content Include="fave_off.png" />
-    <Content Include="fave_on.png" />
     <Content Include="narow_bus_stop.png" />
+    <Content Include="narow_bus_stop.scale-400.png" />
     <Content Include="profile_generic.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="slideout.png" />

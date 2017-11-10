@@ -4,6 +4,8 @@
              x:Class="FxITransit.Views.AgencyListView">
     <ContentPage.Content>
         <StackLayout>
+            <Button x:Name="BtnSpeedMeUp" Text="Speed me up" Clicked="BtnSpeedMeUp_Clicked"/>
+                    
             <Label Text="Transit Agencies"
                        LineBreakMode="NoWrap"
                        

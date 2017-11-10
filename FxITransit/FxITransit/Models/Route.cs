@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using SQLite;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace FxITransit.Models
 {
-    public class Route : ObservableObject
+    public class Route : DbEntity
     {
         public Route()
         {
@@ -19,7 +20,11 @@ namespace FxITransit.Models
         public string AgencyTag { get; set; }
         public string Tag { get; set; }
         public string Title { get; set; }
+
+        [Ignore]
         public ObservableRangeCollection<Direction> Directions { get; set; }
+
+        [Ignore]
         public ObservableRangeCollection<GeoPoint> Path { get; set; }
 
         public string Color { get; set; }
@@ -37,26 +42,4 @@ namespace FxITransit.Models
         public bool IsConfigured { get; set; }
         public string AgencyTitle { get; internal set; }
     }
-
-   
-
-    public class Direction : ObservableObject
-    {
-        public Direction()
-        {
-            Stops = new ObservableRangeCollection<Stop>();
-        }
-        public ObservableRangeCollection<Stop> Stops { get; set; }
-        public string Tag { get; set; }
-        public string Title { get; set; }
-        public string Name { get; set; }
-        public string UseForUI { get; set; }
-        
-
-        
-    }
-
-   
-
-
 }

@@ -80,17 +80,17 @@ namespace FxITransit.Views
 
         private void BackButtio_OnClicked(object sender, EventArgs e)
         {
-            //Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Testing...", MaskType.Black));
-            //Task.Run(async () =>
-            //{
-            //    await Task.Delay(1000 * 30);
+            ////Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Testing...", MaskType.Black));
+            ////Task.Run(async () =>
+            ////{
+            ////    await Task.Delay(1000 * 30);
 
-            //}).ContinueWith(result => Device.BeginInvokeOnMainThread(() =>
-            //{
+            ////}).ContinueWith(result => Device.BeginInvokeOnMainThread(() =>
+            ////{
 
-            //    UserDialogs.Instance.HideLoading();
+            ////    UserDialogs.Instance.HideLoading();
 
-            //}));
+            ////}));
 
             ConfirmConfig config = new ConfirmConfig
             {

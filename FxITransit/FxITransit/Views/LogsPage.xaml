@@ -30,6 +30,8 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button x:Name="BtnClear" Clicked="BtnClear_Clicked" Text="RefreshDatabase"/>
         </StackLayout>
+        
     </ContentPage.Content>
 </ContentPage>

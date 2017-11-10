@@ -14,6 +14,7 @@ using FxITransit.Services.NextBus;
 using Xamarin.Forms;
 using Newtonsoft.Json;
 using PCLStorage;
+using Acr.UserDialogs;
 
 namespace FxITransit.Helpers
 {
@@ -111,18 +112,16 @@ namespace FxITransit.Helpers
                 if (MySettings.FavoriteStops == null)
                 {
                     MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
-
                 }
 
-
                 var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
-                fav.IsFavorited = true;
+              
 
                 if (fav == null)
                 {
-                    fav.IsFavorited = true;
+                    stop.IsFavorited = true;
                     MySettings.FavoriteStops.Add(stop);
-                    var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
+                    var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == stop.StopId);
                     if (inWatch != null)
                     {
                         StopOptionsHelper.Instance.ViewStopsToUpdate.Add(stop);

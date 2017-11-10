@@ -10,11 +10,12 @@ namespace FxITransit.Services
     {
         Task<IEnumerable<Agency>> GetAgencyList();
 
-        Task<IEnumerable<Route>> GetRouteList(Agency agency);
+        Task<IEnumerable<Route>> GetRouteList(Agency agency, bool showDialogs = true);
 
         
         //Task  PopulateRouteList(Agency agency);
-        Task GetRouteDetailsFromService(Route route, Action callBack);
+        //Task GetRouteDetailsFromService(Route route, Action callBack);
+        Task GetRouteDetails(Route route);
 
         Position LastPosition { get; }
 

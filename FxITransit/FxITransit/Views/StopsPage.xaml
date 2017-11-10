@@ -48,10 +48,18 @@
                                         Style="{DynamicResource ListItemDetailTextStyle}"
                                         FontSize="13"/>
                                 </StackLayout>
-                                <Button Grid.Column ="1"
+                                <!--<Button Grid.Column ="1"
                                         Text ="Fave"
                                         Clicked="Button_OnClicked"
-                                        />
+                                        />-->
+                                <AbsoluteLayout Grid.Column="1">
+                                    <Image Source="narror_bus_stop.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                                    <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                            AbsoluteLayout.LayoutFlags="PositionProportional" 
+                                            BorderColor="Transparent" BackgroundColor="Transparent" 
+                                            Clicked="Button_OnClicked"
+                                            />
+                                </AbsoluteLayout>
 
                             </Grid>
                         </ViewCell>

@@ -28,16 +28,31 @@ namespace FxITransit.ViewModels
         
         async Task ExecutePopulateRouteCommandCommand()
         {
-            if (IsBusy)
-                return;
+            //try
+            //{
+            //    var routes = await TransitService.GetRouteList(Agency);
 
-            IsBusy = true;
+            //    Agency.Routes.ReplaceRange(routes);
+            //    _filteredRoutes.ReplaceRange(routes);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex);
+            //    MessagingCenter.Send(new MessagingCenterAlert
+            //    {
+            //        Title = "Error",
+            //        Message = "Unable to load routes.",
+            //        Cancel = "OK"
+            //    }, "message");
+            //}
 
+            //====================
             try
             {
                 if (!Route.IsConfigured)
                 {
-                    TransitService.GetRouteDetailsFromService(Route, OnPopulateRoutesDone);
+                    await TransitService.GetRouteDetails(Route);
+                    //TransitService.GetRouteDetailsFromService(Route);
                     //await Task.Factory.StartNew(async () =>
                     // {
                     //     await DataStore.PopulateRouteDetails(Route, OnPopulateRoutesDone);
@@ -60,7 +75,6 @@ namespace FxITransit.ViewModels
             }
             finally
             {
-                IsBusy = false;
             }
         }
     }

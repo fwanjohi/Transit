@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLite;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace FxITransit.Models
 {
-    public class Stop : ObservableObject
+    public class Stop : DbEntity
     {
 
         private double _distance;
@@ -29,7 +30,7 @@ namespace FxITransit.Models
         private Prediction _prediction2;
         private Prediction _prediction3;
         private ObservableRangeCollection<Position> _otherStops;
-
+        private string _directionTag;
 
         public Stop()
         {
@@ -59,12 +60,19 @@ namespace FxITransit.Models
             set { _agencyTag = value; OnPropertyChanged("AgencyTag"); }
         }
 
+        public string DirectionTag
+        {
+            get { return _directionTag; }
+            set { _directionTag = value; OnPropertyChanged("DirectionTag"); }
+        }
+
         public string Tag
         {
             get { return _stopTag; }
             set { _stopTag = value; OnPropertyChanged("Tag"); }
         }
 
+        [Ignore]
         public string FullTitle
         {
             get { return $"{AgencyTitle} - {Title}"; }
@@ -75,6 +83,7 @@ namespace FxITransit.Models
             //}
         }
         [JsonIgnore]
+        [Ignore]
         public string MediumTitle
         {
             get { return $"{RouteTitle}, {DirectionTitle }, {Title}"; }
@@ -140,6 +149,7 @@ namespace FxITransit.Models
         }
 
         [JsonIgnore]
+        [Ignore]
         public Position Postion
         {
             get
@@ -148,6 +158,7 @@ namespace FxITransit.Models
             }
         }
 
+        [Ignore]
         public double Distance
         {
             get { return _distance; }
@@ -157,7 +168,7 @@ namespace FxITransit.Models
                 OnPropertyChanged("Distance");
             }
         }
-
+        [Ignore]
         public string Display
         {
             get
@@ -167,6 +178,7 @@ namespace FxITransit.Models
             }
         }
 
+        [Ignore]
         public string TitleDisplay
         {
             get
@@ -177,6 +189,7 @@ namespace FxITransit.Models
         }
 
         [JsonIgnore]
+        [Ignore]
         public Prediction Prediction1
         {
             get => _prediction1;
@@ -187,6 +200,7 @@ namespace FxITransit.Models
             }
         }
         [JsonIgnore]
+        [Ignore]
         public Prediction Prediction2
         {
             get => _prediction2;
@@ -197,6 +211,7 @@ namespace FxITransit.Models
             }
         }
         [JsonIgnore]
+        [Ignore]
         public Prediction Prediction3
         {
             get => _prediction3;
@@ -207,9 +222,11 @@ namespace FxITransit.Models
             }
         }
         [JsonIgnore]
+        [Ignore]
         public ObservableRangeCollection<Prediction> Predictions { get; set; }
 
         [JsonIgnore]
+        [Ignore]
         public ObservableRangeCollection<Position> OtherStops
         {
             get => _otherStops;

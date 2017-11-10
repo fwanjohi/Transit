@@ -46,7 +46,10 @@ namespace FxITransit.ViewModels
                     
                     if (_closestStop != null)
                     {
-                        Speak("The closest stop is " + _closestStop.TitleDisplay);
+                        if (Settings.MySettings.Speak)
+                        {
+                            Speak("The closest stop is " + _closestStop.TitleDisplay);
+                        }
                     }
                 }
                 catch { };
@@ -57,12 +60,7 @@ namespace FxITransit.ViewModels
 
        
 
-        bool isBusy = false;
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
+     
         /// <summary>
         /// Private backing field to hold the title
         /// </summary>
