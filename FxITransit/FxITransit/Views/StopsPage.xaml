@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:w="clr-namespace:FxITransit.Layouts;assembly=FxITransit"
              x:Class="FxITransit.Views.StopsPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem  Text="Add To Favorites" Clicked="OnFavorite" />
@@ -8,21 +9,37 @@
     <ContentPage.Content>
         <StackLayout>
 
-            <Label Text="{Binding Path= Title}"
-                       LineBreakMode="NoWrap"
-                       
+            <!--<Label Text="{Binding Path= Title}"
+                       LineBreakMode="NoWrap"                      
                        TextColor="Blue"
                        FontSize="16"/>
             <StackLayout>
-                <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
+                --><!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>--><!--
                 <Button x:Name="BtnClosest" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}">
                     <Button.Clicked>BtnClosest_ClickedAsync</Button.Clicked>
                 </Button>
 
-            </StackLayout>
-            <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
-            <StackLayout x:Name="MapHolder" HeightRequest="200"/>
+            </StackLayout>-->
 
+            <w:RepeatableStack 
+                
+                HeightRequest="86"
+                Orientation="Horizontal" 
+                ItemsSource="{Binding Directions}">
+
+                <w:RepeatableStack.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Margin="1"
+                            Text="{Binding Title}"
+                            Command="DirectionChangedCommand" />
+                    </DataTemplate>
+                </w:RepeatableStack.ItemTemplate>
+            </w:RepeatableStack>
+            
+
+                <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
+            <StackLayout x:Name="MapHolder" HeightRequest="200"/>
             <ListView x:Name="StopsListView"
 				ItemsSource="{Binding FilteredStops}"
                 VerticalOptions="FillAndExpand"

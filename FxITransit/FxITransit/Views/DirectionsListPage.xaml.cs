@@ -96,24 +96,19 @@ namespace FxITransit.Views
 
         async void OnDirectionSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            var direction = args.SelectedItem as Direction;
-            if (direction == null)
-                return;
+            //var direction = args.SelectedItem as Direction;
+            //if (direction == null)
+            //    return;
 
-            await Navigation.PushAsync(new StopsPage(direction));
+            //await Navigation.PushAsync(new StopsPage(direction));
 
-            // Manually deselect item
-            DirectionsListView.SelectedItem = null;
+            //// Manually deselect item
+            //DirectionsListView.SelectedItem = null;
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            
-
-
-
         }
     }
 }

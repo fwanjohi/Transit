@@ -28,12 +28,10 @@ namespace FxITransit.Views
 
         }
 
-        public StopsPage(Direction direction)
+        public StopsPage(Route route)
         {
             InitializeComponent();
-            BindingContext = this._viewModel = new StopsViewModel(direction);
-
-             _map = new CustomMap
+            _map = new CustomMap
             {
                 IsShowingUser = true,
                 //HeightRequest = 300,
@@ -41,33 +39,31 @@ namespace FxITransit.Views
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
             };
-            Position firstPos = direction.Stops[0].Postion;
-            foreach (var stop in direction.Stops)
-            {
-                var mapPos = new Position(stop.Lat, stop.Lon);
-                _map.RouteCoordinates.Add(mapPos);
-            }
+            BindingContext = this._viewModel = new StopsViewModel(route, _map);
+            
+            var lastPhonePosition = TrackingHelper.Instance.LastPosition;
+            Position firstPos = new Position(lastPhonePosition.Latitude, lastPhonePosition.Longitude);
             
             _map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
             MapHolder.Children.Add(_map);
 
             
-            var closest = TrackingHelper.Instance.GetClosestStop(_viewModel.Direction.Stops);
-            _viewModel.ClosestStop = closest;
-            if (closest != null)
-            {
-                var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
-                var pin = new Pin
-                {
-                    Type = PinType.Place,
-                    Position = position,
-                    Label = closest.Title,
-                    Address = $"{closest.Distance} Miles"
+            //var closest = TrackingHelper.Instance.GetClosestStop(_viewModel.Direction.Stops);
+            //_viewModel.ClosestStop = closest;
+            //if (closest != null)
+            //{
+            //    var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
+            //    var pin = new Pin
+            //    {
+            //        Type = PinType.Place,
+            //        Position = position,
+            //        Label = closest.Title,
+            //        Address = $"{closest.Distance} Miles"
 
-                };
-                _map.Pins.Add(pin);
-                _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
-            }
+            //    };
+            //    _map.Pins.Add(pin);
+            //    _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
+            //}
    
 
         }
@@ -86,9 +82,17 @@ namespace FxITransit.Views
             StopsListView.SelectedItem = null;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            var route = _viewModel.Route;
+            if (!route.IsConfigured)
+            {
+                await _viewModel.ConfigureRoute();
+
+            }
+
         }
 
         private async Task BtnClosest_ClickedAsync(object sender, EventArgs e)

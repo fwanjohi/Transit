@@ -17,7 +17,7 @@ namespace FxITransit.ViewModels
     {
 
         public Command LoadRoutessCommand { get; set; }
-        public Command<Route> ItemTapCommand { get; set; }
+        
         public ObservableCollection<Route> RouteList { get; private set; }
         public Agency Agency { get; set; }
 

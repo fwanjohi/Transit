@@ -24,19 +24,6 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = new RoutesViewModel(agency);
-            viewModel.ItemTapCommand = new Command<Route>(OnRouteSelected);
-        }
-
-
-        private async void OnRouteSelected(Route route)
-        {
-            if (route == null)
-                return;
-
-            await Navigation.PushAsync(new DirectionsListPage(route));
-
-            // Manually deselect item
-            //RoutesListView.SelectedItem = null;
         }
 
         protected override void OnAppearing()
@@ -47,14 +34,23 @@ namespace FxITransit.Views
 
         }
 
-        private async void BtnRouteSelected_OnClicked(object sender, EventArgs e)
+        private void BtnFaveRoute_OnClicked(object sender, EventArgs e)
         {
-            var route = ((Button)sender).BindingContext as Route;
-            if (route == null)
-                return;
-
-            await Navigation.PushAsync(new DirectionsListPage(route));
+            var route = (sender as Button).BindingContext as Route;
+            if (route != null)
+            {
+                route.IsFavorite = !route.IsFavorite;
+            }
         }
 
+        private async void BtnRouteSelected_OnClicked(object sender, EventArgs e)
+        {
+            var route = (sender as Button).BindingContext as Route;
+            if (route != null)
+            {
+                await Navigation.PushAsync(new StopsPage(route));
+
+            }
+        }
     }
 }

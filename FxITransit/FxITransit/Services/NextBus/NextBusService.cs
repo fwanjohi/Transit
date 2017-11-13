@@ -130,8 +130,8 @@ namespace FxITransit.Services.NextBus
 
             if (!route.IsConfigured)
             {
-                //UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
-                //await Task.Delay(TimeSpan.FromMilliseconds(1));
+                UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
+                await Task.Delay(TimeSpan.FromMilliseconds(1));
 
                 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
 
@@ -218,7 +218,7 @@ namespace FxITransit.Services.NextBus
                     _dbHelper.SaveDirection(direction);
 
                 }
-                //UserDialogs.Instance.HideLoading();
+                UserDialogs.Instance.HideLoading();
             }
             
             route.IsConfigured = true;

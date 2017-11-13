@@ -48,12 +48,13 @@
                                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                                         AbsoluteLayout.LayoutFlags="All"/>
 
-                                            <Button
+                                            <Button x:Name ="BtnRouteSelected"
                                             AbsoluteLayout.LayoutBounds="0,0,1,1"
                                             AbsoluteLayout.LayoutFlags="All" 
                                             BackgroundColor="Transparent"
                                             BorderColor="Transparent" 
-                                            Clicked="BtnRouteSelected_OnClicked" />
+                                            Clicked="BtnRouteSelected_OnClicked"
+                                             />
                                         </AbsoluteLayout>
                                     </Frame>
 
@@ -62,6 +63,7 @@
                                            AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
                                            AbsoluteLayout.LayoutFlags="PositionProportional"/>-->
                                     <Button Grid.Column="1" x:Name="btnFave" 
+                                            Clicked="BtnFaveRoute_OnClicked"
                                             Text="Fave" />
                                     <!--</AbsoluteLayout>-->
 
