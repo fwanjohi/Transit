@@ -104,10 +104,14 @@ namespace FxITransit.Helpers
                 _db.Insert(stop);
             }
         }
-
-        internal async Task<List<Route>>  GetRoutesListAsync(Agency agency)
+        internal async Task<List<Route>> GetRoutesListAsync(Agency agency)
         {
             return _db.Query<Route>("Select * from Route where ParentId=?", agency.Id);
+        }
+
+        internal async Task<List<Agency>>  GetAgencyListAsync()
+        {
+            return _db.Query<Agency>("Select * from Agency");
         }
 
         internal Task<int> ConfigureRoute(Route route)

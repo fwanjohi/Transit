@@ -111,7 +111,7 @@ namespace FxITransit.Models
             }
         }
 
-
+        public bool ShowFavoritesRoutesOnly { get; set; }
     }
 
 

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FxITransit.Helpers"
              x:Class="FxITransit.Views.FavouritesPage">
-    <ContentPage.Resources>
+    <!--<ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="PredictionStyle" TargetType="Label">
                 <Style.Triggers>
@@ -17,7 +17,7 @@
             
             
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </ContentPage.Resources>-->
     
     <ContentPage.Content>
         <StackLayout>

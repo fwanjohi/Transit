@@ -15,8 +15,6 @@ namespace FxITransit.ViewModels
     public class StopsViewModel : BaseViewModel
     {
         public Direction Direction { get; private set; }
-        public Command<Stop> FavoriteCommand { get; set; } 
-        public Command RandomCommand { get; set; }
         private string _filter;
         private ObservableRangeCollection<Stop> _filteredStops;
 

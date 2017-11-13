@@ -137,16 +137,6 @@ namespace FxITransit.Models
         //		Message	"Self referencing loop detected with type 'FxITransit.Models.Stop'. Path '[0].Direction.Stops'."	string
 
 
-        public bool IsFavorited
-        {
-            get => _isFavorited;
-            set
-            {
-                _isFavorited = value;
-                OnPropertyChanged("IsFavorited");
-
-            }
-        }
 
         [JsonIgnore]
         [Ignore]

@@ -15,7 +15,9 @@
                        FontSize="16"/>
             <StackLayout>
                 <!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>-->
-                <Button x:Name="BtnClosest"  Clicked="BtnClosest_ClickedAsync" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}"/>
+                <Button x:Name="BtnClosest" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}">
+                    <Button.Clicked>BtnClosest_ClickedAsync</Button.Clicked>
+                </Button>
 
             </StackLayout>
             <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
@@ -53,7 +55,9 @@
                                         Clicked="Button_OnClicked"
                                         />-->
                                 <AbsoluteLayout Grid.Column="1">
-                                    <Image Source="narror_bus_stop.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                                    <Image Source="fave_add.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                           
+                                           AbsoluteLayout.LayoutFlags="PositionProportional"/>
                                     <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
                                             AbsoluteLayout.LayoutFlags="PositionProportional" 
                                             BorderColor="Transparent" BackgroundColor="Transparent" 

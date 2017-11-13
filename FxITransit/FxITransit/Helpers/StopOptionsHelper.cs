@@ -93,7 +93,7 @@ namespace FxITransit.Helpers
             var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
             if (fav != null)
             {
-                stop.IsFavorited = false;
+                stop.IsFavorite = false;
                 MySettings.FavoriteStops.Remove(stop);
                 var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
                 if (inWatch != null)
@@ -119,7 +119,7 @@ namespace FxITransit.Helpers
 
                 if (fav == null)
                 {
-                    stop.IsFavorited = true;
+                    stop.IsFavorite = true;
                     MySettings.FavoriteStops.Add(stop);
                     var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == stop.StopId);
                     if (inWatch != null)

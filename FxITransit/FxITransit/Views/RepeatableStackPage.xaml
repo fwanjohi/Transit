@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 
+	xmlns="http://xamarin.com/schemas/2014/forms" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:al="clr-namespace:FxITransit.Layouts"
+	x:Class="Sample.Views.RepeatableStackPage"
+	Title="RepeatableStack">
+    <ScrollView>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" Spacing="2" VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+                <Button Text="Add" Command="{Binding AddCommand}" VerticalOptions="Center" />
+                <Button Text="Del" Command="{Binding DeleteCommand}" VerticalOptions="Center" />
+                <Button Text="Rep" Command="{Binding ReplaceCommand}" VerticalOptions="Center" />
+                <Button Text="Clr" Command="{Binding ClearCommand}" VerticalOptions="Center" />
+            </StackLayout>
+            <ScrollView VerticalOptions="Start" Orientation="Horizontal" HeightRequest="86">
+                <al:RepeatableStack Orientation="Horizontal" ItemsSource="{Binding RouteList}" HeightRequest="86">
+                    <al:RepeatableStack.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView  HeightRequest="36" Padding="3">
+                                <Label  VerticalTextAlignment="Center"    
+			                    Text="{Binding Title}" FontSize="16" FontAttributes="Bold"
+			            />
+                            </ContentView>
+                        </DataTemplate>
+                    </al:RepeatableStack.ItemTemplate>
+                </al:RepeatableStack>
+            </ScrollView>
+
+
+            <al:RepeatableStack Orientation="Vertical" ItemsSource="{Binding RouteList}">
+                <al:RepeatableStack.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView  HeightRequest="36" Padding="3">
+                            <Label  VerticalTextAlignment="Center"    
+								Text="{Binding Title}" FontSize="16" FontAttributes="Bold"
+							 />
+                        </ContentView>
+                    </DataTemplate>
+                </al:RepeatableStack.ItemTemplate>
+            </al:RepeatableStack>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

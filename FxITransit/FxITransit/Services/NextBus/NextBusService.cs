@@ -55,61 +55,25 @@ namespace FxITransit.Services.NextBus
 
         public async Task<IEnumerable<Agency>> GetAgencyList()
         {
-            Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Loading Agencies", MaskType.Black));
-            string xml = string.Empty;
-            var root = FileSystem.Current.LocalStorage;
-            var myFolder = await root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists);
-            IFile myFile = null;
-            if (myFolder != null)
+            var list = await _dbHelper.GetAgencyListAsync();
+
+            if (list.Count == 0)
             {
-                myFile = await myFolder.CreateFileAsync("agencies.xml", CreationCollisionOption.OpenIfExists);
-                if (myFile != null)
+                UserDialogs.Instance.ShowLoading("Loading routes from net...", MaskType.Black);
+                await Task.Delay(TimeSpan.FromMilliseconds(10));
+                var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
+                var doc = XDoc.LoadXml(data);
+                foreach (var node in doc.GetDescendantElements("agency"))
                 {
-                    UtilsHelper.Instance.Log("Loading agencies from file " + myFile.Path);
-                    xml = await myFile.ReadAllTextAsync();
+                    var agency = new Agency();
+                    agency.Title = node.GetAttribute("title");
+                    agency.RegionTitle = node.GetAttribute("regionTitle");
+                    agency.Tag = node.GetAttribute("tag");
+                    agency.Id = agency.Tag;
+                    agency.ParentId = "NextBusSetvice";
+                    _dbHelper.SaveAgency(agency);
+                    list.Add(agency);
                 }
-            }
-
-            XDocument doc;
-            if (xml.HasValue())
-            {
-
-                doc = XDoc.LoadXml(xml);
-
-            }
-            else
-            {
-                try
-                {
-                    UtilsHelper.Instance.Log("Loading agencies from Internet");
-                    var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
-                    //var doc = new XDocument();
-                    doc = XDoc.LoadXml(data);
-
-                    await myFile.WriteAllTextAsync(data);
-                }
-                catch (Exception e)
-                {
-                    string err = e.Message;
-                    throw;
-                }
-
-            }
-
-            var list = new List<Agency>();
-
-            foreach (var node in doc.GetDescendantElements("agency"))
-            {
-
-                var agency = new Agency();
-
-                agency.Title = node.GetAttribute("title");
-                agency.RegionTitle = node.GetAttribute("regionTitle");
-                agency.Tag = node.GetAttribute("tag");
-                agency.Id = agency.Tag;
-                agency.ParentId = "NextBusSetvice";
-                _dbHelper.SaveAgency(agency);
-                list.Add(agency);
             }
             UserDialogs.Instance.HideLoading();
 
@@ -144,6 +108,7 @@ namespace FxITransit.Services.NextBus
                     routes.Add(route);
                     route.AgencyTag = agency.Tag;
                     _dbHelper.SaveRoute(route);
+                    //GetRouteDetails(route);
                 }
                 if (showDialogs)
                 {
@@ -158,15 +123,15 @@ namespace FxITransit.Services.NextBus
         public async Task GetRouteDetails(Route route)
         {
             //Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Configuring Details from DB...", MaskType.Black));
-            UserDialogs.Instance.ShowLoading($"Configuring Details from DB...", MaskType.Black);
-            await Task.Delay(TimeSpan.FromMilliseconds(1));
+            //UserDialogs.Instance.ShowLoading($"Configuring Details from DB...", MaskType.Black);
+            
             var count =  await _dbHelper.ConfigureRoute(route);
-            UserDialogs.Instance.HideLoading();
+            //UserDialogs.Instance.HideLoading();
 
             if (!route.IsConfigured)
             {
-                UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
-                await Task.Delay(TimeSpan.FromMilliseconds(1));
+                //UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
+                //await Task.Delay(TimeSpan.FromMilliseconds(1));
 
                 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
 
@@ -253,7 +218,7 @@ namespace FxITransit.Services.NextBus
                     _dbHelper.SaveDirection(direction);
 
                 }
-                UserDialogs.Instance.HideLoading();
+                //UserDialogs.Instance.HideLoading();
             }
             
             route.IsConfigured = true;

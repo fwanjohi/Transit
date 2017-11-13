@@ -1,43 +1,86 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:w="clr-namespace:FxITransit.Layouts"
+             xmlns:views="clr-namespace:FxITransit.Views;assembly=FxITransit"
+             xmlns:xl="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
              x:Class="FxITransit.Views.RouteListPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="{Binding Path= Title}"
-                       LineBreakMode="NoWrap"
-                        
-                       TextColor="Blue"
-                       FontSize="16"/>
-            
-            <Entry x:Name="TxtSearch" Placeholder="Search Route" Text="{Binding Filter, Mode=TwoWay}"/>
-            
-            <ListView x:Name="RoutesListView"
-				ItemsSource="{Binding Path = FilteredRoutes}"
-                VerticalOptions="FillAndExpand"
-                HasUnevenRows="true"
-                RefreshCommand="{Binding LoadRoutesCommand}"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                CachingStrategy="RecycleElement"
-				ItemSelected="OnRouteSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Title}"
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemTextStyle}"
-                       FontSize="16"/>
-                                <!--<Label Text="{Binding RegionTitle}"
-                       LineBreakMode="NoWrap"
-                       Style="{DynamicResource ListItemDetailTextStyle}"
-                       FontSize="13"/>-->
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+    <StackLayout Orientation="Vertical">
+        <StackLayout Orientation ="Horizontal">
+            <Label Text ="Favorite Routes Only"/>
+            <Switch IsToggled="{Binding ShowFavoritesOnly}"/>
         </StackLayout>
-    </ContentPage.Content>
+        <Label Text="{Binding Path= Title}"
+           LineBreakMode="NoWrap"
+           TextColor="Blue"
+           FontSize="16"/>
+
+        <Entry x:Name="TxtSearch" 
+           Placeholder="Search Route" 
+           Text="{Binding Filter, Mode=TwoWay}"/>
+
+        <ScrollView>
+            <StackLayout>
+
+                <ScrollView VerticalOptions="Start" Orientation="Horizontal">
+                    <w:RepeatableStack 
+                               ItemsSource="{Binding FilteredRoutes}">
+                        <w:RepeatableStack.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="80"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width ="70"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Frame OutlineColor="Gray" Grid.Column="0" >
+                                        <AbsoluteLayout >
+                                            <Label Margin="4"  Text="{Binding Title}" 
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="NoWrap"
+                                       Style="{DynamicResource ListItemTextStyle}"
+                                        HorizontalTextAlignment="Start" 
+                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                        AbsoluteLayout.LayoutFlags="All"/>
+
+                                            <Button
+                                            AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                            AbsoluteLayout.LayoutFlags="All" 
+                                            BackgroundColor="Transparent"
+                                            BorderColor="Transparent" 
+                                            Clicked="BtnRouteSelected_OnClicked" />
+                                        </AbsoluteLayout>
+                                    </Frame>
+
+                                    <!--<AbsoluteLayout Grid.Column="1">-->
+                                    <!--<Image Source="fave_on.png" 
+                                           AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                           AbsoluteLayout.LayoutFlags="PositionProportional"/>-->
+                                    <Button Grid.Column="1" x:Name="btnFave" 
+                                            Text="Fave" />
+                                    <!--</AbsoluteLayout>-->
+
+                                </Grid>
+
+                                <!--<controls:ExtendedButton HorizontalContentAlignment="Start"
+                                                 
+                                                 VerticalContentAlignment="Start"
+                                                 Clicked="Button_OnClicked"
+                                                 ContentLayout="Left"
+                                                 Text="{Binding Title}">
+                            
+                        </controls:ExtendedButton>-->
+
+                            </DataTemplate>
+                        </w:RepeatableStack.ItemTemplate>
+                    </w:RepeatableStack>
+                </ScrollView>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>

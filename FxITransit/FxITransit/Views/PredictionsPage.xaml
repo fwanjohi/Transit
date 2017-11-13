@@ -3,19 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FxITransit.Views.PredictionsPage">
 
-    <ContentPage.Resources>
+    <!--<ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="PredictionStyle" TargetType="Label">
                 <Style.Triggers>
                     <DataTrigger TargetType="Label"
-                    Binding="{Binding IsArriving}"
-                    Value="true">
+                        Binding="{Binding IsArriving}"
+                        Value="true">
                         <Setter Property="TextColor"  Value="Color.Red" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </ContentPage.Resources>-->
     <!--<DataTrigger TargetType="Button"
          Binding="{Binding Source={x:Reference emailAddress},
                                            Path=Text.Length}"

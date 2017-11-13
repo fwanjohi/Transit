@@ -6,6 +6,7 @@ using FxITransit.Views;
 using Plugin.Notifications;
 using System.Collections.Generic;
 using System.Linq;
+using Sample.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -35,7 +36,7 @@ namespace FxITransit
             {
                 Children =
                 {
-
+                    
                     new NavigationPage(new AgencyListView())
                     {
                         Title = "Browse",
@@ -43,6 +44,8 @@ namespace FxITransit
 
 
                     },
+
+                    
 
                     new NavigationPage(new FavouritesPage())
                     {

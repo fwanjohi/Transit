@@ -152,7 +152,6 @@ namespace FxITransit.Helpers
 
         public Stop GetClosestStop(IEnumerable<Stop> stops)
         {
-            Log("Getting GetClosestStop " + LastPosition == null ? "Last postion = null" : LastPosition.Longitude.ToString() + "," + LastPosition.Latitude.ToString());
             Stop closestStop = null;
             var lastPos = LastPosition;
 

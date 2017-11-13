@@ -24,19 +24,4 @@ namespace FxITransit.Models
 
         
     }
-
-    public  class DbEntity : ObservableObject
-    {
-        [PrimaryKey]
-        public string Id
-        {
-            get;
-            set;
-        }
-
-        public string ParentId { get; set; }
-
-    }
-
-
 }

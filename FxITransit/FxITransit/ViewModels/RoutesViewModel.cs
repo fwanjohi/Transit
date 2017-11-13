@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using FxITransit.Services.NextBus;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace FxITransit.ViewModels
 {
@@ -16,11 +17,15 @@ namespace FxITransit.ViewModels
     {
 
         public Command LoadRoutessCommand { get; set; }
-
+        public Command<Route> ItemTapCommand { get; set; }
+        public ObservableCollection<Route> RouteList { get; private set; }
         public Agency Agency { get; set; }
 
         private string _filter;
-        private ObservableRangeCollection<Route> _filteredRoutes;
+        private ObservableCollection<Route> _filteredRoutes;
+        private bool _showFavoritesOnly;
+
+
 
         public RoutesViewModel(Agency agency)
         {
@@ -29,16 +34,19 @@ namespace FxITransit.ViewModels
             _filteredRoutes = new ObservableRangeCollection<Route>();
 
             LoadRoutessCommand = new Command(async () => await ExecuteLoadRoutesCommand());
-
-
-            //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
-            //{
-            //    var _item = item as Item;
-            //    Items.Add(_item);
-            //    await DataStore.AddItemAsync(_item);
-            //});
+            
+            
         }
 
+        public bool ShowFavoritesOnly
+        {
+            get => Settings.MySettings.ShowFavoritesRoutesOnly;
+            set
+            {
+                Settings.MySettings.ShowFavoritesRoutesOnly = value;
+                OnPropertyChanged("FilteredRoutes");
+            }
+        }
         public string Filter
         {
             get { return _filter; }
@@ -49,34 +57,53 @@ namespace FxITransit.ViewModels
             }
         }
 
-        public ObservableRangeCollection<Route> FilteredRoutes
+        public ObservableCollection<Route> FilteredRoutes
         {
             get
             {
+                var items = new List<Route>();
                 if (string.IsNullOrEmpty(_filter))
                 {
-                    _filteredRoutes.ReplaceRange(Agency.Routes);
+                    items =new List<Route>(Agency.Routes);//(Agency.Routes);
                 }
                 else
                 {
-                    var items = new List<Route>(Agency.Routes.Where(x => x.Title.ToLower().Contains(_filter.ToLower())));
-
-                    _filteredRoutes.ReplaceRange(items);
+                     items = new List<Route>(Agency.Routes.Where(x => x.Title.ToLower().Contains(_filter.ToLower())));
                 }
+                if (ShowFavoritesOnly)
+                {
+                    items = _filteredRoutes.Where(x => x.IsFavorite == true).ToList();
+                }
+                _filteredRoutes = new ObservableCollection<Route>(items);
                 return _filteredRoutes;
+            }
+            set
+            {
+                _filteredRoutes = value;
+                //RouteList = value;
+                //OnPropertyChanged("RouteList");
             }
 
         }
 
-        async Task ExecuteLoadRoutesCommand()
+        private  async Task ShowStops(Route route)
         {
-
+            
+        }
+        private async Task ExecuteLoadRoutesCommand()
+        {
             try
             {
+                var start = DateTime.Now;
+                Utils.Log("------------start get and config routes-----");
                 var routes = await TransitService.GetRouteList(Agency);
 
                 Agency.Routes.ReplaceRange(routes);
-                _filteredRoutes.ReplaceRange(routes);
+                
+                var end = DateTime.Now;
+                var secs = end.Subtract(start).TotalSeconds;
+                OnPropertyChanged("FilteredRoutes");
+                Utils.Log($"-----{secs}-------END get and config routes-----");
             }
             catch (Exception ex)
             {

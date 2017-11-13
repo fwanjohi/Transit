@@ -117,6 +117,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bus.png" />
+    <Content Include="fave_add.png" />
+    <Content Include="Fave_on.png" />
     <Content Include="narow_bus_stop.png" />
     <Content Include="narow_bus_stop.scale-400.png" />
     <Content Include="profile_generic.png" />
