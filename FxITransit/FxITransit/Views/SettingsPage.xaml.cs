@@ -16,20 +16,17 @@ namespace FxITransit.Views
         public SettingsPage()
         {
             InitializeComponent();
-            BindingContext =  StopOptionsHelper.Instance;
+            BindingContext =  PreferencesHelper.Instance.Preference;
         }
 
         
 
-        private void StopsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-
-        }
+       
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            StopOptionsHelper.Instance.SaveSttingsToFile();
+            PreferencesHelper.Instance.SaveSttingsToFile();
         }
     }
 }

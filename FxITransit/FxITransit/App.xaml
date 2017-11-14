@@ -25,13 +25,23 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="FaveImageStyle" TargetType="Label">
+            <Style x:Key="SelectedButtonStyle" TargetType="Button">
                 <Style.Triggers>
-                    <DataTrigger TargetType="Image" Binding="{Binding IsFavorite}"  Value="true">
-                        <Setter Property="Source"  Value="fave_on.pn" />
+                    <DataTrigger TargetType="Button"  Binding="{Binding IsSelected, Mode=TwoWay}"   Value="true">
+                        <Setter Property="TextColor"  Value="Color.White" />
+                        <Setter Property="FontAttributes"  Value="Bold" />
+                        <Setter Property="BackgroundColor"  Value="{DynamicResource Primary}" />
                     </DataTrigger>
-                    <DataTrigger TargetType="Image" Binding="{Binding IsFavorite}"  Value="false">
-                        <Setter Property="Source"  Value="fave_off.pn" />
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="FaveImageStyle" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger TargetType="Image" Binding="{Binding IsFavorite, Mode=TwoWay}"  Value="true">
+                        <Setter Property="Source"  Value="fave_remove.png" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Image" Binding="{Binding IsFavorite, Mode=TwoWay}"  Value="false">
+                        <Setter Property="Source"  Value="fave_add.png" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

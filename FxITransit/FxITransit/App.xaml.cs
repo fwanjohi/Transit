@@ -6,7 +6,6 @@ using FxITransit.Views;
 using Plugin.Notifications;
 using System.Collections.Generic;
 using System.Linq;
-using Sample.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -26,7 +25,7 @@ namespace FxITransit
 
         ~App()
         {
-            StopOptionsHelper.Instance.MySettings.AutoRefresh = false;
+            PreferencesHelper.Instance.Preference.AutoRefresh = false;
         }
 
 
@@ -72,22 +71,6 @@ namespace FxITransit
                 }
             };
             Current.MainPage = main;
-
-            UtilsHelper.Instance.Log("AFTER CHECKING SETTINGS, FAVE STOPS = " + StopOptionsHelper.Instance.MySettings.FavoriteStops.Count);
-
-            if (StopOptionsHelper.Instance.MySettings.FavoriteStops.Count > 0)
-            {
-                var faves = main.Children.FirstOrDefault(x => (x as NavigationPage).Title == "Favorites");
-
-                if (faves != null)
-                {
-                    main.CurrentPage = faves;
-                }
-            }
-
-            
-
-
 
         }
         protected override void OnStart()

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxITransit", "FxITransit\FxITransit\FxITransit.csproj", "{938D4267-276F-4DBD-905B-08F98B91D6C6}"
 EndProject
@@ -10,6 +10,20 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxITransit.iOS", "FxITransit\FxITransit.iOS\FxITransit.iOS.csproj", "{1FD88256-4887-49ED-957D-ED1D452CD895}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxITransit.UWP", "FxITransit\FxITransit.UWP\FxITransit.UWP.csproj", "{E51FEC90-03F5-4113-87B5-9D4E9B1EAD18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{545414DA-D995-4EC3-A76A-5C04A8F92576}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RawIcons", "RawIcons", "{1E6C47BE-8101-405A-B238-1F263E01C8AA}"
+	ProjectSection(SolutionItems) = preProject
+		FxITransit\RawIcons\bus.png = FxITransit\RawIcons\bus.png
+		FxITransit\RawIcons\fave_add.png = FxITransit\RawIcons\fave_add.png
+		FxITransit\RawIcons\fave_off.png = FxITransit\RawIcons\fave_off.png
+		FxITransit\RawIcons\Fave_on.png = FxITransit\RawIcons\Fave_on.png
+		FxITransit\RawIcons\fave_remove.png = FxITransit\RawIcons\fave_remove.png
+		FxITransit\RawIcons\narow_bus_stop.png = FxITransit\RawIcons\narow_bus_stop.png
+		FxITransit\RawIcons\noun_466303_cc.png = FxITransit\RawIcons\noun_466303_cc.png
+		FxITransit\RawIcons\wide_bus._stop.png = FxITransit\RawIcons\wide_bus._stop.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -130,5 +144,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1E6C47BE-8101-405A-B238-1F263E01C8AA} = {545414DA-D995-4EC3-A76A-5C04A8F92576}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35E504D0-24BB-49ED-A705-2D250A3C7812}
 	EndGlobalSection
 EndGlobal

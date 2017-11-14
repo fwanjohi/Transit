@@ -26,16 +26,7 @@ namespace FxITransit.Views
             InitializeComponent();
             BindingContext = this.viewModel = new PredictionsViewModel(stop);
 
-            var map = new CustomMap
-            {
-                IsShowingUser = true,
-                //HeightRequest = 300,
-
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-
-
-            };
+            
             //Xamarin.Forms.Point.Distance
 
             //CLLocation pointA = new CLLocation(lat, long);
@@ -55,16 +46,16 @@ namespace FxITransit.Views
 
             // var distance = Xamarin.Forms.Maps.Distance.()
 
-            foreach (var dirStop in stop.OtherStops)
-            {
+            //foreach (var dirStop in stop.OtherStops)
+            //{
                 
-                map.RouteCoordinates.Add(dirStop);
-            }
+            //    map.RouteCoordinates.Add(dirStop);
+            //}
 
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
+            //map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
 
-            map.Pins.Add(pin);
-            MapHolder.Children.Add(map);
+            //map.Pins.Add(pin);
+            //MapHolder.Children.Add(map);
 
         }
 
@@ -76,10 +67,10 @@ namespace FxITransit.Views
             if (viewModel.Stop != null)
             {
                 // make this the only stop to watch
-                StopOptionsHelper.Instance.OnPredictionsChanged = viewModel.OnPredictionsChanged;
-                StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop> {viewModel.Stop};
-                StopOptionsHelper.Instance.LoadPredictions();
-                StopOptionsHelper.Instance.StartAutoRefresh();
+                PreferencesHelper.Instance.OnPredictionsChanged = viewModel.OnPredictionsChanged;
+                PreferencesHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop> {viewModel.Stop};
+                PreferencesHelper.Instance.LoadPredictions();
+                PreferencesHelper.Instance.StartAutoRefresh();
             }
         }
 
@@ -87,7 +78,7 @@ namespace FxITransit.Views
         {
             base.OnDisappearing();
             //since you could be in another view, clear what has to be watched 
-            StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>();
+            PreferencesHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>();
 
 
 

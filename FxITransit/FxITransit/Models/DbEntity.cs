@@ -7,6 +7,7 @@ namespace FxITransit.Models
     public  class DbEntity : ObservableObject
     {
         private bool _isFavorite;
+        
 
         [PrimaryKey]
         public string Id
@@ -26,8 +27,13 @@ namespace FxITransit.Models
             {
                 _isFavorite = value;
                 OnPropertyChanged("IsFavorite");
-
+                OnPropertyChanged("FavoriteImage");
             }
+        }
+        [Ignore]
+        public string FavoriteImage
+        {
+            get { return IsFavorite ? Constants.FaveOnIcon : Constants.FaveOffIcon; }
         }
        
 

@@ -22,30 +22,31 @@ namespace FxITransit.Views
         public FavouritesPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new FavoritesViewModel(StopOptionsHelper.Instance.MySettings.FavoriteStops);
+            BindingContext = _viewModel = new FavoritesViewModel();
             //_viewModel.FavoriteStops = new List<Stop>(StopOptionsHelper.Instance.MySettings.FavoriteStops);
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            _viewModel.FavoriteStops =StopOptionsHelper.Instance.MySettings.FavoriteStops;
-            StopOptionsHelper.Instance.OnPredictionsChanged = _viewModel.OnPredictionsChanged;
-            StopOptionsHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>(
-               StopOptionsHelper.Instance.MySettings.FavoriteStops);
+            _viewModel.FavoriteStops = new ObservableRangeCollection<Stop>(DbHelper.Instance.GetFavoriteStops());
+            PreferencesHelper.Instance.OnPredictionsChanged = _viewModel.OnPredictionsChanged;
+
+            PreferencesHelper.Instance.ViewStopsToUpdate = new ObservableRangeCollection<Stop>(
+                _viewModel.FavoriteStops);
 
 
-            StopOptionsHelper.Instance.LoadPredictions();
-            StopOptionsHelper.Instance.StartAutoRefresh();
+            PreferencesHelper.Instance.LoadPredictions();
+            PreferencesHelper.Instance.StartAutoRefresh();
 
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            StopOptionsHelper.Instance.StopAutoRefresh();
+            PreferencesHelper.Instance.StopAutoRefresh();
             base.OnDisappearing();
-            StopOptionsHelper.Instance.SaveSttingsToFile();
+            PreferencesHelper.Instance.SaveSttingsToFile();
         }
 
         private void RemoveFave_OnClicked(object sender, EventArgs e)
@@ -119,12 +120,14 @@ namespace FxITransit.Views
                 {
                     if (yes)
                     {
-                        StopOptionsHelper.Instance.RemoveFavorite(stop);
+                        stop.IsFavorite = false;
+
+                        DbHelper.Instance.SaveEntity(stop);
+                        _viewModel.FavoriteStops.Remove(stop);
                         OnPropertyChanged("FavoriteStops");
                     }
                    
                 }
-                
 
             };
 

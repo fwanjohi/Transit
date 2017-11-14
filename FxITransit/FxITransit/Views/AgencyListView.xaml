@@ -1,19 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Available Transit Agencies"
              x:Class="FxITransit.Views.AgencyListView">
     <ContentPage.Content>
         <StackLayout>
-            <Button x:Name="BtnSpeedMeUp" Text="Speed me up" Clicked="BtnSpeedMeUp_Clicked"/>
-                    
-            <Label Text="Transit Agencies"
-                       LineBreakMode="NoWrap"
-                       
-                       TextColor="Blue"
-                       FontSize="16"/>
-            <Entry x:Name="TxtSearch" Placeholder="Search Agency" Text="{Binding Filter, Mode=TwoWay}"/>
+            <StackLayout Orientation ="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <Entry Grid.Column="0"  
+                       WidthRequest="300"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand"
+                       x:Name="TxtSearch"
+                       Placeholder="Search agency" 
+                       Text="{Binding Filter, Mode=TwoWay}"/>
+                <StackLayout Grid.Column="1" Orientation="Vertical">
+                    <Label 
+                        HorizontalOptions="End"
+                        VerticalOptions="Center" 
+                        Text ="Favorite Agencies Only"/>
+                    <Switch 
+                        
+                        HorizontalOptions="End"
+                        VerticalOptions="Center" 
+                        IsToggled="{Binding ShowFavoritesOnly}"/>
+                </StackLayout>
+            </StackLayout>
+
             <ListView x:Name="ItemsListView"
-				ItemsSource="{Binding FilteredAgencies}"
+				ItemsSource="{Binding Filtered}"
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadAgenciesCommand}"
@@ -24,17 +44,35 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Title}"
-                                       FontAttributes="Bold"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width ="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Vertical" Padding="10">
+                                    <Label Text="{Binding Title}"
                                         LineBreakMode="NoWrap"
-                                       Style="{DynamicResource ListItemTextStyle}"
-                                       FontSize="16"/>
-                                <Label Text="{Binding RegionTitle}"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        FontSize="16"/>
+
+                                    <Label Text="{Binding RegionTitle}"
                                         LineBreakMode="NoWrap"
                                         Style="{DynamicResource ListItemDetailTextStyle}"
-                                        FontSize="13"/>  
-                            </StackLayout>
+                                        FontSize="13"/>
+                                </StackLayout>
+
+                                <AbsoluteLayout Grid.Column="1">
+                                    <Image Style="{DynamicResource FaveImageStyle}" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                           
+                                           AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                                    <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                            AbsoluteLayout.LayoutFlags="PositionProportional" 
+                                            BorderColor="Transparent" BackgroundColor="Transparent" 
+                                            Clicked="OnFavoriteChanged"
+                                            />
+                                </AbsoluteLayout>
+
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

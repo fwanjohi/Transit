@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using FxITransit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -34,18 +34,21 @@ namespace FxITransit.Views
 
         }
 
-        private void BtnFaveRoute_OnClicked(object sender, EventArgs e)
+        private void OnFavoriteChanged(object sender, EventArgs e)
         {
-            var route = (sender as Button).BindingContext as Route;
-            if (route != null)
+            var context = (sender as Button).BindingContext as DbEntity;
+
+            if (context != null)
             {
-                route.IsFavorite = !route.IsFavorite;
+                context.IsFavorite = !context.IsFavorite;
+                DbHelper.Instance.SaveEntity(context);
             }
         }
 
-        private async void BtnRouteSelected_OnClicked(object sender, EventArgs e)
+        
+        private async void OnRouteSelected(object sender, ItemTappedEventArgs e)
         {
-            var route = (sender as Button).BindingContext as Route;
+            var route = e.Item as Route;
             if (route != null)
             {
                 await Navigation.PushAsync(new StopsPage(route));

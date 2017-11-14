@@ -23,9 +23,6 @@ namespace FxITransit.ViewModels
 
         private string _filter;
         private ObservableCollection<Route> _filteredRoutes;
-        private bool _showFavoritesOnly;
-
-
 
         public RoutesViewModel(Agency agency)
         {
@@ -40,11 +37,12 @@ namespace FxITransit.ViewModels
 
         public bool ShowFavoritesOnly
         {
-            get => Settings.MySettings.ShowFavoritesRoutesOnly;
+            get => Settings.Preference.FavoriteRoutesOnly;
             set
             {
-                Settings.MySettings.ShowFavoritesRoutesOnly = value;
-                OnPropertyChanged("FilteredRoutes");
+                Settings.Preference.FavoriteRoutesOnly = value;
+                Db.SavePrerefence(Settings.Preference);
+                OnPropertyChanged("Filtered");
             }
         }
         public string Filter
@@ -53,11 +51,11 @@ namespace FxITransit.ViewModels
             set
             {
                 _filter = value;
-                OnPropertyChanged("FilteredRoutes");
+                OnPropertyChanged("Filtered");
             }
         }
 
-        public ObservableCollection<Route> FilteredRoutes
+        public ObservableCollection<Route> Filtered
         {
             get
             {
@@ -99,10 +97,10 @@ namespace FxITransit.ViewModels
                 var routes = await TransitService.GetRouteList(Agency);
 
                 Agency.Routes.ReplaceRange(routes);
-                
+
                 var end = DateTime.Now;
                 var secs = end.Subtract(start).TotalSeconds;
-                OnPropertyChanged("FilteredRoutes");
+                OnPropertyChanged("Filtered");
                 Utils.Log($"-----{secs}-------END get and config routes-----");
             }
             catch (Exception ex)

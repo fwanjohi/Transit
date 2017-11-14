@@ -6,18 +6,18 @@
         <TableView Intent="Settings">
             <TableRoot>
                 <TableSection Title="Alerts">
-                    <SwitchCell    Text="Send Alerts" On="{Binding Path=MySettings.Alert}" />
-                    <SwitchCell Text="Voice Alerts" On="{Binding Path=MySettings.Speak}" />
-                    <SwitchCell Text="Vibrate" On="{Binding Path=MySettings.Vibrate}" />
+                    <SwitchCell    Text="Send Alerts" On="{Binding Path=Alert}" />
+                    <SwitchCell Text="Voice Alerts" On="{Binding Path=Speak}" />
+                    <SwitchCell Text="Vibrate" On="{Binding Path=Vibrate}" />
 
-
-                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" HorizontalTextAlignment ="Start" Label="Alert Mins Before : " Text="{Binding Path=MySettings.AlertMinsBefore}" />
-                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" Label="Alert Interval : " HorizontalTextAlignment ="Start"  Text="{Binding Path=MySettings.AlertInterval}" />
-
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" HorizontalTextAlignment ="Start" Label="Alert Mins Before : " Text="{Binding Path=AlertMinsBefore}" />
+                    <EntryCell Keyboard="Numeric" LabelColor ="Color.Black" Label="Alert Interval : " HorizontalTextAlignment ="Start"  Text="{Binding Path=AlertInterval}" />
 
                 </TableSection>
-                <TableSection Title="Favorite Routes" x:Name="FavesSection">
-
+                <TableSection Title="Browsing Options" x:Name="Browsing">
+                    <SwitchCell   Text="Show Favorite Agencies Only" On="{Binding Path=FavoriteAgenciesOnly}" />
+                    <SwitchCell   Text="Show Favorite Routes Only" On="{Binding Path=FavoriteRoutesOnly}" />
+                    <SwitchCell   Text="Show Favorite Stops Only" On="{Binding Path=FavoriteStopsOnly}" />
                 </TableSection>
             </TableRoot>
         </TableView>

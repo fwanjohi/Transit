@@ -12,68 +12,81 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Acr.UserDialogs;
+using System.Collections.ObjectModel;
 
 namespace FxITransit.ViewModels
 {
     public class AgenciesViewModel : BaseViewModel
     {
+        public Command LoadAgenciesCommand { get; set; }
+
         public ObservableRangeCollection<Agency> Agencies { get; set; }
 
         private string _filter;
-        private ObservableRangeCollection<Agency> _filteredAgencies;
+        private ObservableCollection<Agency> _filtered;
         public string Filter
         {
             get { return _filter; }
             set
             {
                 _filter = value;
-                OnPropertyChanged("FilteredAgencies");
+                OnPropertyChanged("Filtered");
+            }
+        }
+        public bool ShowFavoritesOnly
+        {
+            get => Settings.Preference.FavoriteAgenciesOnly;
+            set
+            {
+                Settings.Preference.FavoriteAgenciesOnly = value;
+                Db.SavePrerefence(Settings.Preference);
+                OnPropertyChanged("ShowFavoritesOnly");
+                OnPropertyChanged("Filtered");
             }
         }
 
-        public ObservableRangeCollection<Agency> FilteredAgencies
+        public ObservableCollection<Agency> Filtered
         {
             get
             {
+                var items = new List<Agency>();
                 if (string.IsNullOrEmpty(_filter))
                 {
-                    _filteredAgencies.ReplaceRange(Agencies);
+                    items = new List<Agency>(Agencies);//(Agency.Routes);
                 }
                 else
                 {
-                    var items = new List<Agency>(Agencies.Where(x => x.Title.ToLower().Contains(_filter.ToLower())));
-
-                    _filteredAgencies.ReplaceRange(items);
+                    items = new List<Agency>(Agencies.Where(x => x.Title.ToLower().Contains(_filter.ToLower())));
                 }
-                return _filteredAgencies;
+                if (ShowFavoritesOnly)
+                {
+                    items = items.Where(x => x.IsFavorite == true).ToList();
+                }
+                _filtered = new ObservableCollection<Agency>(items);
+                return _filtered;
             }
 
+
+
         }
-        public Command LoadAgenciesCommand { get; set; }
 
         public AgenciesViewModel() : base()
         {
             Title = "Select Agency";
             Agencies = new ObservableRangeCollection<Agency>();
-            _filteredAgencies = new ObservableRangeCollection<Agency>();
+            _filtered = new ObservableCollection<Agency>();
+
+            ShowFavoritesOnly = PreferencesHelper.Instance.Preference.FavoriteAgenciesOnly;
 
             LoadAgenciesCommand = new Command(async () =>
             {
                 var agencies = await TransitService.GetAgencyList();
                 Agencies.ReplaceRange(agencies);
-                _filteredAgencies.ReplaceRange(Agencies);
-                OnPropertyChanged("FilteredAgencies");
-
-
+                _filtered = new ObservableCollection<Agency>(Agencies);
+                OnPropertyChanged("Filtered");
             });
 
 
-            //MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
-            //{
-            //    var _item = item as Item;
-            //    Items.Add(_item);
-            //    await DataStore.AddItemAsync(_item);
-            //});
         }
 
         //async Task ExecuteLoadAgenciesCommand()
@@ -99,8 +112,8 @@ namespace FxITransit.ViewModels
 
         //            Agencies.ReplaceRange(agencies);
 
-        //            _filteredAgencies.ReplaceRange(Agencies);
-        //            OnPropertyChanged("FilteredAgencies");
+        //            _Filtered.ReplaceRange(Agencies);
+        //            OnPropertyChanged("Filtered");
 
         //            UserDialogs.Instance.HideLoading();
 

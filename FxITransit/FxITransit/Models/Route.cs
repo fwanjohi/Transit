@@ -22,6 +22,12 @@ namespace FxITransit.Models
         public string Title { get; set; }
 
         [Ignore]
+        public string Display
+        {
+            get { return $"{AgencyTitle} - {Title}"; }
+        }
+
+        [Ignore]
         public ObservableRangeCollection<Direction> Directions { get; set; }
 
         [Ignore]

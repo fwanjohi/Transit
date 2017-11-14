@@ -5,6 +5,7 @@ namespace FxITransit.Models
 {
     public class Direction : DbEntity
     {
+        public bool _isSelected;
         public Direction()
         {
             Stops = new ObservableRangeCollection<Stop>();
@@ -16,7 +17,16 @@ namespace FxITransit.Models
         public string Title { get; set; }
         public string Name { get; set; }
         public string UseForUI { get; set; }
-        
+        //public string PathData { get; set; }
+        public bool IsSeleted
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged("IsSelected");
+            }
+        }
 
         
     }

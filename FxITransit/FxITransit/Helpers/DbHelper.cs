@@ -18,12 +18,11 @@ namespace FxITransit.Helpers
     {
         private SQLiteConnection _db;
 
-        public SQLiteConnection Db
-        {
-            get => _db;
-        }
+        private static readonly Lazy<DbHelper> _instance = new Lazy<DbHelper>(() => new DbHelper());
 
-        public DbHelper()
+        public static DbHelper Instance { get { return _instance.Value; } }
+
+        private DbHelper()
         {
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
@@ -41,6 +40,9 @@ namespace FxITransit.Helpers
             _db.CreateTable<Route>();
             _db.CreateTable<Direction>();
             _db.CreateTable<Stop>();
+
+            _db.CreateTable<Preference>();
+
         }
 
         public void RefreshDatabase()
@@ -49,7 +51,101 @@ namespace FxITransit.Helpers
             _db.DropTable<Route>();
             _db.DropTable<Direction>();
             _db.DropTable<Stop>();
+
+            _db.CreateTable<Agency>();
+            _db.CreateTable<Route>();
+            _db.CreateTable<Direction>();
+            _db.CreateTable<Stop>();
         }
+
+        public void SaveEntity<T>(T entity) where T : DbEntity
+        {
+            if (entity is Agency)
+            {
+                if (_db.Find<Agency>(entity.Id) == null)
+                {
+                    _db.Insert(entity);
+                }
+                else
+                {
+                    _db.Update(entity);
+                }
+            }
+
+            if (entity is Route)
+            {
+                if (_db.Find<Route>(entity.Id) == null)
+                {
+                    _db.Insert(entity);
+                }
+                else
+                {
+                    _db.Update(entity);
+                }
+            }
+
+            if (entity is Stop)
+            {
+                if (_db.Find<Stop>(entity.Id) == null)
+                {
+                    _db.Insert(entity);
+                }
+                else
+                {
+                    _db.Update(entity);
+                }
+            }
+
+            if (entity is Direction)
+            {
+                if (_db.Find<Direction>(entity.Id) == null)
+                {
+                    _db.Insert(entity);
+                }
+                else
+                {
+                    _db.Update(entity);
+                }
+            }
+
+        }
+
+        public List<Stop> GetFavoriteStops()
+        {
+            return _db.Query<Stop>("Select * from Stop where IsFavorite=?", true);
+        }
+        public Preference GetPreference()
+        {
+            var preference = _db.Find<Preference>("user");
+            if (preference == null)
+            {
+                preference = new Preference
+                {
+                    AutoRefresh = true,
+                    AlertInterval = 1,
+                    Vibrate = true,
+                    AlertMinsBefore = 3
+                };
+            }
+
+            return preference;
+
+        }
+
+        
+        public void SavePrerefence(Preference preference)
+        {
+            var saved = _db.Find<Preference>(preference.Id);
+            if (saved == null)
+            {
+                _db.Insert(preference);
+            }
+            else
+            {
+                _db.Update(preference);
+            }
+        }
+
         public void SaveAgency(Agency agency)
         {
             var saved = _db.Find<Agency>(agency.Id);

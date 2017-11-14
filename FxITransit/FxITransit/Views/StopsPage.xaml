@@ -2,43 +2,59 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:w="clr-namespace:FxITransit.Layouts;assembly=FxITransit"
+             Title ="{Binding Title}"
              x:Class="FxITransit.Views.StopsPage">
-    <ContentPage.ToolbarItems>
+    <!--<ContentPage.ToolbarItems>
         <ToolbarItem  Text="Add To Favorites" Clicked="OnFavorite" />
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
         <StackLayout>
 
-            <!--<Label Text="{Binding Path= Title}"
-                       LineBreakMode="NoWrap"                      
-                       TextColor="Blue"
-                       FontSize="16"/>
-            <StackLayout>
-                --><!--<Label Text="{Binding Id, StringFormat='Number of Records = {0:N}'}"/>--><!--
-                <Button x:Name="BtnClosest" HeightRequest="50" Text="{Binding  Path=ClosestStop.TitleDisplay}">
-                    <Button.Clicked>BtnClosest_ClickedAsync</Button.Clicked>
-                </Button>
-
-            </StackLayout>-->
-
-            <w:RepeatableStack 
-                
-                HeightRequest="86"
+            <ScrollView VerticalOptions="Start" Orientation="Horizontal" HeightRequest="40">
+                <w:RepeatableStack x:Name="StkDir"
+                HeightRequest="40"
                 Orientation="Horizontal" 
                 ItemsSource="{Binding Directions}">
 
-                <w:RepeatableStack.ItemTemplate>
-                    <DataTemplate>
-                        <Button
+                    <w:RepeatableStack.ItemTemplate>
+                        <DataTemplate>
+                            <Button
+                            HeightRequest="40"
+                            Style ="{DynamicResource SelectedButtonStyle}"
                             Margin="1"
                             Text="{Binding Title}"
-                            Command="DirectionChangedCommand" />
-                    </DataTemplate>
-                </w:RepeatableStack.ItemTemplate>
-            </w:RepeatableStack>
-            
+                            Clicked="OnDirectionChanged" />
+                        </DataTemplate>
+                    </w:RepeatableStack.ItemTemplate>
+                </w:RepeatableStack>
+            </ScrollView>
+            <StackLayout Orientation ="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <Entry Grid.Column="0"  
+                       WidthRequest="300"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand"
+                       x:Name="TxtSearch"
+                       Placeholder="Search a stop" 
+                       Text="{Binding Filter, Mode=TwoWay}"/>
+                <StackLayout Grid.Column="1" Orientation="Vertical">
+                    <Label 
+                        HorizontalOptions="End"
+                        VerticalOptions="Center" 
+                        Text ="Favorite Agencies Only"/>
+                    <Switch 
+                        
+                        HorizontalOptions="End"
+                        VerticalOptions="Center" 
+                        IsToggled="{Binding ShowFavoritesOnly}"/>
+                </StackLayout>
+            </StackLayout>
 
-                <Entry x:Name="TxtSearch" Placeholder="Search A Stop" Text="{Binding Filter, Mode=TwoWay}"/>
             <StackLayout x:Name="MapHolder" HeightRequest="200"/>
             <ListView x:Name="StopsListView"
 				ItemsSource="{Binding FilteredStops}"
@@ -72,13 +88,13 @@
                                         Clicked="Button_OnClicked"
                                         />-->
                                 <AbsoluteLayout Grid.Column="1">
-                                    <Image Source="fave_add.png" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                    <Image Style="{DynamicResource FaveImageStyle}" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
                                            
                                            AbsoluteLayout.LayoutFlags="PositionProportional"/>
                                     <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
                                             AbsoluteLayout.LayoutFlags="PositionProportional" 
                                             BorderColor="Transparent" BackgroundColor="Transparent" 
-                                            Clicked="Button_OnClicked"
+                                            Clicked="OnFavoriteChanged"
                                             />
                                 </AbsoluteLayout>
 

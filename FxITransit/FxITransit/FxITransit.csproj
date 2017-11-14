@@ -39,6 +39,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackForeColorConverter.cs" />
+    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Layouts\RepeatableStack.cs" />
     <Compile Include="Layouts\RepeatableWrapLayout.cs" />
     <Compile Include="Layouts\WrapLayout.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Helpers\MessengingCenterAlert.cs" />
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\ObservableRangeCollection.cs" />
-    <Compile Include="Helpers\StopOptionsHelper.cs" />
+    <Compile Include="Helpers\PreferencesHelper.cs" />
     <Compile Include="Helpers\PageNavigationHelper.cs" />
     <Compile Include="Helpers\TrackingHelper.cs" />
     <Compile Include="Helpers\UtilsHelper.cs" />
@@ -69,7 +70,7 @@
     <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\Schedule.cs" />
-    <Compile Include="Models\MySettings.cs" />
+    <Compile Include="Models\Preference.cs" />
     <Compile Include="Models\Stop.cs" />
     <Compile Include="Models\StopDirections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\AgenciesViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\DirectionsViewModel.cs" />
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\PredictionsViewModel.cs" />
@@ -92,7 +92,6 @@
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgencyListView.xaml.cs" />
-    <Compile Include="Views\DirectionsListPage.xaml.cs" />
     <Compile Include="Views\FavouritesPage.xaml.cs">
       <DependentUpon>FavouritesPage.xaml</DependentUpon>
     </Compile>
@@ -103,13 +102,9 @@
       <DependentUpon>MainLaunchPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PredictionsPage.xaml.cs" />
-    <Compile Include="Views\RepeatableStackPage.xaml.cs" />
     <Compile Include="Views\RouteListPage.xaml.cs" />
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StopDirections.xaml.cs">
-      <DependentUpon>StopDirections.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StopsPage.xaml.cs" />
     <Compile Include="Views\TestSelector.cs" />
@@ -126,10 +121,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\AgencyListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\DirectionsListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -261,12 +252,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\StopDirections.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Views\MainLaunchPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -287,12 +272,6 @@
     <Content Include="Images\fave_off.png" />
     <Content Include="Images\narow_bus_stop.png" />
     <Content Include="Images\wide_bus._stop.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Views\RepeatableStackPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets')" />

@@ -24,51 +24,21 @@ namespace FxITransit.Views
         public StopsPage()
         {
             InitializeComponent();
-          
+
 
         }
 
         public StopsPage(Route route)
         {
             InitializeComponent();
-            _map = new CustomMap
-            {
-                IsShowingUser = true,
-                //HeightRequest = 300,
+           
+            BindingContext = this._viewModel = new StopsViewModel(route);
+            _viewModel.TabsContainer = StkDir;
 
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-            };
-            BindingContext = this._viewModel = new StopsViewModel(route, _map);
-            
-            var lastPhonePosition = TrackingHelper.Instance.LastPosition;
-            Position firstPos = new Position(lastPhonePosition.Latitude, lastPhonePosition.Longitude);
-            
-            _map.MoveToRegion(MapSpan.FromCenterAndRadius(firstPos, Distance.FromMiles(0.5)));
-            MapHolder.Children.Add(_map);
-
-            
-            //var closest = TrackingHelper.Instance.GetClosestStop(_viewModel.Direction.Stops);
-            //_viewModel.ClosestStop = closest;
-            //if (closest != null)
-            //{
-            //    var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
-            //    var pin = new Pin
-            //    {
-            //        Type = PinType.Place,
-            //        Position = position,
-            //        Label = closest.Title,
-            //        Address = $"{closest.Distance} Miles"
-
-            //    };
-            //    _map.Pins.Add(pin);
-            //    _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
-            //}
-   
 
         }
 
-        
+
 
         private async void OnStopSelected(object sender, SelectedItemChangedEventArgs args)
         {
@@ -86,13 +56,8 @@ namespace FxITransit.Views
         {
             base.OnAppearing();
 
-            var route = _viewModel.Route;
-            if (!route.IsConfigured)
-            {
-                await _viewModel.ConfigureRoute();
-
-            }
-
+            await _viewModel.ConfigureRoute();
+            MapHolder.Children.Add(_viewModel.Map);
         }
 
         private async Task BtnClosest_ClickedAsync(object sender, EventArgs e)
@@ -105,19 +70,27 @@ namespace FxITransit.Views
 
         }
 
-        async void OnFavorite(object sender, EventArgs e)
+        private void OnFavoriteChanged(object sender, EventArgs e)
         {
-            //await Navigation.PushAsync(new NewItemPage());
+            var stop = (sender as Button).BindingContext as Stop;
+            if (stop != null)
+            {
+                stop.IsFavorite = !stop.IsFavorite;
+                DbHelper.Instance.SaveEntity(stop);
+                
+            }
         }
 
-        private void Button_OnClicked(object sender, EventArgs e)
+        private void OnDirectionChanged(object sender, EventArgs e)
         {
-            if ((sender as Button).BindingContext is Stop stop)
+            var direction = (sender as Button).BindingContext as Direction;
+            if (direction != null)
             {
-                
-                StopOptionsHelper.Instance.AddFavorite(stop);
+                _viewModel.ChangeDirection(direction);
 
+                
             }
+
         }
     }
 }

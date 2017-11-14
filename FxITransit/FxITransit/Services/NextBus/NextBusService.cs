@@ -41,7 +41,8 @@ namespace FxITransit.Services.NextBus
         private NextBusService()
         {
             _client = GetClient();
-            _dbHelper = new DbHelper();
+            _dbHelper = DbHelper.Instance;
+
 
         }
 
@@ -50,7 +51,7 @@ namespace FxITransit.Services.NextBus
         public void RefreshDatabase()
         {
             _dbHelper.RefreshDatabase();
-            _dbHelper = new DbHelper();
+
         }
 
         public async Task<IEnumerable<Agency>> GetAgencyList()
@@ -81,7 +82,7 @@ namespace FxITransit.Services.NextBus
         }
 
 
-        public async Task<IEnumerable<Route>> GetRouteList(Agency agency, bool showDialogs=true)
+        public async Task<IEnumerable<Route>> GetRouteList(Agency agency, bool showDialogs = true)
         {
             var routes = new List<Route>();
 
@@ -124,8 +125,8 @@ namespace FxITransit.Services.NextBus
         {
             //Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Configuring Details from DB...", MaskType.Black));
             //UserDialogs.Instance.ShowLoading($"Configuring Details from DB...", MaskType.Black);
-            
-            var count =  await _dbHelper.ConfigureRoute(route);
+
+            var count = await _dbHelper.ConfigureRoute(route);
             //UserDialogs.Instance.HideLoading();
 
             if (!route.IsConfigured)
@@ -137,6 +138,8 @@ namespace FxITransit.Services.NextBus
 
                 string xml = _client.GetStringAsync(
                     EndPoints.RouteConfigUrl(route.AgencyTag, route.Tag)).Result;
+
+                var url = EndPoints.RouteConfigUrl(route.AgencyTag, route.Tag);
 
                 var doc = XDoc.LoadXml(xml);
 
@@ -163,13 +166,13 @@ namespace FxITransit.Services.NextBus
                         stop.Tag = stopNode.GetAttribute("tag");
                         stop.Title = stopNode.GetAttribute("title");
                         stop.StopId = stopNode.GetAttribute("stopId");
-                        
+
                         stop.RouteTag = route.Tag;
                         stop.AgencyTag = route.AgencyTag;
                         stop.RouteTitle = route.Title;
                         stop.AgencyTitle = route.AgencyTitle;
                         stops.Add(stop);
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -179,9 +182,15 @@ namespace FxITransit.Services.NextBus
 
                 }
 
+
+                //foreach (XElement directionNode in dirN
+                //{
+
+                //}
+
                 //directions
                 route.Directions.Clear();
-                foreach (var directionNode in doc.GetDescendantElements("direction"))
+                foreach (XElement directionNode in doc.GetDescendantElements("direction"))
                 {
                     var direction = new Direction();
 
@@ -192,6 +201,7 @@ namespace FxITransit.Services.NextBus
                     direction.Name = directionNode.GetAttribute("name");
                     direction.UseForUI = directionNode.GetAttribute("useForUI");
                     direction.RouteTag = route.Tag;
+                    
 
                     route.Directions.Add(direction);
 
@@ -206,6 +216,7 @@ namespace FxITransit.Services.NextBus
                             stop.Id = $"{direction.Id}.{stop.Tag}";
                             stop.ParentId = direction.Id;
                             stop.DirectionTitle = direction.Title;
+                            stop.AgencyTitle = route.AgencyTitle;
                             direction.Stops.Add(stop);
                             stop.DirectionTag = direction.Tag;
                             if (stop.Tag != tag)
@@ -215,12 +226,20 @@ namespace FxITransit.Services.NextBus
                             _dbHelper.SaveStop(stop);
                         }
                     }
+                    //var pathXml = "<path>";
+                    //foreach (var pathNode in directionNode.Descendants().Where(x => x.Name == "point"))
+                    //{
+                    //    pathXml += pathNode.ToString();
+                    //}
+                    //pathXml += "</path>";
+                    //direction.PathData = pathXml;
+
                     _dbHelper.SaveDirection(direction);
 
                 }
                 UserDialogs.Instance.HideLoading();
             }
-            
+
             route.IsConfigured = true;
 
             //?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true
@@ -228,57 +247,57 @@ namespace FxITransit.Services.NextBus
 
         }
 
-    public void GetPredictionsFromService(IList<Stop> stops)
-    {
-        foreach (var stop in stops)
+        public void GetPredictionsFromService(IList<Stop> stops)
         {
-
-            var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
-
-            var xml = _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
-
-            var doc = XDoc.LoadXml(xml);
-
-            /*
-             * <prediction tripTag="7679393" 
-             * block="9718" 
-             * vehicle="1537" 
-             * dirTag="N____O_F00" 
-             * isDeparture="false" minutes="20" seconds="1220" epochTime="1503625693370" vehiclesInConsist="2"/>
-             */
-            List<Prediction> preds = new List<Prediction>();
-
-
-            foreach (var predNode in doc.GetDescendantElements("prediction"))
+            foreach (var stop in stops)
             {
-                var pred = new Prediction();
-                pred.Minutes = predNode.GetAttribute("minutes");
-                pred.Seconds = predNode.GetAttribute("seconds");
-                pred.EpochTime = predNode.GetAttribute("epochTime");
-                pred.IsDeparture = predNode.GetAttribute("isDeparture");
-                pred.DirTag = predNode.GetAttribute("dirTag");
-                pred.Vehicle = predNode.GetAttribute("vehicle");
-                pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
-                preds.Add(pred);
+
+                var x = EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag);
+
+                var xml = _client.GetStringAsync(EndPoints.PredictionsUrl(stop.AgencyTag, stop.RouteTag, stop.Tag)).Result;
+
+                var doc = XDoc.LoadXml(xml);
+
+                /*
+                 * <prediction tripTag="7679393" 
+                 * block="9718" 
+                 * vehicle="1537" 
+                 * dirTag="N____O_F00" 
+                 * isDeparture="false" minutes="20" seconds="1220" epochTime="1503625693370" vehiclesInConsist="2"/>
+                 */
+                List<Prediction> preds = new List<Prediction>();
+
+
+                foreach (var predNode in doc.GetDescendantElements("prediction"))
+                {
+                    var pred = new Prediction();
+                    pred.Minutes = predNode.GetAttribute("minutes");
+                    pred.Seconds = predNode.GetAttribute("seconds");
+                    pred.EpochTime = predNode.GetAttribute("epochTime");
+                    pred.IsDeparture = predNode.GetAttribute("isDeparture");
+                    pred.DirTag = predNode.GetAttribute("dirTag");
+                    pred.Vehicle = predNode.GetAttribute("vehicle");
+                    pred.LocalTime = UtilsHelper.Instance.ConvertUnixTimeStamp(pred.EpochTime);
+                    preds.Add(pred);
+                }
+                stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
+                stop.Prediction1 = preds.Count >= 1 ? preds[0] : null;
+                stop.Prediction2 = preds.Count >= 2 ? preds[1] : null;
+                stop.Prediction3 = preds.Count >= 3 ? preds[2] : null;
+
             }
-            stop.Predictions.ReplaceRange(preds.OrderBy(t => Convert.ToDouble(t.EpochTime)));
-            stop.Prediction1 = preds.Count >= 1 ? preds[0] : null;
-            stop.Prediction2 = preds.Count >= 2 ? preds[1] : null;
-            stop.Prediction3 = preds.Count >= 3 ? preds[2] : null;
 
         }
 
+        private HttpClient GetClient()
+        {
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(EndPoints.BaseUrl);
+            return client;
+        }
+
+
     }
-
-    private HttpClient GetClient()
-    {
-        var client = new HttpClient();
-        client.BaseAddress = new Uri(EndPoints.BaseUrl);
-        return client;
-    }
-
-
-}
 
 
 

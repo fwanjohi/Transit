@@ -20,6 +20,7 @@ namespace FxITransit.Views
         {
 
             InitializeComponent();
+            PreferencesHelper.Instance.Preference = DbHelper.Instance.GetPreference();
         }
 
 
@@ -32,39 +33,6 @@ namespace FxITransit.Views
 
         protected override void OnAppearing()
         {
-            base.OnAppearing();
-            if (_first)
-            {
-                Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Loading preferences", MaskType.Black));
-                Task.Run(async () =>
-                {
-                     await StopOptionsHelper.Instance.LoadSettingsFromFile();
-
-                    
-                }).ContinueWith(result => Device.BeginInvokeOnMainThread(() =>
-                {
-                    if (StopOptionsHelper.Instance.MySettings.AlertMinsBefore == 0)
-                    {
-                        StopOptionsHelper.Instance.MySettings.AlertMinsBefore = 5;
-                        StopOptionsHelper.Instance.MySettings.AlertInterval = 1;
-                        StopOptionsHelper.Instance.MySettings.Speak = true;
-                        StopOptionsHelper.Instance.MySettings.Alert = true;
-
-
-                    }
-                    StopOptionsHelper.Instance.MySettings.AutoRefresh = true;
-
-                    if (StopOptionsHelper.Instance.MySettings.FavoriteStops == null)
-                    {
-                        StopOptionsHelper.Instance.MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
-                    }
-                    UserDialogs.Instance.HideLoading();
-
-                }));
-            }
-            _first = false;
-
-
         }
     }
 }

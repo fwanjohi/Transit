@@ -22,27 +22,27 @@ namespace FxITransit.ViewModels
                 {
                     int diff = (int)pred.LocalTime.Value.Subtract(DateTime.Now).TotalMinutes;
 
-                    if (diff <= Settings.MySettings.AlertMinsBefore)
+                    if (diff <= Settings.Preference.AlertMinsBefore)
                     {
                         pred.IsArriving = true;
-                        if (StopOptionsHelper.Instance.MySettings.Alert && _nextAlert <= DateTime.Now)
+                        if (PreferencesHelper.Instance.Preference.Alert && _nextAlert <= DateTime.Now)
                         {
                             var vehicle = pred.Vehicle ?? "";
 
                             var msg = $"Your transit vehicle {vehicle} is arriving in {diff} Minutes";
                             Settings.SendNotification(msg);
 
-                            if (Settings.MySettings.Speak)
+                            if (Settings.Preference.Speak)
                             {
                                 Speak(msg);
                             }
 
-                            if (Settings.MySettings.Vibrate)
+                            if (Settings.Preference.Vibrate)
                             {
 
                             }
 
-                            _nextAlert = _nextAlert.AddMinutes(Settings.MySettings.AlertInterval);
+                            _nextAlert = _nextAlert.AddMinutes(Settings.Preference.AlertInterval);
 
                         }
                     }

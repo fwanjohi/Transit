@@ -24,7 +24,12 @@ namespace FxITransit.ViewModels
             
             Stop = stop;
             Title = $"Predictions - {stop.TitleDisplay }";
-            ChangeFavoriteCommand = new Command(async () =>  StopOptionsHelper.Instance.AddFavorite(Stop));
+            ChangeFavoriteCommand = new Command(
+                async () =>
+                {
+                    stop.IsFavorite = !stop.IsFavorite;
+                    Db.SaveEntity(stop);
+                });
         }
         
         

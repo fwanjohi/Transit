@@ -86,7 +86,7 @@ namespace FxITransit.Models
         [Ignore]
         public string MediumTitle
         {
-            get { return $"{RouteTitle}, {DirectionTitle }, {Title}"; }
+            get { return $" {Title}, {DirectionTitle } , {RouteTitle}"; }
         }
 
         

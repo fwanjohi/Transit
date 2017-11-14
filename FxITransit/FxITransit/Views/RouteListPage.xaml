@@ -4,85 +4,74 @@
              xmlns:w="clr-namespace:FxITransit.Layouts"
              xmlns:views="clr-namespace:FxITransit.Views;assembly=FxITransit"
              xmlns:xl="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             Title ="{Binding Title}"
              x:Class="FxITransit.Views.RouteListPage">
     <StackLayout Orientation="Vertical">
         <StackLayout Orientation ="Horizontal">
-            <Label Text ="Favorite Routes Only"/>
-            <Switch IsToggled="{Binding ShowFavoritesOnly}"/>
-        </StackLayout>
-        <Label Text="{Binding Path= Title}"
-           LineBreakMode="NoWrap"
-           TextColor="Blue"
-           FontSize="16"/>
-
-        <Entry x:Name="TxtSearch" 
-           Placeholder="Search Route" 
-           Text="{Binding Filter, Mode=TwoWay}"/>
-
-        <ScrollView>
-            <StackLayout>
-
-                <ScrollView VerticalOptions="Start" Orientation="Horizontal">
-                    <w:RepeatableStack 
-                               ItemsSource="{Binding FilteredRoutes}">
-                        <w:RepeatableStack.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="80"/>
-                                    </Grid.RowDefinitions>
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width ="70"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Frame OutlineColor="Gray" Grid.Column="0" >
-                                        <AbsoluteLayout >
-                                            <Label Margin="4"  Text="{Binding Title}" 
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       LineBreakMode="NoWrap"
-                                       Style="{DynamicResource ListItemTextStyle}"
-                                        HorizontalTextAlignment="Start" 
-                                        AbsoluteLayout.LayoutBounds="0,0,1,1"
-                                        AbsoluteLayout.LayoutFlags="All"/>
-
-                                            <Button x:Name ="BtnRouteSelected"
-                                            AbsoluteLayout.LayoutBounds="0,0,1,1"
-                                            AbsoluteLayout.LayoutFlags="All" 
-                                            BackgroundColor="Transparent"
-                                            BorderColor="Transparent" 
-                                            Clicked="BtnRouteSelected_OnClicked"
-                                             />
-                                        </AbsoluteLayout>
-                                    </Frame>
-
-                                    <!--<AbsoluteLayout Grid.Column="1">-->
-                                    <!--<Image Source="fave_on.png" 
-                                           AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
-                                           AbsoluteLayout.LayoutFlags="PositionProportional"/>-->
-                                    <Button Grid.Column="1" x:Name="btnFave" 
-                                            Clicked="BtnFaveRoute_OnClicked"
-                                            Text="Fave" />
-                                    <!--</AbsoluteLayout>-->
-
-                                </Grid>
-
-                                <!--<controls:ExtendedButton HorizontalContentAlignment="Start"
-                                                 
-                                                 VerticalContentAlignment="Start"
-                                                 Clicked="Button_OnClicked"
-                                                 ContentLayout="Left"
-                                                 Text="{Binding Title}">
-                            
-                        </controls:ExtendedButton>-->
-
-                            </DataTemplate>
-                        </w:RepeatableStack.ItemTemplate>
-                    </w:RepeatableStack>
-                </ScrollView>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+            <Entry Grid.Column="0"  
+                   WidthRequest="300"
+                   VerticalOptions="Center"
+                   HorizontalOptions="StartAndExpand"
+                   x:Name="TxtSearch"
+                   Placeholder="Search Route" 
+                   Text="{Binding Filter, Mode=TwoWay}"/>
+            <StackLayout Grid.Column="1" Orientation="Vertical">
+                <Label 
+                    HorizontalOptions="End"
+                    VerticalOptions="Center" 
+                    Text ="Favorite Agencies Only"/>
+                <Switch 
+                        
+                    HorizontalOptions="End"
+                    VerticalOptions="Center" 
+                    IsToggled="{Binding ShowFavoritesOnly}"/>
             </StackLayout>
-        </ScrollView>
+        </StackLayout>
+
+
+        <ListView x:Name="ItemsListView"
+				ItemsSource="{Binding Filtered}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                CachingStrategy="RecycleElement"
+				ItemTapped="OnRouteSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width ="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Orientation="Vertical" Padding="10">
+                                <Label Text="{Binding Title}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        FontSize="16"/>
+                            </StackLayout>
+
+                            <AbsoluteLayout Grid.Column="1">
+                                <Image Style="{DynamicResource FaveImageStyle}" 
+                                       AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                       AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                                <Button x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                        AbsoluteLayout.LayoutFlags="PositionProportional" 
+                                        BorderColor="Transparent" BackgroundColor="Transparent" 
+                                        Clicked="OnFavoriteChanged"/>
+                            </AbsoluteLayout>
+
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
 </ContentPage>

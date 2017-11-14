@@ -21,9 +21,9 @@ namespace FxITransit.ViewModels
             }
         }
 
-        public FavoritesViewModel( ObservableRangeCollection<Stop> faves)
+        public FavoritesViewModel()
         {
-            _faves = faves;
+            FavoriteStops = new ObservableRangeCollection<Stop>();
             OnPredictionsChanged = UpdatePredictions;
         }
 

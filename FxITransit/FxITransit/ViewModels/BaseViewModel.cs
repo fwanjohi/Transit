@@ -19,16 +19,24 @@ namespace FxITransit.ViewModels
         public ITransitService TransitService { get; private set; }
         public TrackingHelper Tracking { get; private set; }
 
-        public StopOptionsHelper Settings { get; private set; }
+        public PreferencesHelper Settings { get; private set; }
         public UtilsHelper Utils { get; private set; }
+        public DbHelper Db { get; private set; }
+
+        public Command<DbEntity> ChangeFavoriteCommand { get; set; }
 
         public BaseViewModel()
         {
             TransitService = NextBusService.Instance;
             Tracking = TrackingHelper.Instance;
-            Settings = StopOptionsHelper.Instance;
+            Settings = PreferencesHelper.Instance;
             Utils = UtilsHelper.Instance;
+            Db = DbHelper.Instance;
 
+            ChangeFavoriteCommand = new Command<DbEntity>((entity =>
+            {
+                entity.IsFavorite = !entity.IsFavorite;
+            }));
         }
 
 
@@ -44,7 +52,7 @@ namespace FxITransit.ViewModels
 
                     if (_closestStop != null)
                     {
-                        if (Settings.MySettings.Speak)
+                        if (Settings.Preference.Speak)
                         {
                             Speak("The closest stop is " + _closestStop.TitleDisplay);
                         }
@@ -76,10 +84,7 @@ namespace FxITransit.ViewModels
             set { SetProperty(ref title, value); }
         }
 
-        protected Position DeviceLocation
-        {
-            get => Tracking.LastPosition;
-        }
+       
 
         protected void Speak(string text)
         {

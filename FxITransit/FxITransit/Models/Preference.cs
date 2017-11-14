@@ -11,7 +11,7 @@ using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 namespace FxITransit.Models
 {
     //https://github.com/aritchie/settings
-    public class MySettings : ObservableObject
+    public class Preference : DbEntity
     {
         private int _alertMinsBefore;
         private bool _alert;
@@ -20,24 +20,18 @@ namespace FxITransit.Models
         private bool _speak;
         private bool _autoRefresh;
 
+        private bool _favoriteAgenciesOnly;
+        private bool _favoriteRoutesOnly;
+        private bool _favoriteStopsOnly;
+
         private ObservableRangeCollection<Stop> _favoriteStops;
 
-        public MySettings()
+        public Preference()
         {
+            Id = "user";
             RefreshInterval = 30;
             _favoriteStops = new ObservableRangeCollection<Stop>();
         }
-
-       
-
-        public void Update()
-        {
-            OnPropertyChanged("FavoriteStops");
-            //OnPropertyChanged("FavoriteRoutes");
-
-        }
-        
-
 
 
         public int AlertMinsBefore
@@ -47,6 +41,7 @@ namespace FxITransit.Models
             {
                 _alertMinsBefore = value;
                 OnPropertyChanged("AlertMinsBefore");
+                
             }
         }
 
@@ -57,6 +52,7 @@ namespace FxITransit.Models
             {
                 _alertInterval = value;
                 OnPropertyChanged("AlertInterval");
+                
             }
         }
 
@@ -66,6 +62,7 @@ namespace FxITransit.Models
             set
             {
                 _alert = value;
+                
                 OnPropertyChanged("Alert");
             }
         }
@@ -76,7 +73,9 @@ namespace FxITransit.Models
             set
             {
                 _autoRefresh = value;
+                
                 OnPropertyChanged("AutoRefresh");
+
             }
         }
 
@@ -86,7 +85,9 @@ namespace FxITransit.Models
             set
             {
                 _speak = value;
+                
                 OnPropertyChanged("Speak");
+               
             }
         }
         public bool Vibrate
@@ -95,23 +96,48 @@ namespace FxITransit.Models
             set
             {
                 _vibrate = value;
+                
                 OnPropertyChanged("Vibrate");
             }
         }
 
         public int RefreshInterval { get; private set; }
 
-        public ObservableRangeCollection<Stop> FavoriteStops
+        public bool FavoriteAgenciesOnly
         {
-            get { return _favoriteStops; }
+            get { return _favoriteAgenciesOnly; }
             set
             {
-                _favoriteStops = value;
-                OnPropertyChanged("FavoriteStops");
+                _favoriteAgenciesOnly = value;
+                
+                OnPropertyChanged("FavoriteAgenciesOnly");
+                
             }
         }
 
-        public bool ShowFavoritesRoutesOnly { get; set; }
+        public bool FavoriteRoutesOnly
+        {
+            get { return _favoriteRoutesOnly; }
+            set
+            {
+                _favoriteRoutesOnly = value;
+                
+                OnPropertyChanged("FavoriteRoutesOnly");
+            }
+        }
+
+        public bool FavoriteStopsOnly
+        {
+            get { return _favoriteStopsOnly; }
+            set
+            {
+                _favoriteStopsOnly = value;
+                
+                OnPropertyChanged("FavoriteStopsOnly");
+            }
+        }
+
+        
     }
 
 

@@ -44,7 +44,7 @@ namespace FxITransit.UWP
 
                     var polyline = new MapPolyline();
                     polyline.StrokeColor = Windows.UI.Color.FromArgb(128, 255, 0, 0);
-                    polyline.StrokeThickness = 5;
+                    polyline.StrokeThickness = 2;
                     polyline.Path = new Geopath(coordinates);
                     nativeMap.MapElements.Add(polyline);
                 }

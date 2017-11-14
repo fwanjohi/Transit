@@ -285,6 +285,7 @@
     <Content Include="Resources\drawable\bus.png" />
     <AndroidResource Include="Resources\drawable\fave_add.png" />
     <Content Include="Resources\drawable\fave_off.png" />
+    <AndroidResource Include="Resources\drawable\fave_remove.png" />
     <Content Include="Resources\drawable\narow_bus_stop.png" />
     <Content Include="Resources\drawable\wide_bus._stop.png" />
   </ItemGroup>

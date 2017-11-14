@@ -1,44 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{Binding Title}"
              x:Class="FxITransit.Views.PredictionsPage">
-
-    <!--<ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="PredictionStyle" TargetType="Label">
-                <Style.Triggers>
-                    <DataTrigger TargetType="Label"
-                        Binding="{Binding IsArriving}"
-                        Value="true">
-                        <Setter Property="TextColor"  Value="Color.Red" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>-->
-    <!--<DataTrigger TargetType="Button"
-         Binding="{Binding Source={x:Reference emailAddress},
-                                           Path=Text.Length}"
-         Value="0">
-        <Setter Property="IsEnabled" Value="False" />
-    </DataTrigger>-->
-
-    
 
     <ContentPage.Content>
         <StackLayout >
-            
-            <Label Text="{Binding Title}"
-                       LineBreakMode="WordWrap"
-                       TextColor="Blue"
-                       FontSize="16"/>
 
             <StackLayout Orientation="Horizontal">
-                <!--<Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>-->
+                <AbsoluteLayout Grid.Column="1">
+                    <Image 
+                        BindingContext="{Binding}"
+                        Style="{DynamicResource FaveImageStyle}" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                                           
+                           AbsoluteLayout.LayoutFlags="PositionProportional"/>
+                    <Button BindingContext="{Binding}"
+                        x:Name="btnFave" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
+                            AbsoluteLayout.LayoutFlags="PositionProportional" 
+                            BorderColor="Transparent" BackgroundColor="Transparent" 
+                            Command="{Binding ChangeFavoriteCommand}"
+                            
+                    />
+                </AbsoluteLayout>
+
+
+                <!--<Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>--><!--
                 <Button Text="Fave" Command="{Binding ChangeFavoriteCommand}"></Button>
-                <!--<Button Text="Stop Settings"></Button>-->
+                --><!--<Button Text="Stop Settings"></Button>-->
                 <!--<SwitchCell    Text="Send Alerts" On="{Binding Path=Alerts.Alert}" />-->
-                
                 
             </StackLayout>
 

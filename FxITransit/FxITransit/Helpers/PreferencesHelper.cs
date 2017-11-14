@@ -36,27 +36,32 @@ namespace FxITransit.Helpers
     //    public FavoriteSettings Favorites { get; set; }
     //}
 
-    public class StopOptionsHelper : ObservableObject
+    public class PreferencesHelper : ObservableObject
     {
-        private static readonly Lazy<StopOptionsHelper> _instance = new Lazy<StopOptionsHelper>(() => new StopOptionsHelper());
+        private static readonly Lazy<PreferencesHelper> _instance = new Lazy<PreferencesHelper>(() => new PreferencesHelper());
         private int _elapsedTime;
-        private MySettings _mySettings;
+        private Preference _preference;
         private bool _viewUpdates = false;
         private ITransitService _transitService;
 
-        public static StopOptionsHelper Instance => _instance.Value;
+        public static PreferencesHelper Instance => _instance.Value;
         public ObservableRangeCollection<Stop> _stopsToUpdate;
+
         public Command<Stop> FavoriteCommand { get; set; }
+        private ObservableRangeCollection<Stop> _favoriteStops = new ObservableRangeCollection<Stop>();
         public Command<Route> FavoriteRouteCommand { get; set; }
 
 
         public Action<List<Prediction>> OnPredictionsChanged { get; set; }
 
-        private StopOptionsHelper()
+        private PreferencesHelper()
         {
-            MySettings = new MySettings();
+            _preference = new Preference();
             _stopsToUpdate = new ObservableRangeCollection<Stop>();
             _transitService = NextBusService.Instance;
+            _preference = DbHelper.Instance.GetPreference();
+            _favoriteStops = new ObservableRangeCollection<Stop>();
+            _favoriteStops.ReplaceRange(DbHelper.Instance.GetFavoriteStops());
         }
 
         public ObservableRangeCollection<Stop> ViewStopsToUpdate
@@ -69,14 +74,33 @@ namespace FxITransit.Helpers
             }
         }
 
-        public MySettings MySettings
+        //public ObservableRangeCollection<Stop> FavoriteStops
+        //{
+        //    get { return _favoriteStops; }
+        //    set
+        //    {
+        //        _favoriteStops = value;
+        //        OnPropertyChanged("FavoriteStops");
+        //    }
+        //}
+
+
+
+        public void Update()
         {
-            get { return _mySettings; }
+            OnPropertyChanged("FavoriteStops");
+            //OnPropertyChanged("FavoriteRoutes");
+
+        }
+
+        public Preference Preference
+        {
+            get { return _preference; }
             set
             {
-                _mySettings = value;
-                OnPropertyChanged("MySettings");
-                _mySettings.Update();
+                _preference = value;
+                OnPropertyChanged("Preference");
+               
             }
         }
         public ITransitService TransitService
@@ -88,50 +112,48 @@ namespace FxITransit.Helpers
                 OnPropertyChanged("TransitService");
             }
         }
-        public void RemoveFavorite(Stop stop)
-        {
-            var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
-            if (fav != null)
-            {
-                stop.IsFavorite = false;
-                MySettings.FavoriteStops.Remove(stop);
-                var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
-                if (inWatch != null)
-                {
-                    StopOptionsHelper.Instance.ViewStopsToUpdate.Remove(stop);
-                }
-                MySettings.Update();
-                OnPropertyChanged("MySettings");
-            }
-        }
+        //public void RemoveFavorite(Stop stop)
+        //{
+        //    var fav = FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
+        //    if (fav != null)
+        //    {
+        //        stop.IsFavorite = false;
+        //        FavoriteStops.Remove(stop);
+        //        var inWatch = ViewStopsToUpdate.FirstOrDefault(x => x.StopId == fav.StopId);
+        //        if (inWatch != null)
+        //        {
+        //            ViewStopsToUpdate.Remove(stop);
+        //        }
+                
+                
+        //    }
+        //}
 
-        public void AddFavorite(Stop stop)
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                if (MySettings.FavoriteStops == null)
-                {
-                    MySettings.FavoriteStops = new ObservableRangeCollection<Stop>();
-                }
+        //public void AddFavorite(Stop stop)
+        //{
+        //    Device.BeginInvokeOnMainThread(() =>
+        //    {
+        //        if (FavoriteStops == null)
+        //        {
+        //            FavoriteStops = new ObservableRangeCollection<Stop>();
+        //        }
 
-                var fav = MySettings.FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
+        //        var fav = FavoriteStops.FirstOrDefault(x => x.Tag == stop.Tag);
               
 
-                if (fav == null)
-                {
-                    stop.IsFavorite = true;
-                    MySettings.FavoriteStops.Add(stop);
-                    var inWatch = StopOptionsHelper.Instance.ViewStopsToUpdate.FirstOrDefault(x => x.StopId == stop.StopId);
-                    if (inWatch != null)
-                    {
-                        StopOptionsHelper.Instance.ViewStopsToUpdate.Add(stop);
-                    }
-                }
-
-                MySettings.Update();
-                OnPropertyChanged("MySettings");
-            });
-        }
+        //        if (fav == null)
+        //        {
+        //            stop.IsFavorite = true;
+        //            FavoriteStops.Add(stop);
+        //            var inWatch = ViewStopsToUpdate.FirstOrDefault(x => x.StopId == stop.StopId);
+        //            if (inWatch != null)
+        //            {
+        //                ViewStopsToUpdate.Add(stop);
+        //            }
+        //        }
+                
+        //    });
+        //}
         
         
 
@@ -142,9 +164,9 @@ namespace FxITransit.Helpers
 
             Device.StartTimer(TimeSpan.FromSeconds(1), () =>
             {
-                if (this.MySettings.AutoRefresh && _viewUpdates)
+                if (this.Preference.AutoRefresh && _viewUpdates)
                 {
-                    if (_elapsedTime >= this.MySettings.RefreshInterval)
+                    if (_elapsedTime >= this.Preference.RefreshInterval)
                     {
 
                         LoadPredictions();
@@ -157,7 +179,7 @@ namespace FxITransit.Helpers
                 }
 
                 _elapsedTime++;
-                return MySettings.AutoRefresh && _viewUpdates;  // True = Repeat again, False = Stop the timer
+                return Preference.AutoRefresh && _viewUpdates;  // True = Repeat again, False = Stop the timer
             });
         }
 
@@ -235,7 +257,7 @@ namespace FxITransit.Helpers
         public async void SaveSttingsToFile()
         {
             UtilsHelper.Instance.Log("----------saving---------");
-            string json = JsonConvert.SerializeObject(MySettings);
+            string json = JsonConvert.SerializeObject(Preference);
             var root = FileSystem.Current.LocalStorage;
 
             var folderName = "fxitransit";
@@ -284,65 +306,8 @@ namespace FxITransit.Helpers
         }
 
 
-        public async Task LoadSettingsFromFile()
-        {
-            UtilsHelper.Instance.Log("----------START LOADING---------");
-            var fileName = "settings.json";
-            var root = FileSystem.Current.LocalStorage;
-            var folderName = "fxitransit";
-            IFolder myFolder = null;
-            if (await root.CheckExistsAsync(folderName) == ExistenceCheckResult.FolderExists )
-            {
-                UtilsHelper.Instance.Log($"{folderName} exits");
-                myFolder = await root.GetFolderAsync(folderName);
-            }
-            else
-            {
-                UtilsHelper.Instance.Log($"{folderName} DOES NOT exiSt... at {root.Path}, {root.Name}");
-                return;
-            }
 
-
-            IFile myFile = null;
-
-            myFile = await myFolder.GetFileAsync(fileName);
-
-            if (myFile != null)
-            {
-                UtilsHelper.Instance.Log("Loading settings from file " + myFile.Path);
-                var json = await myFile.ReadAllTextAsync();
-                if (json.HasValue())
-                {
-                    UtilsHelper.Instance.Log(json);
-                    var settings = JsonConvert.DeserializeObject<MySettings>(json);
-                    if (settings != null)
-                    {
-
-                        MySettings = settings;
-                        UtilsHelper.Instance.Log("loaded the settings... " + settings.FavoriteStops.Count);
-
-                        //MySettings = new MySettings();
-                        MySettings.FavoriteStops = new ObservableRangeCollection<Stop>(settings.FavoriteStops);
-
-
-                    }
-                    else
-                    {
-                        UtilsHelper.Instance.Log("FUCK... could not load settings...");
-                    }
-                    
-
-                    var items = settings.FavoriteStops.Count;
-                }
-                UtilsHelper.Instance.Log("----------DONE LOADING---------");
-            }
-            else
-            {
-                UtilsHelper.Instance.Log("ERROR GETTING settings from file " + myFile.Path);
-            }
-        }
-
-        ~StopOptionsHelper()
+        ~PreferencesHelper()
         {
 
         }
