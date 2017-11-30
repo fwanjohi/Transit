@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{Binding PageTitle}"
+             x:Class="FxITransit.Views.StopLitePage">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical">
+            <!--<StackLayout Orientation ="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <Entry Grid.Column="0"  
+                       WidthRequest="300"
+                       VerticalOptions="Center"
+                       HorizontalOptions="StartAndExpand"
+                       x:Name="TxtSearch"
+                       Placeholder="Search an address" 
+                       Text="{Binding ToAddress, Mode=TwoWay}"/>
+                <StackLayout Grid.Column="1" Orientation="Vertical">
+                    <Button
+                        x:Name="BtnSearch"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center" 
+                        Clicked="OnSearchAddress"
+                        Text ="Search"/>
+
+                </StackLayout>
+
+            </StackLayout>-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+                <ListView Grid.Row="0"  
+                          x:Name="StopListView"
+                          ItemsSource="{Binding StopsFound}"
+                          SelectedItem="{Binding SelectedStop}" 
+                          VerticalOptions="FillAndExpand"
+                          HasUnevenRows="true"
+                          IsPullToRefreshEnabled="true"
+                          IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                          CachingStrategy="RecycleElement"
+                          
+                >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+
+                                <StackLayout Orientation="Vertical" Padding="10">
+                                    <Label Text="{Binding Title}"
+                                           LineBreakMode="WordWrap"
+                                           Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="16"/>
+
+                                    <Label Text="{Binding DistanceDisplay}"
+                                           LineBreakMode="CharacterWrap"
+                                           Style="{DynamicResource ListItemDetailTextStyle}"
+                                           FontSize="13"/>
+                                </StackLayout>
+
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                <!--<StackLayout Orientation="Horizontal" Grid.Row="1">
+                    <Button x:Name="BtnOK" Clicked="BtnOK_Clicked" Text="Go to Selected Stop"/>
+                    <Button x:Name="BtnCancel" Clicked="BtnCancel_Clicked" Text="Back"/>
+                </StackLayout>-->
+
+            </Grid>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

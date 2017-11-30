@@ -15,6 +15,7 @@ using System.Windows;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -81,7 +82,6 @@ namespace FxITransit.Services.NextBus
             return list;
         }
 
-
         public async Task<IEnumerable<Route>> GetRouteList(Agency agency, bool showDialogs = true)
         {
             var routes = new List<Route>();
@@ -119,7 +119,6 @@ namespace FxITransit.Services.NextBus
 
             return routes;
         }
-
 
         public async Task GetRouteDetails(Route route)
         {
@@ -288,6 +287,8 @@ namespace FxITransit.Services.NextBus
             }
 
         }
+
+        
 
         private HttpClient GetClient()
         {

@@ -58,13 +58,14 @@
     <Compile Include="Helpers\TrackingHelper.cs" />
     <Compile Include="Helpers\UtilsHelper.cs" />
     <Compile Include="Helpers\XDoc.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\BaseDataObject.cs" />
+    <Compile Include="Models\GooglePlaceSearchResponse.cs" />
     <Compile Include="Models\CustomMap.cs" />
     <Compile Include="Models\DbEntity.cs" />
     <Compile Include="Models\Direction.cs" />
     <Compile Include="Models\GeoPoint.cs" />
-    <Compile Include="Models\GoogleDirections.cs" />
     <Compile Include="Models\LogItem.cs" />
     <Compile Include="Models\NotificationBaseObject.cs" />
     <Compile Include="Models\Prediction.cs" />
@@ -81,17 +82,23 @@
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\AgenciesViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\DestinationViewModel.cs" />
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\PredictionsViewModel.cs" />
     <Compile Include="ViewModels\RepeatableStackPageViewModel.cs" />
     <Compile Include="ViewModels\RoutesViewModel.cs" />
+    <Compile Include="Models\StopLite.cs" />
+    <Compile Include="ViewModels\StopLiteViewModel.cs" />
     <Compile Include="ViewModels\StopPredictionBaseViewModel.cs" />
     <Compile Include="ViewModels\StopsViewModel.cs" />
     <Compile Include="Views\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgencyListView.xaml.cs" />
+    <Compile Include="Views\DestinationPage.xaml.cs">
+      <DependentUpon>DestinationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FavouritesPage.xaml.cs">
       <DependentUpon>FavouritesPage.xaml</DependentUpon>
     </Compile>
@@ -105,6 +112,9 @@
     <Compile Include="Views\RouteListPage.xaml.cs" />
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StopLitePage.xaml.cs">
+      <DependentUpon>StopLitePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StopsPage.xaml.cs" />
     <Compile Include="Views\TestSelector.cs" />
@@ -272,6 +282,18 @@
     <Content Include="Images\fave_off.png" />
     <Content Include="Images\narow_bus_stop.png" />
     <Content Include="Images\wide_bus._stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\DestinationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\StopLitePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets')" />

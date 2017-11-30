@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FxITransit.Helpers;
 
 namespace FxITransit.Services.NextBus
 {
@@ -44,6 +45,21 @@ namespace FxITransit.Services.NextBus
 
             var uri = $"maps.googleapis.com/maps/api/directions/json?origin={start}&waypoints=optimize:true|{destination}&key=AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk";
             return "https://" + uri;
+        }
+
+        public static string GoogleAddressUrl(string address)
+        {
+            var pos = TrackingHelper.Instance.LastPosition;
+            var latLong = $"{pos.Latitude},{pos.Longitude}";
+
+            var apiKey = "AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk";
+            var encoded = System.Net.WebUtility.UrlEncode(address);
+            var radius = TrackingHelper.Instance.MetersFromMiles(10);
+
+            var uri = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latLong}&radius={radius}&name={encoded}&key={apiKey}";
+            
+
+            return uri;
         }
 
     }

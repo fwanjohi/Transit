@@ -87,7 +87,7 @@ namespace FxITransit.Droid
             Availability status, Android.OS.Bundle extras)
         { }
         //---fired whenever there is a change in location---
-        public void OnLocationChanged(Location location)
+        public void OnLocationChanged(Android.Locations.Location location)
         {
             if (location != null)
             {

@@ -8,24 +8,31 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xamarin.Forms.Maps;
+using Position = Plugin.Geolocator.Abstractions.Position;
 
 namespace FxITransit.Helpers
 {
-   
-    
 
-    public  class TrackingHelper
+
+
+    public class TrackingHelper
     {
         private static readonly Lazy<TrackingHelper> instance = new Lazy<TrackingHelper>(() => new TrackingHelper());
 
-        public static TrackingHelper Instance { get { return instance.Value; } }
+        public static TrackingHelper Instance
+        {
+            get { return instance.Value; }
+        }
 
         private IGeolocator _locator;
-        
-        
+
+
         private TrackingHelper()
         {
-            
+
         }
 
         private bool _isInitialized = false;
@@ -84,28 +91,40 @@ namespace FxITransit.Helpers
 
         private void _locator_PositionChanged(object sender, PositionEventArgs e)
         {
-            Log($"_locator_PositionChanged to {e.Position.Latitude} , {e.Position.Longitude}" );
+            Log($"_locator_PositionChanged to {e.Position.Latitude} , {e.Position.Longitude}");
             LastPosition = e.Position;
         }
 
-        private  double DegreesToRadians(double degrees)
+        private double DegreesToRadians(double degrees)
         {
             return degrees * Math.PI / 180.0;
         }
 
-        public  double CalculateDistance(Stop location1, Stop location2)
+        public double CalculateDistance(Stop location1, Stop location2)
         {
-            var loc1 = new Location { Latitude = location1.Lat, Longitude = location1.Lon };
-            var loc2 = new Location { Latitude = location2.Lat, Longitude = location2.Lon };
+            var loc1 = new Location {Latitude = location1.Lat, Longitude = location1.Lon};
+            var loc2 = new Location {Latitude = location2.Lat, Longitude = location2.Lon};
             return CalculateDistance(loc1, loc2);
         }
 
-        public  double ToMiles(double kms)
+        public double ToMiles(double kms)
         {
             return kms * ((double)5 / (double)8);
         }
 
-        public  double CalculateDistance(Location location1, Location location2)
+
+        public double MetersFromMiles(double miles)
+        {
+            return 1000 * miles  * ((double)8 / (double)5);
+        }
+
+        public double KiloMetersFromMiles(double miles)
+        {
+            return  miles * ((double)8 / (double)5);
+        }
+
+
+        public double CalculateDistance(Location location1, Location location2)
         {
             double circumference = 40000.0; // Earth's circumference at the equator in km
             double distance = 0.0;
@@ -125,15 +144,23 @@ namespace FxITransit.Helpers
 
             double angleCalculation =
                 Math.Acos(
-                  Math.Sin(latititude2Rad) * Math.Sin(latitude1Rad) +
-                  Math.Cos(latititude2Rad) * Math.Cos(latitude1Rad) * Math.Cos(logitudeDiff));
+                    Math.Sin(latititude2Rad) * Math.Sin(latitude1Rad) +
+                    Math.Cos(latititude2Rad) * Math.Cos(latitude1Rad) * Math.Cos(logitudeDiff));
 
             distance = circumference * angleCalculation / (2.0 * Math.PI);
 
-            return distance;
+            return Math.Abs(distance);
         }
 
-        public  double CalculateDistance(params Location[] locations)
+        public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            var loc1 = new Location {Latitude = lat1, Longitude = lon1};
+            var loc2 = new Location { Latitude = lat2, Longitude = lon2 };
+            return CalculateDistance(loc1, loc2);
+
+        }
+
+        public double CalculateDistance(params Location[] locations)
         {
             double totalDistance = 0.0;
 
@@ -148,7 +175,7 @@ namespace FxITransit.Helpers
             return totalDistance;
         }
 
-        
+
 
         public Stop GetClosestStop(IEnumerable<Stop> stops)
         {
@@ -159,13 +186,13 @@ namespace FxITransit.Helpers
 
             if (lastPos != null)
             {
-                 curStop = new Stop { Lat = lastPos.Latitude, Lon = lastPos.Longitude };
+                curStop = new Stop {Lat = lastPos.Latitude, Lon = lastPos.Longitude};
             }
             else
             {
                 curStop = stops.First();
             }
-            
+
 
             foreach (var stop in stops)
             {
@@ -192,14 +219,49 @@ namespace FxITransit.Helpers
         {
             UtilsHelper.Instance.Log(message);
         }
-        
 
         public Position LastPosition { get; private set; }
-        public object TransitService { get; private set; }
-    }
-    public class Location
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+
+        public async Task<List<GoogleAddress>> GetAddressPosition(string address)
+        {
+            var url = EndPoints.GoogleAddressUrl(address);
+            var client = new HttpClient();
+            var json = client.GetStringAsync(url).Result;
+            var adds = new List<GoogleAddress>();
+
+            GooglePlaceSearchResponse resp = JsonConvert.DeserializeObject<GooglePlaceSearchResponse>(json);
+
+            try
+            {
+                foreach (var add in resp.Results)
+                {
+                    var pos = new GoogleAddress
+                    {
+                        RequestedAddress = address,
+                        FormattedAddress = add.Vicinity,
+                        Lat = add.Geometry.Location.Lat,
+                        Lon = add.Geometry.Location.Lng,
+                        Name = add.Name
+
+
+                    };
+                    adds.Add(pos);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return adds;
+        }
+
+      
+
+        public class Location
+        {
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
+        }
     }
 }

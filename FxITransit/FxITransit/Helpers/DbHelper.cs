@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using FxITransit.Models;
 using PCLStorage;
 using SQLite;
-
+using XLabs;
 
 
 namespace FxITransit.Helpers
@@ -22,20 +23,22 @@ namespace FxITransit.Helpers
 
         public static DbHelper Instance { get { return _instance.Value; } }
 
+        private static readonly string _DbPath;
+
         private DbHelper()
         {
             string xml = string.Empty;
             var root = FileSystem.Current.LocalStorage;
             var myFolder = root.CreateFolderAsync("fxitransit", CreationCollisionOption.OpenIfExists).Result;
             var dbPath = myFolder.Path + "\\fxTransit.db2";
-            
+
             //if (ex == ExistenceCheckResult.FileExists)
             //{
             //    myFolder.DeleteAsync();
             //}
 
             _db = new SQLiteConnection(dbPath);
-            
+
             _db.CreateTable<Agency>();
             _db.CreateTable<Route>();
             _db.CreateTable<Direction>();
@@ -43,6 +46,43 @@ namespace FxITransit.Helpers
 
             _db.CreateTable<Preference>();
 
+        }
+
+        public List<StopLite> SearchStopsNearAddress(double lat, double lon, double distanceInMiles, string from)
+        {
+            TableMapping m = new TableMapping(typeof(StopLite));
+
+            //var stops = _db.Query<Stop>("select * from Stop").ToList()
+            var lites = _db.Query<StopLite>("select distinct Tag, Title, Lat, Lon, AgencyTitle from Stop").ToList()
+            .Where(
+                k => TrackingHelper.Instance.CalculateDistance(
+                         k.Lat, k.Lon, lat, lon) <= distanceInMiles).ToList();
+
+            foreach (var x in lites)
+            {
+                x.Distance = TrackingHelper.Instance.CalculateDistance(x.Lat, x.Lon, lat, lon);
+                var dist = x.Distance.ToString("0.##0");
+                x.DistanceDisplay = $"{x.AgencyTitle} - {dist} from {from}";
+
+            }
+            lites = lites.OrderBy(x => x.Distance).ToList();
+            return lites;
+        }
+
+        public List<Stop> SearchStopsNearMeToADestination(List<Stop> stopsFound)
+        {
+            //var currentLocation = TrackingHelper.Instance.LastPosition;
+
+            ////select distinct bus routes that pass there
+            //var dirTags = stopsFound.Select(x => x.ParentId).ToList();
+
+            ////select all routes near my location that share the soutes
+            //var nearMe = SearchStopsNearAddress(currentLocation.Latitude, currentLocation.Latitude, 0.2)
+            //    .Where(x => dirTags.Contains(x.ParentId)).ToList(); ;
+              
+            
+
+            return null;
         }
 
         public void RefreshDatabase()
@@ -57,6 +97,7 @@ namespace FxITransit.Helpers
             _db.CreateTable<Direction>();
             _db.CreateTable<Stop>();
         }
+
 
         public void SaveEntity<T>(T entity) where T : DbEntity
         {
@@ -132,7 +173,7 @@ namespace FxITransit.Helpers
 
         }
 
-        
+
         public void SavePrerefence(Preference preference)
         {
             var saved = _db.Find<Preference>(preference.Id);
@@ -205,7 +246,7 @@ namespace FxITransit.Helpers
             return _db.Query<Route>("Select * from Route where ParentId=?", agency.Id);
         }
 
-        internal async Task<List<Agency>>  GetAgencyListAsync()
+        internal async Task<List<Agency>> GetAgencyListAsync()
         {
             return _db.Query<Agency>("Select * from Agency");
         }
@@ -221,11 +262,11 @@ namespace FxITransit.Helpers
                 if (dirs.Count != 0)
                 {
                     foreach (var dir in dirs)
-                    { 
+                    {
 
                         var dirStops = _db.Query<Stop>("Select * from Stop where parentId=?", dir.Id);
                         dir.Stops.ReplaceRange(dirStops);
-                        
+
                         //only consider it done if there are stops
                         isConfigured = true;
                         stopsCount++;
@@ -239,7 +280,7 @@ namespace FxITransit.Helpers
             {
                 throw;
             }
-            
+
             return Task.FromResult(stopsCount);
         }
     }

@@ -174,7 +174,7 @@ namespace FxITransit.Models
             get
             {
                 var dist = Distance.ToString("0.##0");
-                return $"{Title} - ({dist} Miles away)";
+                return $"{Title} - ({dist} Miles)";
             }
         }
 
