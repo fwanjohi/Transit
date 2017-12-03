@@ -14,7 +14,7 @@ namespace FxITransit.ViewModels
     {
         public DestinationViewModel()
         {
-            ToAddress= "Aces";
+            ToAddress= "Sapphire";
             Addresses =new  ObservableRangeCollection<GoogleAddress>();
             StopsFound =new ObservableRangeCollection<StopLite>();
         }

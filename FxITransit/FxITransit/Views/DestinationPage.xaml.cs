@@ -32,7 +32,7 @@ namespace FxITransit.Views
             
         }
 
-        private void StopListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void StopListView_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var address = e.SelectedItem as GoogleAddress;
             if (address != null)
@@ -42,7 +42,7 @@ namespace FxITransit.Views
                 {
                     var viewModel = new StopLiteViewModel(stopsFound);
 
-                    Navigation.PushAsync(new StopLitePage (viewModel) { Title = $"Stops near { address.Name } at {address.FormattedAddress}" });
+                    await Navigation.PushAsync(new StopLitePage (viewModel) { Title = $"Stops near { address.Name } at {address.FormattedAddress}" });
                 }
             }
 

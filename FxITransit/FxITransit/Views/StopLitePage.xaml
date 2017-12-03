@@ -45,6 +45,7 @@
                           IsPullToRefreshEnabled="true"
                           IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                           CachingStrategy="RecycleElement"
+                          ItemTapped="StopListView_ItemTapped"
                           
                 >
                     <ListView.ItemTemplate>

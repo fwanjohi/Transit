@@ -35,7 +35,10 @@ namespace FxITransit.Models
         {
             get { return IsFavorite ? Constants.FaveOnIcon : Constants.FaveOffIcon; }
         }
-       
+    }
 
+    public class IdItem
+    {
+        public string Id { get; set; }
     }
 }

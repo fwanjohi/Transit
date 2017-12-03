@@ -16,5 +16,7 @@ namespace FxITransit.ViewModels
             StopsFound = stopsFound;
         }
 
+        
+
     }
 }

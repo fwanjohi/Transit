@@ -245,5 +245,17 @@ namespace FxITransit.Models
             OnPropertyChanged("Prediction2");
             OnPropertyChanged("Prediction3");
         }
+        public static implicit operator StopLite(Stop stop)
+        {
+            return new StopLite
+            {
+                Lat = stop.Lat,
+                Lon = stop.Lon,
+                Tag = stop.Tag,
+                AgencyTitle = stop.AgencyTitle,
+                Title = stop.Title
+            };
+        }
     }
+
 }

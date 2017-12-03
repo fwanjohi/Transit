@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using FxITransit.Models;
 using PCLStorage;
 using SQLite;
+using Xamarin.Forms;
 using XLabs;
 
 
@@ -69,20 +70,37 @@ namespace FxITransit.Helpers
             return lites;
         }
 
-        public List<Stop> SearchStopsNearMeToADestination(List<Stop> stopsFound)
+        
+
+        //get you a list of stops that 
+        public List<StopLite> SearchStopsNearMeToADestination(StopLite dest)
         {
-            //var currentLocation = TrackingHelper.Instance.LastPosition;
-
+            var my = TrackingHelper.Instance.LastPosition;
+            var ret = new List<StopLite>();
             ////select distinct bus routes that pass there
-            //var dirTags = stopsFound.Select(x => x.ParentId).ToList();
 
-            ////select all routes near my location that share the soutes
-            //var nearMe = SearchStopsNearAddress(currentLocation.Latitude, currentLocation.Latitude, 0.2)
-            //    .Where(x => dirTags.Contains(x.ParentId)).ToList(); ;
-              
+            List<IdItem> routesDest = _db.Query<IdItem>("select distinct ParentId as Id from Stop where lat=? and Lon =?", dest.Lat, dest.Lon).ToList();
+
+            var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "Here");
+
+            //uniq dests;
+            var destRoutes = routesDest.Select(x => x.Id).Distinct().ToList();
+            var realStops = _db.Query<Stop>("select * from stop").Where(x => destRoutes.Contains(x.ParentId)).ToList();
+
+            foreach (var stop in stopsNearMe)
+            {
+                var r = realStops.FirstOrDefault(x => x.Lat == stop.Lat && x.Lon == stop.Lon);
+
+                if (r != null)
+                {
+                    ret.Add(r);
+
+                }
+            }
             
+            //var destNearMe = stopsNearMe
 
-            return null;
+            return ret;
         }
 
         public void RefreshDatabase()
