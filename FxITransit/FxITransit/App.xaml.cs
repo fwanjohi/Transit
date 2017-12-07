@@ -35,22 +35,17 @@ namespace FxITransit
             {
                 Children =
                 {
-                    
                     new NavigationPage(new AgencyListView())
                     {
                         Title = "Browse",
                         Icon = Device.OnPlatform("tab_feed.png",null,null),
-
-
                     },
 
                     new NavigationPage(new DestinationPage())
                     {
-                        Title = "Destination",
+                        Title = "Dest",
                         Icon = Device.OnPlatform("tab_feed.png",null,null),
                     },
-
-
 
                     new NavigationPage(new FavouritesPage())
                     {
@@ -64,16 +59,16 @@ namespace FxITransit
                         Icon = Device.OnPlatform("tab_feed.png",null,null)
                     },
 
-                    //new NavigationPage(new LogsPage())
-                    //{
-                    //    Title = "Logs",
-                    //    Icon = Device.OnPlatform("tab_about.png",null,null)
-                    //},
-                    //new NavigationPage(new AboutPage())
-                    //{
-                    //    Title = "About",
-                    //    Icon = Device.OnPlatform("tab_about.png",null,null)
-                    //},
+                    new NavigationPage(new LogsPage())
+                    {
+                        Title = "Logs",
+                        Icon = Device.OnPlatform("tab_about.png",null,null)
+                    }, 
+                    new NavigationPage(new AboutPage())
+                    {
+                        Title = "About",
+                        Icon = Device.OnPlatform("tab_about.png",null,null)
+                    },
                 }
             };
             Current.MainPage = main;

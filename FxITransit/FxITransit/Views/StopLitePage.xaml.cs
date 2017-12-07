@@ -32,14 +32,27 @@ namespace FxITransit.Views
 
         }
 
-        private void StopListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        private async void StopListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             var item = e.Item as StopLite;
             if (item != null)
             {
-                var x = DbHelper.Instance.SearchStopsNearMeToADestination(item);
-                var nearViwModel = new StopLiteViewModel(x);
-                Navigation.PushAsync(new StopLitePage(nearViwModel));
+              
+                var stoptToDest = DbHelper.Instance.SearchStopsNearMeToADestination(item);
+                var nearViwModel = new StopLiteViewModel(stoptToDest);
+                if (item.IsStart)
+                {
+                    //go to predictions page
+                    var stop = DbHelper.Instance.GetStopByTag(item.Tag);
+                    await Navigation.PushAsync(new PredictionsPage(stop));
+
+                }
+                else
+                {
+                    Navigation.PushAsync(new StopLitePage(nearViwModel) {Title = $"Stops to {item.Title}"});
+                }
+
+
             }
         }
     }

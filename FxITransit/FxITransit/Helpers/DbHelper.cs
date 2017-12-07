@@ -89,13 +89,18 @@ namespace FxITransit.Helpers
 
             foreach (var stop in stopsNearMe)
             {
-                var r = realStops.FirstOrDefault(x => x.Lat == stop.Lat && x.Lon == stop.Lon);
+                var stopNearMe = realStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon);
 
-                if (r != null)
+                if (stopNearMe != null)
                 {
-                    ret.Add(r);
-
+                    stopNearMe.Distance = TrackingHelper.Instance.CalculateDistance(stopNearMe.Lat, stopNearMe.Lon, my.Latitude, my.Longitude);
+                    ret.Add(stopNearMe);
                 }
+            }
+
+            foreach (var lite in ret)
+            {
+                lite.IsStart = true;
             }
             
             //var destNearMe = stopsNearMe
@@ -166,6 +171,19 @@ namespace FxITransit.Helpers
                     _db.Update(entity);
                 }
             }
+
+        }
+
+        public Stop GetStopByTag(string tag)
+        {
+            var my = TrackingHelper.Instance.LastPosition;
+            var stop= _db.Query<Stop>("Select * from Stop where Tag=?", tag).FirstOrDefault();
+           if (stop!=null)
+            {
+                stop.Distance = TrackingHelper.Instance.CalculateDistance(stop.Lat, stop.Lon, my.Latitude, my.Longitude);
+
+            }
+            return stop;
 
         }
 

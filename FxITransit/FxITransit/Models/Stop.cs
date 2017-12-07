@@ -247,14 +247,18 @@ namespace FxITransit.Models
         }
         public static implicit operator StopLite(Stop stop)
         {
-            return new StopLite
+            StopLite stopLite = new StopLite
             {
                 Lat = stop.Lat,
                 Lon = stop.Lon,
                 Tag = stop.Tag,
                 AgencyTitle = stop.AgencyTitle,
+                DistanceDisplay = $"{stop.TitleDisplay} away",
                 Title = stop.Title
             };
+
+
+            return stopLite;
         }
     }
 

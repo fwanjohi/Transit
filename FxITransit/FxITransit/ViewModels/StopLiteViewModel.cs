@@ -11,9 +11,15 @@ namespace FxITransit.ViewModels
     {
         public List<StopLite> StopsFound { get; set; }
         public StopLite SelectedStop { get; set; }
-        public StopLiteViewModel(List<StopLite> stopsFound)
+        public string DisatanceDisplay { get; set; }
+        public bool IsStart { get { return _isStart; } }
+
+        private bool _isStart;
+        public StopLiteViewModel(List<StopLite> stopsFound, bool isStart = false)
         {
             StopsFound = stopsFound;
+            _isStart = isStart;
+
         }
 
         
