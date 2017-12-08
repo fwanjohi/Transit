@@ -171,6 +171,20 @@ namespace FxITransit.ViewModels
 
             await TransitService.GetRouteDetails(Route);
             Directions.Clear();
+            var pathCofigured = false;
+            if (Route.Path.Count > 0)
+            {
+                //var doc = XDoc.LoadXml(Route.PathData);
+                var paths = Route.Path.OrderBy(x => x.Lat).OrderBy(y => y.Lon);
+                foreach (var path in paths)
+                {
+                    var mapPos = new Position(path.Lat, path.Lon);
+                    _map.RouteCoordinates.Add(mapPos);
+                }
+                pathCofigured = true;
+
+            }
+
 
             Position firstPos;
             foreach (var direction in Route.Directions)
@@ -178,14 +192,15 @@ namespace FxITransit.ViewModels
                 Directions.Add(direction);
 
                 firstPos = direction.Stops[0].Postion;
-                foreach (var stop in direction.Stops)
+                if (pathCofigured == false)
                 {
-                    var mapPos = new Position(stop.Lat, stop.Lon);
-                    _map.RouteCoordinates.Add(mapPos);
+                    foreach (var stop in direction.Stops)
+                    {
+                        var mapPos = new Position(stop.Lat, stop.Lon);
+                        _map.RouteCoordinates.Add(mapPos);
+                    }
                 }
             }
-
-
 
 
             _map.MoveToRegion(MapSpan.FromCenterAndRadius(_map.RouteCoordinates[0], Distance.FromMiles(1.0)));

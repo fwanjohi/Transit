@@ -8,7 +8,10 @@
         <StackLayout >
 
             <StackLayout Orientation="Horizontal">
-                <AbsoluteLayout Grid.Column="1">
+                <Button BindingContext="{Binding}"
+                        x:Name="btnFave" Text="Fave"
+                        Command="{Binding ChangeFavoriteCommand}"/>
+                <!--<AbsoluteLayout Grid.Column="1">
                     <Image 
                         BindingContext="{Binding}"
                         Style="{DynamicResource FaveImageStyle}" AbsoluteLayout.LayoutBounds="0.2,0.2,35,35" 
@@ -21,7 +24,7 @@
                             Command="{Binding ChangeFavoriteCommand}"
                             
                     />
-                </AbsoluteLayout>
+                </AbsoluteLayout>-->
 
 
                 <!--<Button Text="Directions" Command="{Binding GoogleDirectionsCommand}"></Button>--><!--

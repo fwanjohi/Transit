@@ -225,17 +225,31 @@ namespace FxITransit.Services.NextBus
                             _dbHelper.SaveStop(stop);
                         }
                     }
-                    //var pathXml = "<path>";
-                    //foreach (var pathNode in directionNode.Descendants().Where(x => x.Name == "point"))
-                    //{
-                    //    pathXml += pathNode.ToString();
-                    //}
-                    //pathXml += "</path>";
-                    //direction.PathData = pathXml;
+                    
 
                     _dbHelper.SaveDirection(direction);
 
                 }
+
+                var pathXml = "<path>";
+                foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
+                {
+                    var geoPoint = new GeoPoint
+                    {
+                        ParentId = route.Tag,
+                        Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
+                        Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
+                    };
+                    //DbHelper.Instance.SaveEntity(geoPoint);
+                    route.Path.Add(geoPoint);
+                    pathXml += pathNode.ToString();
+                }
+                pathXml += "</path>";
+                route.PathData = pathXml;
+                _dbHelper.SaveRoute(route);
+
+                
+
                 UserDialogs.Instance.HideLoading();
             }
 

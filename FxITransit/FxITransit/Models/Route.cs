@@ -47,5 +47,6 @@ namespace FxITransit.Models
 
         public bool IsConfigured { get; set; }
         public string AgencyTitle { get; internal set; }
+        public string PathData { get; internal set; }
     }
 }

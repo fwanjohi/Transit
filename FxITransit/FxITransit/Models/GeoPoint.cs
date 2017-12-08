@@ -8,10 +8,11 @@ using Xamarin.Forms.Maps;
 
 namespace FxITransit.Models
 {
-    public class GeoPoint
+    public class GeoPoint : DbEntity
     {
         public double Lat { get; set; }
         public double Lon { get; set; }
+
 
         public static implicit operator Point(GeoPoint gp)
         {

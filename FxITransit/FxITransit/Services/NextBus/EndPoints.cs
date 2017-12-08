@@ -22,7 +22,8 @@ namespace FxITransit.Services.NextBus
 
         public static string RouteConfigUrl(string agencyTag, string routeTag)
         {
-            return $"?command=routeConfig&a={agencyTag}&r={routeTag}";
+            var cfg= $"?command=routeConfig&a={agencyTag}&r={routeTag}";
+            return cfg;
 
         }
 

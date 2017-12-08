@@ -38,7 +38,7 @@ namespace FxITransit.Views
             if (item != null)
             {
               
-                var stoptToDest = DbHelper.Instance.SearchStopsNearMeToADestination(item);
+                var stoptToDest = await DbHelper.Instance.SearchStopsNearMeToADestination(item);
                 var nearViwModel = new StopLiteViewModel(stoptToDest);
                 if (item.IsStart)
                 {
