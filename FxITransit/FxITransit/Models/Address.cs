@@ -16,5 +16,15 @@ namespace FxITransit.Models
 
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public double Distance { get; set; }
+
+        public string Display
+        {
+            get
+            {
+                return  $"{Name}, {Distance} miles away"; 
+            }
+        }
     }
 }

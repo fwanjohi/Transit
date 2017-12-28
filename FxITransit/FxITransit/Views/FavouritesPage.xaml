@@ -34,7 +34,7 @@
                                     <ColumnDefinition Width ="40"/>
                                 </Grid.ColumnDefinitions>
                                 <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding MediumTitle}"
+                                    <Label Text="{Binding StopDirectionRouteTitle}"
                                        LineBreakMode="WordWrap"
                                        Style="{DynamicResource ListItemTextStyle}"
                                        FontSize="16"/>

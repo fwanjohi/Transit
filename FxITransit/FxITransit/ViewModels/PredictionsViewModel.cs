@@ -23,7 +23,7 @@ namespace FxITransit.ViewModels
             OnPredictionsChanged = UpdatePredictions;
             
             Stop = stop;
-            Title = $"Predictions - {stop.TitleDisplay }";
+            Title = $"Predictions - {stop.StopDistance }";
             ChangeFavoriteCommand = new Command(
                 async () =>
                 {

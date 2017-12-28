@@ -55,7 +55,7 @@
                                         Style="{DynamicResource ListItemTextStyle}"
                                         FontSize="16"/>
 
-                                    <Label Text="{Binding Name}"
+                                    <Label Text="{Binding Display}"
                                         LineBreakMode="NoWrap"
                                         Style="{DynamicResource ListItemDetailTextStyle}"
                                         FontSize="13"/>
@@ -66,36 +66,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <ListView Grid.Row="1"  
-                          x:Name="StopListView"
-                          ItemsSource="{Binding StopsFound}"
-                          VerticalOptions="FillAndExpand"
-                          HasUnevenRows="true"
-                          IsPullToRefreshEnabled="true"
-                          IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                          CachingStrategy="RecycleElement"
-                          
-                >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-
-                                <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding Title}"
-                                           LineBreakMode="WordWrap"
-                                           Style="{DynamicResource ListItemTextStyle}"
-                                           FontSize="16"/>
-
-                                    <Label Text="{Binding DistanceDisplay}"
-                                           LineBreakMode="CharacterWrap"
-                                           Style="{DynamicResource ListItemDetailTextStyle}"
-                                           FontSize="13"/>
-                                </StackLayout>
-
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                
 
             </Grid>
 

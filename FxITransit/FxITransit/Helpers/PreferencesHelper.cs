@@ -227,32 +227,7 @@ namespace FxITransit.Helpers
 
         }
 
-        public void SendNotification(string message)
-        {
-            try
-            {
-                CrossNotifications.Current.Send(new Notification
-                {
-                    Title = "Alert!",
-                    Message = message,
-                    Vibrate = true,
-                    When = TimeSpan.FromSeconds(2)
-                });
-            }
-            catch (Exception ex)
-            {
-                UtilsHelper.Instance.Log("Send Notification Failed : " + ex.Message);
-
-                try
-                {
-                    UtilsHelper.Instance.Speak(ex.Message);
-                }
-                catch (Exception ex2)
-                {
-                    UtilsHelper.Instance.Log(ex2.Message);
-                }
-            }
-        }
+       
 
         public async void SaveSttingsToFile()
         {

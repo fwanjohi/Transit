@@ -30,7 +30,7 @@ namespace FxITransit.ViewModels
                             var vehicle = pred.Vehicle ?? "";
 
                             var msg = $"Your transit vehicle {vehicle} is arriving in {diff} Minutes";
-                            Settings.SendNotification(msg);
+                            Utils.SendNotification(msg);
 
                             if (Settings.Preference.Speak)
                             {

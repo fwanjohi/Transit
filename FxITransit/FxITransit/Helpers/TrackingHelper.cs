@@ -15,9 +15,6 @@ using Position = Plugin.Geolocator.Abstractions.Position;
 
 namespace FxITransit.Helpers
 {
-
-
-
     public class TrackingHelper
     {
         private static readonly Lazy<TrackingHelper> instance = new Lazy<TrackingHelper>(() => new TrackingHelper());
@@ -75,14 +72,23 @@ namespace FxITransit.Helpers
                 Log("tracker already initialized");
             }
 
-        }
 
-        //public Task<GoogleDirections> GetDirections(Stop start, Stop destination)
-        //{
-        //    var client = new HttpClient();
-        //    client.BaseAddress = new Uri(EndPoints.);
-        //    return client;
-        //}
+
+        }
+        
+        public async Task<Position> GetMyLocation()
+        {
+            try
+            {
+                var pos = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), null, false);
+                LastPosition = pos;
+                return pos;
+            }
+            catch
+            {
+                return LastPosition;
+            }
+        }
 
         private void _locator_PositionError(object sender, PositionErrorEventArgs e)
         {
@@ -158,6 +164,28 @@ namespace FxITransit.Helpers
             var loc2 = new Location { Latitude = lat2, Longitude = lon2 };
             return CalculateDistance(loc1, loc2);
 
+        }
+
+        public double CalculateDistance(double lat1, double lon1)
+        {
+            
+            var loc1 = new Location { Latitude = lat1, Longitude = lon1 };
+            var loc2 = new Location { Latitude = LastPosition.Latitude, Longitude = LastPosition.Longitude };
+            return CalculateDistance(loc1, loc2);
+
+        }
+
+        internal Pin PinFromStop(Stop stop)
+        {
+            if (stop == null) return null;
+                
+            return new Pin
+            {
+                Position = stop,
+                Type = PinType.Place,
+                Address = stop.DirectionTitle,
+                Label = stop.DistanceAwayDisplay,
+            };
         }
 
         public double CalculateDistance(params Location[] locations)
@@ -241,8 +269,9 @@ namespace FxITransit.Helpers
                         FormattedAddress = add.Vicinity,
                         Lat = add.Geometry.Location.Lat,
                         Lon = add.Geometry.Location.Lng,
-                        Name = add.Name
-
+                        Name = add.Name,
+                        Distance = TrackingHelper.Instance.CalculateDistance(add.Geometry.Location.Lat, add.Geometry.Location.Lng),
+                       
 
                     };
                     adds.Add(pos);
@@ -253,7 +282,7 @@ namespace FxITransit.Helpers
             {
 
             }
-            return adds;
+            return adds.OrderBy(x => x.Distance).ToList(); ;
         }
 
       

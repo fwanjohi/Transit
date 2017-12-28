@@ -18,13 +18,11 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = _viewModel = new DestinationViewModel();
-
         }
 
         private async void OnSearchAddress(object sender, EventArgs e)
         {
             _viewModel.SearchAddress();
-
         }
 
         private void OnAddressSelected(object sender, ItemTappedEventArgs e)
@@ -38,15 +36,13 @@ namespace FxITransit.Views
             if (address != null)
             {
                 var stopsFound =_viewModel.SearchStops(address).Result;
+
                 if (stopsFound.Count !=0)
                 {
-                    var viewModel = new StopLiteViewModel(stopsFound);
-
+                    var viewModel = new StopLiteViewModel(stopsFound, true);
                     await Navigation.PushAsync(new StopLitePage (viewModel) { Title = $"Stops near { address.Name } at {address.FormattedAddress}" });
                 }
             }
-
-
         }
     }
 }

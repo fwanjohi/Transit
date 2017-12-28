@@ -35,6 +35,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                 </Grid>
+                <StackLayout Orientation="Vertical" Grid.Row="0">
                 <Entry Grid.Column="0"  
                        WidthRequest="300"
                        VerticalOptions="Center"
@@ -42,11 +43,15 @@
                        x:Name="TxtSearch"
                        Placeholder="Search a stop" 
                        Text="{Binding Filter, Mode=TwoWay}"/>
+                    <Button Text= "{Binding Path=ClosestStop.DistanceAwayDisplay}"
+                            Clicked="BtnGoToClosetClicked"/>
+                    
+                </StackLayout>
                 <StackLayout Grid.Column="1" Orientation="Vertical">
                     <Label 
                         HorizontalOptions="End"
                         VerticalOptions="Center" 
-                        Text ="Favorite Agencies Only"/>
+                        Text ="Favorite Stops Only"/>
                     <Switch 
                         
                         HorizontalOptions="End"
@@ -78,7 +83,7 @@
                                         Style="{DynamicResource ListItemTextStyle}"
                                         FontSize="16"/>
 
-                                    <Label Text="{Binding Display}"
+                                    <Label Text="{Binding DistanceAwayDisplay}"
                                         LineBreakMode="NoWrap"
                                         Style="{DynamicResource ListItemDetailTextStyle}"
                                         FontSize="13"/>

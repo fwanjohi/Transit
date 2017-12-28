@@ -17,8 +17,9 @@ namespace FxITransit
         public App()
         {
             InitializeComponent();
-
+            
             var result = CrossNotifications.Current.RequestPermission().Result;
+            
             SetMainPage();
         }
 

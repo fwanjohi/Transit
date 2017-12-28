@@ -40,22 +40,24 @@ namespace FxITransit.Helpers
             //}
 
             _db = new SQLiteConnection(dbPath);
-
+            CreateTables();
+        }
+        public void CreateTables()
+        {
             _db.CreateTable<Agency>();
             _db.CreateTable<Route>();
             _db.CreateTable<Direction>();
             _db.CreateTable<Stop>();
 
             _db.CreateTable<Preference>();
-
         }
 
-        public List<StopLite> SearchStopsNearAddress(double lat, double lon, double distanceInMiles, string from)
+        public List<Stop> SearchStopsNearAddress(double lat, double lon, double distanceInMiles, string from)
         {
-            TableMapping m = new TableMapping(typeof(StopLite));
+            TableMapping m = new TableMapping(typeof(Stop));
 
             //var stops = _db.Query<Stop>("select * from Stop").ToList()
-            var lites = _db.Query<StopLite>("select distinct Tag, Title, Lat, Lon, AgencyTitle from Stop").ToList()
+            var lites = _db.Query<Stop>("select distinct Tag, Title, Lat, Lon, AgencyTitle from Stop").ToList()
             .Where(
                 k => TrackingHelper.Instance.CalculateDistance(
                          k.Lat, k.Lon, lat, lon) <= distanceInMiles).ToList();
@@ -64,7 +66,7 @@ namespace FxITransit.Helpers
             {
                 x.Distance = TrackingHelper.Instance.CalculateDistance(x.Lat, x.Lon, lat, lon);
                 var dist = x.Distance.ToString("0.##0");
-                x.DistanceDisplay = $"{x.AgencyTitle} - {dist} from {from}";
+                x.DistanceAwayDisplay = $"{x.AgencyTitle} - {dist} from {from}";
 
             }
             lites = lites.OrderBy(x => x.Distance).ToList();
@@ -74,84 +76,89 @@ namespace FxITransit.Helpers
 
 
         //get you a list of stops that 
-        public List<StopLite> SearchStopsNearMeToADestinationV1(StopLite dest)
-        {
-            var my = TrackingHelper.Instance.LastPosition;
-            var ret = new List<StopLite>();
-            ////select distinct bus routes that pass there
+        //public List<Stop> SearchStopsNearMeToADestinationV1(Stop dest)
+        //{
+        //    var my = TrackingHelper.Instance.LastPosition;
+        //    var ret = new List<Stop>();
+        //    ////select distinct bus routes that pass there
 
-            List<IdItem> routesDest = _db.Query<IdItem>("select distinct ParentId as Id from Stop where lat=? and Lon =?", dest.Lat, dest.Lon).ToList();
+        //    List<IdItem> routesDest = _db.Query<IdItem>("select distinct ParentId as Id from Stop where lat=? and Lon =?", dest.Lat, dest.Lon).ToList();
 
-            var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "Here");
+        //    var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "Here");
 
-            //uniq dests;
-            var destRoutes = routesDest.Select(x => x.Id).Distinct().ToList();
-            var realStops = _db.Query<Stop>("select * from stop").Where(x => destRoutes.Contains(x.ParentId)).ToList();
+        //    //uniq dests;
+        //    var destRoutes = routesDest.Select(x => x.Id).Distinct().ToList();
+        //    var realStops = _db.Query<Stop>("select * from stop").Where(x => destRoutes.Contains(x.ParentId)).ToList();
 
-            foreach (var stop in stopsNearMe)
-            {
-                var stopNearMe = realStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon);
+        //    foreach (var stop in stopsNearMe)
+        //    {
+        //        var stopNearMe = realStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon);
 
-                if (stopNearMe != null)
-                {
-                    stopNearMe.Distance = TrackingHelper.Instance.CalculateDistance(stopNearMe.Lat, stopNearMe.Lon, my.Latitude, my.Longitude);
-                    ret.Add(stopNearMe);
-                }
-            }
+        //        if (stopNearMe != null)
+        //        {
+        //            stopNearMe.Distance = TrackingHelper.Instance.CalculateDistance(stopNearMe.Lat, stopNearMe.Lon, my.Latitude, my.Longitude);
+        //            ret.Add(stopNearMe);
+        //        }
+        //    }
 
-            foreach (var lite in ret)
-            {
-                lite.IsStart = true;
-            }
+        //    foreach (var lite in ret)
+        //    {
+        //        lite.IsStart = true;
+        //    }
 
-            //var destNearMe = stopsNearMe
+        //    //var destNearMe = stopsNearMe
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
         //get you a list of stops that 
-        public Task<List<StopLite>> SearchStopsNearMeToADestination(StopLite dest)
+        public async Task<List<Stop>> SearchStopsNearMeToADestination(Stop dest)
         {
-            var my = TrackingHelper.Instance.LastPosition;
-            var ret = new List<StopLite>();
-            ////select distinct bus routes that pass there
+            var my = await TrackingHelper.Instance.GetMyLocation();
+
+            var ret = new List<Stop>();
+            //select distinct bus routes that pass there
+
+            List<Route> routes = _db.Query<Route>("select * from route where IsConfigured = ?", true);//.Where(x=> !string.IsNullOrEmpty(x.PathData)).ToList();
 
 
-            List<Route> routes = _db.Query<Route>("select * from route").Where(x=> !string.IsNullOrEmpty(x.PathData)).ToList();
             foreach (var route in routes)
             {
-                PopulateRoutePath(route);
+                ConfigureRoute(route);
+            }
+            var allStops = routes.SelectMany(x => x.Stops).ToList();
+
+            //now figure out what stops pass near destination
+            var stopsNearDest = routes.SelectMany(x => x.Stops).Where(
+                y => TrackingHelper.Instance.CalculateDistance(dest.Lat, dest.Lon, y.Lat, y.Lon) < 0.1).ToList();
+            var destRouteIds = stopsNearDest.Select(x => x.RouteTag).Distinct().ToList();
+
+            //now figure out what stops new me are common
+            var stopsNearMe = allStops
+                .Where(y => TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, y.Lat, y.Lon) < 0.1).ToList();
+            var myRouteIds = stopsNearMe.Select(x => x.RouteTag).Distinct().ToList();
+
+            var commonRouteIds = myRouteIds.Intersect(destRouteIds).ToList();
+
+            var sharedNearMe = stopsNearMe.Where(m => commonRouteIds.Contains(m.RouteTag)).ToList();
+
+            foreach (var stop in sharedNearMe)
+            {
+
+                //var stopNearMe = allStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon).To;
+
+                //if (stopNearMe != null)
+                //{
+                stop.Distance = TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, stop.Lat, stop.Lon);
+                var dist = stop.Distance.ToString("0.##0");
+                Stop stopLite = stop;
+               
+                stopLite.DistanceAwayDisplay = $"{stop.AgencyTitle} - {dist} away";
+                ret.Add(stopLite);
+                //}
             }
 
-
-            //now figure out what routes pass near destination
-            var PathsNearBby = routes.SelectMany(x => x.Path).Where(
-                y => TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, y.Lat, y.Lon) < 0.1).ToList();
-            var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "Here");
-
-            //uniq dests;
-            //var destRoutes = routesDest.Select(x => x.Id).Distinct().ToList();
-            //var realStops = _db.Query<Stop>("select * from stop").Where(x => destRoutes.Contains(x.ParentId)).ToList();
-
-            //foreach (var stop in stopsNearMe)
-            //{
-            //    var stopNearMe = realStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon);
-
-            //    if (stopNearMe != null)
-            //    {
-            //        stopNearMe.Distance = TrackingHelper.Instance.CalculateDistance(stopNearMe.Lat, stopNearMe.Lon, my.Latitude, my.Longitude);
-            //        ret.Add(stopNearMe);
-            //    }
-            //}
-
-            //foreach (var lite in ret)
-            //{
-            //    lite.IsStart = true;
-            //}
-
-            //var destNearMe = stopsNearMe
-           
-            return Task.FromResult(ret);
+            return ret;
         }
 
         public void RefreshDatabase()
@@ -161,6 +168,8 @@ namespace FxITransit.Helpers
             _db.DropTable<Direction>();
             _db.DropTable<Stop>();
             _db.CreateTable<GeoPoint>();
+
+            CreateTables();
         }
 
 
@@ -301,7 +310,7 @@ namespace FxITransit.Helpers
             }
             else
             {
-                _db.Update( route);
+                _db.Update(route);
             }
 
             foreach (var dir in route.Directions)
@@ -340,28 +349,30 @@ namespace FxITransit.Helpers
             var routes = _db.Query<Route>("Select * from Route where ParentId=?", agency.Id).ToList();
             foreach (var route in routes)
             {
-                PopulateRoutePath(route);
+                await ConfigureRoute(route);
             }
             return routes;
         }
 
-        private void PopulateRoutePath(Route route)
-        {
-            if (!string.IsNullOrEmpty(route.PathData))
-            {
-                var doc = XDoc.LoadXml(route.PathData);
-                foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
-                {
-                    route.Path.Add(
-                        new GeoPoint
-                        {
-                            ParentId = route.Tag,
-                            Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
-                            Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
-                        });
-                }
-            }
-        }
+        //private void PopulateRoutePath(Route route)
+        //{
+        //    var path = _db.Query<Stop>("select * from stop where route")
+
+        //    //if (!string.IsNullOrEmpty(route.PathData))
+        //    //{
+        //    //    var doc = XDoc.LoadXml(route.PathData);
+        //    //    foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
+        //    //    {
+        //    //        route.Path.Add(
+        //    //            new GeoPoint
+        //    //            {
+        //    //                ParentId = route.Tag,
+        //    //                Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
+        //    //                Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
+        //    //            });
+        //    //    }
+        //    //}
+        //}
 
         internal async Task<List<Agency>> GetAgencyListAsync()
         {
@@ -378,17 +389,22 @@ namespace FxITransit.Helpers
                 var dirs = _db.Query<Direction>("Select * from Direction where ParentId=?", route.Id);
                 if (dirs.Count != 0)
                 {
+
                     foreach (var dir in dirs)
                     {
 
                         var dirStops = _db.Query<Stop>("Select * from Stop where parentId=?", dir.Id);
                         dir.Stops.ReplaceRange(dirStops);
+                        var routeStops = dirStops.Select(x => new GeoPoint { Lat = x.Lat, Lon = x.Lon });
 
                         //only consider it done if there are stops
                         isConfigured = true;
                         stopsCount++;
                     }
+
                 }
+                route.Stops.ReplaceRange(_db.Query<Stop>("Select * from Stop where RouteTag=?", route.Tag));
+
                 route.Directions.ReplaceRange(dirs);
 
                 route.IsConfigured = isConfigured;

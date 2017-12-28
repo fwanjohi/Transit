@@ -54,7 +54,7 @@ namespace FxITransit.ViewModels
                     {
                         if (Settings.Preference.Speak)
                         {
-                            Speak("The closest stop is " + _closestStop.TitleDisplay);
+                            Speak("The closest stop is " + _closestStop.StopDistance);
                         }
                     }
                 }

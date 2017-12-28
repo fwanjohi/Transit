@@ -33,7 +33,6 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
-                    <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
 
                 <ListView Grid.Row="0"  
@@ -58,7 +57,7 @@
                                            Style="{DynamicResource ListItemTextStyle}"
                                            FontSize="16"/>
 
-                                    <Label Text="{Binding DistanceDisplay}"
+                                    <Label Text="{Binding DistanceAwayDisplay}"
                                            LineBreakMode="CharacterWrap"
                                            Style="{DynamicResource ListItemDetailTextStyle}"
                                            FontSize="13"/>

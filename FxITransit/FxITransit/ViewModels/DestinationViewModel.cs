@@ -14,13 +14,13 @@ namespace FxITransit.ViewModels
     {
         public DestinationViewModel()
         {
-            ToAddress= "Sapphire";
+            ToAddress= "Union Square Sports Bar";
             Addresses =new  ObservableRangeCollection<GoogleAddress>();
-            StopsFound =new ObservableRangeCollection<StopLite>();
+            StopsFound =new ObservableRangeCollection<Stop>();
         }
         public string ToAddress { get; set; }
         public ObservableRangeCollection<GoogleAddress> Addresses { get; set; }
-        public ObservableRangeCollection<StopLite> StopsFound { get; set; }
+        public ObservableRangeCollection<Stop> StopsFound { get; set; }
 
         public async void SearchAddress()
         {
@@ -30,9 +30,13 @@ namespace FxITransit.ViewModels
 
         }
 
-        public async  Task<List<StopLite>> SearchStops(GoogleAddress googleAddress)
+        public async  Task<List<Stop>> SearchStops(GoogleAddress googleAddress)
         {
             var  stops =  Db.SearchStopsNearAddress(googleAddress.Lat, googleAddress.Lon, 0.5, googleAddress.Name);
+            foreach(var stop in stops)
+            {
+                stop.IsDestinationStart = true;
+            }
             return stops;
         }
     }

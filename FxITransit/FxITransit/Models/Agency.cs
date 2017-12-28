@@ -21,7 +21,6 @@ namespace FxITransit.Models
 
         [Ignore]
         public ObservableRangeCollection<Route> Routes { get; set; }
-
-        
+        public bool IsConfigured { get; internal set; }
     }
 }

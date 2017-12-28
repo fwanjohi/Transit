@@ -32,9 +32,8 @@ namespace FxITransit.Views
         {
             InitializeComponent();
            
-            BindingContext = this._viewModel = new StopsViewModel(route);
-            _viewModel.TabsContainer = StkDir;
-
+            BindingContext = this._viewModel = new StopsViewModel(route, StkDir );
+            _viewModel.ChangeDirection(route.Directions.FirstOrDefault());
 
         }
 
@@ -60,9 +59,12 @@ namespace FxITransit.Views
             MapHolder.Children.Add(_viewModel.Map);
         }
 
-        private async Task BtnClosest_ClickedAsync(object sender, EventArgs e)
+        private async Task BtnGoToClosetClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new PredictionsPage(_viewModel.ClosestStop));
+            if (_viewModel.ClosestStop != null)
+            {
+                await Navigation.PushAsync(new PredictionsPage(_viewModel.ClosestStop));
+            }
         }
 
         private void MenuItem_Clicked(object sender, EventArgs e)
@@ -92,5 +94,7 @@ namespace FxITransit.Views
             }
 
         }
+
+        
     }
 }

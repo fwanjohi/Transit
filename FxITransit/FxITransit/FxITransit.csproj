@@ -72,6 +72,7 @@
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Preference.cs" />
+    <Compile Include="Models\ServiceError.cs" />
     <Compile Include="Models\Stop.cs" />
     <Compile Include="Models\StopDirections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

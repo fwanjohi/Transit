@@ -21,32 +21,26 @@ namespace FxITransit.Models
         private string _agencyTag;
         private string _stopTag;
         private string _display;
-        private string _fullTitle;
+        private string _AgencyStopTitle;
 
         private string _agencyTitle;
         private string _directionTitle;
         private string _routeTitle;
+        private string _distanceAwayDisplay;
+
         private Prediction _prediction1;
         private Prediction _prediction2;
         private Prediction _prediction3;
-        private ObservableRangeCollection<Position> _otherStops;
+        private ObservableRangeCollection<GeoPoint> _otherStops;
         private string _directionTag;
 
         public Stop()
         {
             Predictions = new ObservableRangeCollection<Prediction>();
-            _otherStops = new ObservableRangeCollection<Position>();
+            _otherStops = new ObservableRangeCollection<GeoPoint>();
         }
 
-        public static implicit operator Point(Stop stop)
-        {
-            return new Point { X = stop.Lat, Y = stop.Lon };
-        }
-
-        public static implicit operator GeoPoint(Stop stop)
-        {
-            return new GeoPoint { Lat = stop.Lat, Lon = stop.Lon };
-        }
+       
 
         public string RouteTag
         {
@@ -73,23 +67,23 @@ namespace FxITransit.Models
         }
 
         [Ignore]
-        public string FullTitle
+        public string AgencyStopTitle
         {
             get { return $"{AgencyTitle} - {Title}"; }
             //set
             //{
-            //    _fullTitle = value;
-            //    OnPropertyChanged("FullTitle");
+            //    _AgencyStopTitle = value;
+            //    OnPropertyChanged("AgencyStopTitle");
             //}
         }
         [JsonIgnore]
         [Ignore]
-        public string MediumTitle
+        public string StopDirectionRouteTitle
         {
             get { return $" {Title}, {DirectionTitle } , {RouteTitle}"; }
         }
 
-        
+
         public string RouteTitle
         {
             get => _routeTitle;
@@ -97,8 +91,8 @@ namespace FxITransit.Models
             {
                 _routeTitle = value;
                 OnPropertyChanged("RouteTitle");
-                OnPropertyChanged("FullTitle");
-                OnPropertyChanged("MediumTitle");
+                OnPropertyChanged("AgencyStopTitle");
+                OnPropertyChanged("StopDirectionRouteTitle");
             }
         }
 
@@ -109,8 +103,8 @@ namespace FxITransit.Models
             {
                 _agencyTitle = value;
                 OnPropertyChanged("AgencyTitle");
-                OnPropertyChanged("FullTitle");
-                OnPropertyChanged("MediumTitle");
+                OnPropertyChanged("AgencyStopTitle");
+                OnPropertyChanged("StopDirectionRouteTitle");
             }
         }
 
@@ -121,8 +115,8 @@ namespace FxITransit.Models
             {
                 _directionTitle = value;
                 OnPropertyChanged("AgencyTitle");
-                OnPropertyChanged("FullTitle");
-                OnPropertyChanged("MediumTitle");
+                OnPropertyChanged("AgencyStopTitle");
+                OnPropertyChanged("StopDirectionRouteTitle");
             }
         }
 
@@ -133,6 +127,8 @@ namespace FxITransit.Models
         public double Lon { get; set; }
 
         public string StopId { get; set; }
+
+        public int Order { get; set; }
 
         //		Message	"Self referencing loop detected with type 'FxITransit.Models.Stop'. Path '[0].Direction.Stops'."	string
 
@@ -158,18 +154,30 @@ namespace FxITransit.Models
                 OnPropertyChanged("Distance");
             }
         }
-        [Ignore]
-        public string Display
-        {
-            get
-            {
-                var dist = Distance.ToString("0.##0");
-                return $"{StopId} - ({dist} Miles away)";
-            }
-        }
 
         [Ignore]
-        public string TitleDisplay
+        public string DistanceAwayDisplay
+        {
+            set
+            {
+                _distanceAwayDisplay = value;
+                OnPropertyChanged("DistanceAwayDisplay");
+            }
+
+            get
+            {
+                if (string.IsNullOrEmpty(_distanceAwayDisplay))
+                {
+                    var dist = Distance.ToString("0.##0");
+                    _distanceAwayDisplay = $"{Title} - ({dist} Miles away)";
+
+                }
+
+                return _distanceAwayDisplay;
+            }
+        }
+        [Ignore]
+        public string StopDistance
         {
             get
             {
@@ -178,6 +186,11 @@ namespace FxITransit.Models
             }
         }
 
+        [Ignore]
+        public bool IsDestinationStart { get; set; }
+
+        
+
         [JsonIgnore]
         [Ignore]
         public Prediction Prediction1
@@ -185,7 +198,7 @@ namespace FxITransit.Models
             get => _prediction1;
             set
             {
-                _prediction1 = value; 
+                _prediction1 = value;
                 UpdateDiaplay();
             }
         }
@@ -217,14 +230,14 @@ namespace FxITransit.Models
 
         [JsonIgnore]
         [Ignore]
-        public ObservableRangeCollection<Position> OtherStops
+        public ObservableRangeCollection<GeoPoint> OtherStops
         {
             get => _otherStops;
             set
             {
                 _otherStops = value;
                 OnPropertyChanged("OtherStops");
-                
+
             }
         }
         internal void UpdateDiaplay()
@@ -232,12 +245,12 @@ namespace FxITransit.Models
             foreach (var pred in Predictions)
             {
                 pred.LocalTime = new DateTime(pred.LocalTime.Value.Ticks);
-                
-                OnPropertyChanged("Display");
-                OnPropertyChanged("TitleDisplay");
+
+                OnPropertyChanged("StopDistance");
+                OnPropertyChanged("DistanceAwayDisplay");
                 pred.UpdatePreditionDisplay();
 
-                
+
                 //var isArriving 
 
             }
@@ -245,21 +258,22 @@ namespace FxITransit.Models
             OnPropertyChanged("Prediction2");
             OnPropertyChanged("Prediction3");
         }
-        public static implicit operator StopLite(Stop stop)
+
+        public static implicit operator Point(Stop stop)
         {
-            StopLite stopLite = new StopLite
-            {
-                Lat = stop.Lat,
-                Lon = stop.Lon,
-                Tag = stop.Tag,
-                AgencyTitle = stop.AgencyTitle,
-                DistanceDisplay = $"{stop.TitleDisplay} away",
-                Title = stop.Title
-            };
-
-
-            return stopLite;
+            return new Point { X = stop.Lat, Y = stop.Lon };
         }
+
+        public static implicit operator Position(Stop stop)
+        {
+            return new Position (stop.Lat, stop.Lon );
+        }
+
+        public static implicit operator GeoPoint(Stop stop)
+        {
+            return new GeoPoint { Lat = stop.Lat, Lon = stop.Lon };
+        }
+       
     }
 
 }

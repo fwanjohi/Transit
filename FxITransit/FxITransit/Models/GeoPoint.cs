@@ -13,6 +13,27 @@ namespace FxITransit.Models
         public double Lat { get; set; }
         public double Lon { get; set; }
 
+        public GeoPoint()
+        {
+
+        }
+        public GeoPoint(double lat, double lon)
+        {
+            Lat = lat;
+            Lon = lon;
+        }
+
+        public GeoPoint(Stop stop)
+        {
+            Lat = stop.Lat;
+            Lon = stop.Lon;
+        }
+
+        public static implicit operator Position(GeoPoint gp)
+        {
+            return new Position(gp.Lat, gp.Lon);
+        }
+
 
         public static implicit operator Point(GeoPoint gp)
         {

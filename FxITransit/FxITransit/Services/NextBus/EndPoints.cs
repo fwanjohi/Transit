@@ -20,9 +20,15 @@ namespace FxITransit.Services.NextBus
             return $"?command=routeList&a={agencyTag}";
         }
 
-        public static string RouteConfigUrl(string agencyTag, string routeTag)
+        public static string RouteConfigUrl(string agencyTag, string routeTag= null)
         {
-            var cfg= $"?command=routeConfig&a={agencyTag}&r={routeTag}";
+            var cfg= $"?command=routeConfig&a={agencyTag}&terse";
+            //if routeTag is added, then include it to return config for one route only
+            if (!string.IsNullOrEmpty(routeTag))
+            {
+                cfg += $"&r={routeTag}";
+            }
+
             return cfg;
 
         }

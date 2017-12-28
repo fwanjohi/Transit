@@ -9,6 +9,8 @@ using Xamarin.Forms;
 using Plugin.TextToSpeech;
 using FxITransit.Models;
 using PCLStorage;
+using Plugin.Notifications;
+using Acr.Settings;
 
 namespace FxITransit.Helpers
 {
@@ -91,7 +93,52 @@ namespace FxITransit.Helpers
         {
             CrossTextToSpeech.Current.Speak(text);
         }
-        
+
+        //public void TellThem(string message)
+        //{
+        //    var vehicle = pred.Vehicle ?? "";
+
+        //    var msg = $"Your transit vehicle {vehicle} is arriving in {diff} Minutes";
+        //    SendNotification(msg);
+
+        //    if (PreferencesHelper.Instance.Prefence.Speak)
+        //    {
+        //        Speak(msg);
+        //    }
+
+        //    if (Settings.Preference.Vibrate)
+        //    {
+
+        //    }
+        //}
+
+        public void SendNotification(string message, string title = "Alert")
+        {
+            try
+            {
+                CrossNotifications.Current.Send(new Notification
+                {
+                    Title = title,
+                    Message = message,
+                    Vibrate = true,
+                    When = TimeSpan.FromSeconds(2)
+                });
+            }
+            catch (Exception ex)
+            {
+                UtilsHelper.Instance.Log("Send Notification Failed : " + ex.Message);
+
+                try
+                {
+                    UtilsHelper.Instance.Speak(ex.Message);
+                }
+                catch (Exception ex2)
+                {
+                    UtilsHelper.Instance.Log(ex2.Message);
+                }
+            }
+        }
+
         public void Log(string message)
         {
             var msg = new LogItem { Message = $"{DateTime.Now} : {message }" };

@@ -13,37 +13,24 @@ namespace FxITransit.Helpers
     {
         public static IEnumerable<XElement> GetDescendantElements(this XDocument xDocument, string nodeName)
         {
+            return xDocument.Descendants().Where(p => p.Name.LocalName == nodeName).ToList();
+        }
+
+        public static IEnumerable<XElement> GetDescendantElements(this XElement xDocument, string nodeName)
+        {
             return xDocument.Descendants().Where(p => p.Name.LocalName == nodeName);
         }
 
+        public static IEnumerable<XElement> GetChildElements(this XElement xElement, string nodeName)
+        {
+           return  xElement.Elements().Where(p => p.Name.LocalName == nodeName);
+        }
         public static bool HasValue(this string item)
         {
            return !string.IsNullOrWhiteSpace(item);
         }
 
-        //public static bool FileExists(this IFolder folder, string name)
-        //{
-        //    return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FileExists;
-
-        //}
-
-        //public static bool FolderExists(this IFolder folder, string name)
-        //{
-        //    return folder.CheckExistsAsync(name).Result == ExistenceCheckResult.FolderExists;
-
-        //}
-
-        //public static IFolder CreateFolder(this IFolder folder, string name)
-        //{
-        //    return folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists).Result;
-
-        //}
-
-        //public static IFile CreateFile(this IFolder folder, string name)
-        //{
-        //    return folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists).Result;
-
-        //}
+        
 
 
         public static string GetAttribute(this XElement xElement, string attName)
@@ -57,6 +44,22 @@ namespace FxITransit.Helpers
                 return string.Empty;
             }
             
+        }
+
+        public static T TryGetAttribute<T>(this XElement element, string attName)
+        {
+            T val = default(T);
+            var stringVal = element.GetAttribute(attName);
+
+            try
+            {
+                val =(T) Convert.ChangeType(stringVal, typeof(T));
+            }
+            catch
+            {
+                val = default(T);
+            }
+            return val;
         }
 
         public static XDocument LoadXml(string xml)

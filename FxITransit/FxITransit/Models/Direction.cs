@@ -9,9 +9,14 @@ namespace FxITransit.Models
         public Direction()
         {
             Stops = new ObservableRangeCollection<Stop>();
+            Path = new ObservableRangeCollection<GeoPoint>();
         }
         [Ignore]
         public ObservableRangeCollection<Stop> Stops { get; set; }
+
+        [Ignore]
+        public ObservableRangeCollection<GeoPoint> Path { get; set; }
+
         public string RouteTag { get; set; }
         public string Tag { get; set; }
         public string Title { get; set; }

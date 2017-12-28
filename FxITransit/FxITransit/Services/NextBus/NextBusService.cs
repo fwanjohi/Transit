@@ -206,13 +206,19 @@ namespace FxITransit.Services.NextBus
 
                     //get stops
                     direction.Stops.Clear();
+                    var order = 1;
+
                     foreach (var stopIdNode in directionNode.Descendants())
                     {
                         var tag = stopIdNode.GetAttribute("tag");
                         var stop = stops.FirstOrDefault(x => x.Tag == tag);
                         if (stop != null)
                         {
+                            
                             stop.Id = $"{direction.Id}.{stop.Tag}";
+                            stop.Order = order;
+                            order++;
+
                             stop.ParentId = direction.Id;
                             stop.DirectionTitle = direction.Title;
                             stop.AgencyTitle = route.AgencyTitle;
@@ -220,7 +226,7 @@ namespace FxITransit.Services.NextBus
                             stop.DirectionTag = direction.Tag;
                             if (stop.Tag != tag)
                             {
-                                stop.OtherStops.Add(stop.Postion);
+                                stop.OtherStops.Add(stop);
                             }
                             _dbHelper.SaveStop(stop);
                         }
@@ -231,21 +237,22 @@ namespace FxITransit.Services.NextBus
 
                 }
 
-                var pathXml = "<path>";
-                foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
-                {
-                    var geoPoint = new GeoPoint
-                    {
-                        ParentId = route.Tag,
-                        Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
-                        Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
-                    };
-                    //DbHelper.Instance.SaveEntity(geoPoint);
-                    route.Path.Add(geoPoint);
-                    pathXml += pathNode.ToString();
-                }
-                pathXml += "</path>";
-                route.PathData = pathXml;
+                //var pathXml = "<path>";
+                //foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
+                //{
+                //    var geoPoint = new GeoPoint
+                //    {
+                //        ParentId = route.Tag,
+                //        Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
+                //        Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
+                //    };
+                //    //DbHelper.Instance.SaveEntity(geoPoint);
+                //    route.Path.Add(geoPoint);
+                //    pathXml += pathNode.ToString();
+                //}
+                //pathXml += "</path>";
+                //route.PathData = pathXml;
+                route.IsConfigured = true;
                 _dbHelper.SaveRoute(route);
 
                 
@@ -253,7 +260,8 @@ namespace FxITransit.Services.NextBus
                 UserDialogs.Instance.HideLoading();
             }
 
-            route.IsConfigured = true;
+            
+
 
             //?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true
             //http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true

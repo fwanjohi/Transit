@@ -14,7 +14,7 @@ namespace FxITransit.Models
         public Route()
         {
             Directions = new ObservableRangeCollection<Direction>();
-            Path = new ObservableRangeCollection<GeoPoint>();
+            Stops = new ObservableRangeCollection<Stop>();
             IsConfigured = false;
         }
         public string AgencyTag { get; set; }
@@ -31,22 +31,22 @@ namespace FxITransit.Models
         public ObservableRangeCollection<Direction> Directions { get; set; }
 
         [Ignore]
-        public ObservableRangeCollection<GeoPoint> Path { get; set; }
+        public ObservableRangeCollection<Stop> Stops { get; set; }
 
         public string Color { get; set; }
 
         public string OppositeColor { get; set; }
 
-        public string LatMin { get; set; }
+        public double StartLat { get; set; }
 
-        public string LatMax { get; set; }
+        public double EndLat { get; set; }
 
-        public string LonMin { get; set; }
+        public double StartLon { get; set; }
 
-        public string LonMax { get; set; }
+        public double EndLon { get; set; }
 
         public bool IsConfigured { get; set; }
         public string AgencyTitle { get; internal set; }
-        public string PathData { get; internal set; }
+        //public string PathData { get; internal set; }
     }
 }

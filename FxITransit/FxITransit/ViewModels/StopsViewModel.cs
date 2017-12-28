@@ -55,10 +55,10 @@ namespace FxITransit.ViewModels
         private string _filter;
         private ObservableRangeCollection<Stop> _filteredStops;
         public IViewContainer<View> TabsContainer { get; set; }
-        public StopsViewModel(Route route)
+        public StopsViewModel(Route route, Layouts.RepeatableStack stkDir)
         {
 
-
+            TabsContainer = stkDir;
             _map = new CustomMap
             {
                 MapType = MapType.Street,
@@ -68,20 +68,19 @@ namespace FxITransit.ViewModels
             _filteredStops = new ObservableRangeCollection<Stop>();
 
             Route = route;
-            Directions = new ObservableCollection<Direction>();
+            Directions = new ObservableCollection<Direction>(Route.Directions);
+            OnPropertyChanged("Directions");
 
             Title = "Stops for  : " + Route.Title;
             ChangeFavoriteCommand = PreferencesHelper.Instance.FavoriteCommand;
             DirectionChangedCommand = new Command<Direction>(ChangeDirection);
-            if (Route.IsConfigured)
-            {
-                ChangeDirection(route.Directions.FirstOrDefault());
-            }
+            
         }
 
         public void ChangeDirection(Direction selecteDirection)
         {
             if (selecteDirection == null) return;
+
             selecteDirection.IsSeleted = true;
             SelectedDirection = selecteDirection;
 
@@ -94,32 +93,13 @@ namespace FxITransit.ViewModels
 
             }
 
-            var closest = TrackingHelper.Instance.GetClosestStop(SelectedDirection.Stops);
-            ClosestStop = closest;
-            if (closest != null)
-            {
-                var position = new Position(closest.Lat, closest.Lon); // Latitude, Longitude
-                var pin = new Pin
-                {
-                    Type = PinType.Place,
-                    Position = position,
-                    Label = closest.Title,
-                    Address = $"{closest.Distance} Miles"
-
-                };
-                _map.Pins.Add(pin);
-                _map.MoveToRegion(MapSpan.FromCenterAndRadius(closest.Postion, Distance.FromMiles(0.5)));
-            }
-
-
-
             foreach (var cnt in TabsContainer.Children)
             {
                 var btn = cnt as Button;
                 if (btn != null)
                 {
                     var dir = cnt.BindingContext as Direction;
-                    if (dir.IsSeleted)
+                    if (dir.Equals(SelectedDirection))
                     {
                         btn.BackgroundColor = Color.FromHex("#2196F3");
                         btn.FontAttributes = FontAttributes.Bold;
@@ -131,6 +111,30 @@ namespace FxITransit.ViewModels
                         btn.FontAttributes = FontAttributes.None;
                     }
                 }
+            }
+
+            var closest = TrackingHelper.Instance.GetClosestStop(SelectedDirection.Stops);
+            ClosestStop = closest;
+
+            Pin pin = Tracking.PinFromStop(closest); 
+
+
+            var path = selecteDirection.Stops.Select(x => new GeoPoint(x));
+
+            _map.DrawPath(path, new List<Pin> { pin }, closest, 1.0);
+
+            if (PreferencesHelper.Instance.Preference.Speak && ClosestStop!= null)
+            {
+                var speak = $"The closest stop is {ClosestStop.DistanceAwayDisplay}";
+
+                Utils.Speak(speak);
+            }
+
+            if (PreferencesHelper.Instance.Preference.Alert && ClosestStop != null)
+            {
+                var msg = $"The closest stop is {ClosestStop.DistanceAwayDisplay}";
+
+                Utils.SendNotification(msg);
             }
         }
 
@@ -168,46 +172,24 @@ namespace FxITransit.ViewModels
 
         public async Task ConfigureRoute()
         {
-
             await TransitService.GetRouteDetails(Route);
-            Directions.Clear();
-            var pathCofigured = false;
-            if (Route.Path.Count > 0)
-            {
-                //var doc = XDoc.LoadXml(Route.PathData);
-                var paths = Route.Path.OrderBy(x => x.Lat).OrderBy(y => y.Lon);
-                foreach (var path in paths)
-                {
-                    var mapPos = new Position(path.Lat, path.Lon);
-                    _map.RouteCoordinates.Add(mapPos);
-                }
-                pathCofigured = true;
 
-            }
+            _map.RouteCoordinates.Clear();
+
+            Directions = Route.Directions;
+            var closest = Tracking.GetClosestStop(Route.Stops);
+
+            var pin = Tracking.PinFromStop(closest);
 
 
-            Position firstPos;
-            foreach (var direction in Route.Directions)
-            {
-                Directions.Add(direction);
-
-                firstPos = direction.Stops[0].Postion;
-                if (pathCofigured == false)
-                {
-                    foreach (var stop in direction.Stops)
-                    {
-                        var mapPos = new Position(stop.Lat, stop.Lon);
-                        _map.RouteCoordinates.Add(mapPos);
-                    }
-                }
-            }
+            var path = Route.Stops.Select(x => new GeoPoint(x)).ToList();
+            _map.DrawPath(path, pin);
 
 
-            _map.MoveToRegion(MapSpan.FromCenterAndRadius(_map.RouteCoordinates[0], Distance.FromMiles(1.0)));
-            SelectedDirection = Directions.FirstOrDefault();
-            SelectedDirection.IsSeleted = true;
 
         }
+
+
 
     }
 }
