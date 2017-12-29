@@ -131,6 +131,7 @@ namespace FxITransit.Helpers
             //now figure out what stops pass near destination
             var stopsNearDest = routes.SelectMany(x => x.Stops).Where(
                 y => TrackingHelper.Instance.CalculateDistance(dest.Lat, dest.Lon, y.Lat, y.Lon) < 0.1).ToList();
+
             var destRouteIds = stopsNearDest.Select(x => x.RouteTag).Distinct().ToList();
 
             //now figure out what stops new me are common

@@ -19,14 +19,10 @@ namespace FxITransit.Views
             BindingContext =  PreferencesHelper.Instance.Preference;
         }
 
-        
-
-       
-
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            PreferencesHelper.Instance.SaveSttingsToFile();
+            DbHelper.Instance.SavePrerefence(PreferencesHelper.Instance.Preference);
         }
     }
 }

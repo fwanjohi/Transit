@@ -40,6 +40,7 @@ namespace FxITransit.Models
             set
             {
                 _alertMinsBefore = value;
+
                 OnPropertyChanged("AlertMinsBefore");
                 
             }
@@ -52,6 +53,7 @@ namespace FxITransit.Models
             {
                 _alertInterval = value;
                 OnPropertyChanged("AlertInterval");
+
                 
             }
         }

@@ -18,7 +18,7 @@ namespace FxITransit.Helpers
     public class TrackingHelper
     {
         private static readonly Lazy<TrackingHelper> instance = new Lazy<TrackingHelper>(() => new TrackingHelper());
-
+      
         public static TrackingHelper Instance
         {
             get { return instance.Value; }
@@ -188,6 +188,46 @@ namespace FxITransit.Helpers
             };
         }
 
+        public Stop GetClosestStopVariableDistance(List<Stop> stops, GeoPoint from, double minDistance, double maxDistance)
+        {
+            var curDistance = minDistance;
+            while(curDistance <= maxDistance)
+            {
+                Stop curStop;
+
+                if (lastPos != null)
+                {
+                    curStop = new Stop { Lat = lastPos.Latitude, Lon = lastPos.Longitude };
+                }
+                else
+                {
+                    curStop = stops.First();
+                }
+
+
+                foreach (var stop in stops)
+                {
+
+                    stop.Distance = ToMiles(CalculateDistance(curStop, stop));
+                    if (closestStop == null)
+                    {
+                        closestStop = stop;
+                    }
+                    else
+                    {
+                        if (closestStop.Distance > stop.Distance)
+                        {
+                            closestStop = stop;
+                        }
+                    }
+                }
+                var xPos = new Xamarin.Forms.Maps.Position(closestStop.Lat, closestStop.Lon);
+                return closestStop;
+            }
+
+            return null;
+        }
+
         public double CalculateDistance(params Location[] locations)
         {
             double totalDistance = 0.0;
@@ -205,41 +245,12 @@ namespace FxITransit.Helpers
 
 
 
-        public Stop GetClosestStop(IEnumerable<Stop> stops)
+        public Stop GetClosestStopToMe(IEnumerable<Stop> stops)
         {
             Stop closestStop = null;
             var lastPos = LastPosition;
 
-            Stop curStop;
-
-            if (lastPos != null)
-            {
-                curStop = new Stop {Lat = lastPos.Latitude, Lon = lastPos.Longitude};
-            }
-            else
-            {
-                curStop = stops.First();
-            }
-
-
-            foreach (var stop in stops)
-            {
-
-                stop.Distance = ToMiles(CalculateDistance(curStop, stop));
-                if (closestStop == null)
-                {
-                    closestStop = stop;
-                }
-                else
-                {
-                    if (closestStop.Distance > stop.Distance)
-                    {
-                        closestStop = stop;
-                    }
-                }
-            }
-            var xPos = new Xamarin.Forms.Maps.Position(closestStop.Lat, closestStop.Lon);
-            return closestStop;
+            
             //Map.Pins.Add(new Xamarin.Forms.Maps.Pin { Position = xPos, Address = ClosestStop.Title, Label = ClosestStop.TitleDisplay });
         }
 

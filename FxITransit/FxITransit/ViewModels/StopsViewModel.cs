@@ -113,7 +113,7 @@ namespace FxITransit.ViewModels
                 }
             }
 
-            var closest = TrackingHelper.Instance.GetClosestStop(SelectedDirection.Stops);
+            var closest = TrackingHelper.Instance.GetClosestStopToMe(SelectedDirection.Stops);
             ClosestStop = closest;
 
             Pin pin = Tracking.PinFromStop(closest); 
@@ -177,7 +177,7 @@ namespace FxITransit.ViewModels
             _map.RouteCoordinates.Clear();
 
             Directions = Route.Directions;
-            var closest = Tracking.GetClosestStop(Route.Stops);
+            var closest = Tracking.GetClosestStopToMe(Route.Stops);
 
             var pin = Tracking.PinFromStop(closest);
 

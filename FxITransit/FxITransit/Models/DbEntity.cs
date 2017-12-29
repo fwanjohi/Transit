@@ -33,7 +33,7 @@ namespace FxITransit.Models
         [Ignore]
         public string FavoriteImage
         {
-            get { return IsFavorite ? Constants.FaveOnIcon : Constants.FaveOffIcon; }
+            get { return IsFavorite ? Constants.Images.FaveOnIcon : Constants.Images.FaveOffIcon; }
         }
     }
 
