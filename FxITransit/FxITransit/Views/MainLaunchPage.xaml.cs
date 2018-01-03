@@ -33,6 +33,7 @@ namespace FxITransit.Views
 
         protected override void OnAppearing()
         {
+
         }
     }
 }
