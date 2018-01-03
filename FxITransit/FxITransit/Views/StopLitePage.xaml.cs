@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FxITransit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Acr.UserDialogs;
 
 namespace FxITransit.Views
 {
@@ -40,10 +41,24 @@ namespace FxITransit.Views
                 if (stop.IsDestinationStart)
                 {
                     // look for stops near you
-                    var stoptToDest = await DbHelper.Instance.SearchStopsNearMeToADestination(stop);
-                    var nearViwModel = new StopLiteViewModel(stoptToDest, true);
-                    await Navigation.PushAsync(new StopLitePage(nearViwModel) { Title = $"Stops to {stop.Title}" });
-                   
+                    var stopsToDest = await DbHelper.Instance.SearchStopsNearMeToADestination(stop);
+
+                    if (stopsToDest.Count == 0)
+                    {
+                        var alertConfig = new AlertConfig
+                        {
+                            Message = $"No stops found near you to {stop.Title}. Please select another stop",
+                            OkText = "OK",
+                            OnAction = null
+                        };
+                        UserDialogs.Instance.Alert(alertConfig);
+                    }
+                    else
+                    {
+
+                        var nearViwModel = new StopLiteViewModel(stopsToDest, true);
+                        await Navigation.PushAsync(new StopLitePage(nearViwModel) { Title = $"Stops to {stop.Title}" });
+                    }
                 }
                 else
                 {

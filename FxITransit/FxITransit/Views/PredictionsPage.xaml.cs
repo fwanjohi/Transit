@@ -25,16 +25,9 @@ namespace FxITransit.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = new PredictionsViewModel(stop);
-
-            
-            //Xamarin.Forms.Point.Distance
-
-            //CLLocation pointA = new CLLocation(lat, long);
-            //CLLocation pointB = new CLLocation(lat, long);
-            //var distanceToB = pointB.DistanceFrom(pointA);
-            Position position = new Position(0, 0);
+            var map = new CustomMap();
             Pin pin = null;
-            position = new Position(stop.Lat, stop.Lon); // Latitude, Longitude
+            Position position = new Position(stop.Lat, stop.Lon); 
             pin = new Pin
             {
                 Type = PinType.Place,
@@ -43,19 +36,17 @@ namespace FxITransit.Views
                 Address = stop.Title
 
             };
+            map.Pins.Add(pin);
 
-            // var distance = Xamarin.Forms.Maps.Distance.()
+            foreach (var dirStop in stop.OtherStops)
+            {
+                map.RouteCoordinates.Add(dirStop);
+            }
 
-            //foreach (var dirStop in stop.OtherStops)
-            //{
-                
-            //    map.RouteCoordinates.Add(dirStop);
-            //}
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
 
-            //map.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMiles(0.5)));
-
-            //map.Pins.Add(pin);
-            //MapHolder.Children.Add(map);
+            map.Pins.Add(pin);
+            MapHolder.Children.Add(map);
 
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using FxITransit.Models;
 using FxITransit.ViewModels;
 using Xamarin.Forms;
@@ -41,6 +42,16 @@ namespace FxITransit.Views
                 {
                     var viewModel = new StopLiteViewModel(stopsFound, true);
                     await Navigation.PushAsync(new StopLitePage (viewModel) { Title = $"Stops near { address.Name } at {address.FormattedAddress}" });
+                }
+                else
+                {
+                    var alertConfig = new AlertConfig
+                    {
+                        Message = $"No stops found near {address.Name}. Please select another address",
+                        OkText = "OK",
+                        OnAction = null
+                    };
+                    UserDialogs.Instance.Alert(alertConfig);
                 }
             }
         }

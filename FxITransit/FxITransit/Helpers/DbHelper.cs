@@ -57,7 +57,7 @@ namespace FxITransit.Helpers
             TableMapping m = new TableMapping(typeof(Stop));
 
             //var stops = _db.Query<Stop>("select * from Stop").ToList()
-            var lites = _db.Query<Stop>("select distinct Tag, Title, Lat, Lon, AgencyTitle from Stop").ToList()
+            var lites = _db.Query<Stop>("select distinct * from Stop").ToList()
             .Where(
                 k => TrackingHelper.Instance.CalculateDistance(
                          k.Lat, k.Lon, lat, lon) <= distanceInMiles).ToList();
@@ -118,7 +118,6 @@ namespace FxITransit.Helpers
 
             var ret = new List<Stop>();
             //select distinct bus routes that pass there
-
             List<Route> routes = _db.Query<Route>("select * from route where IsConfigured = ?", true);//.Where(x=> !string.IsNullOrEmpty(x.PathData)).ToList();
 
 
@@ -127,36 +126,40 @@ namespace FxITransit.Helpers
                 ConfigureRoute(route);
             }
             var allStops = routes.SelectMany(x => x.Stops).ToList();
-
+            Double curDistance = 0.1;
             //now figure out what stops pass near destination
-            var stopsNearDest = routes.SelectMany(x => x.Stops).Where(
-                y => TrackingHelper.Instance.CalculateDistance(dest.Lat, dest.Lon, y.Lat, y.Lon) < 0.1).ToList();
+            var stopsNearDest = new List<Stop> { dest };// TrackingHelper.Instance.GetClosestStopsVariableDistance(allStops, dest, 0.1, 0.5, out curDistance);
 
-            var destRouteIds = stopsNearDest.Select(x => x.RouteTag).Distinct().ToList();
+            var destRouteIds = stopsNearDest.Select(x => x.ParentId).Distinct().ToList();
 
             //now figure out what stops new me are common
-            var stopsNearMe = allStops
-                .Where(y => TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, y.Lat, y.Lon) < 0.1).ToList();
-            var myRouteIds = stopsNearMe.Select(x => x.RouteTag).Distinct().ToList();
+            var stopsNearMe = TrackingHelper.Instance.GetClosestStopsVariableDistance(allStops, new GeoPoint { Lat = my.Latitude, Lon = my.Longitude }, 0.1, 0.5, out curDistance);
+            var myRouteIds = stopsNearMe.Select(x => x.ParentId).Distinct().ToList();
 
             var commonRouteIds = myRouteIds.Intersect(destRouteIds).ToList();
 
-            var sharedNearMe = stopsNearMe.Where(m => commonRouteIds.Contains(m.RouteTag)).ToList();
+            //if no common routes found; keep increasing the distance
+            while (commonRouteIds.Count == 0 && curDistance <= 1.0)
+            {
+                curDistance = curDistance + 0.1;
+                stopsNearMe = allStops.Where(x => x.Distance <= curDistance).ToList();
+                myRouteIds = stopsNearMe.Select(x => x.ParentId).Distinct().ToList();
+                commonRouteIds = myRouteIds.Intersect(destRouteIds).ToList();
+            }
+
+            var sharedNearMe = stopsNearMe.Where(m => commonRouteIds.Contains(m.ParentId)).ToList();
 
             foreach (var stop in sharedNearMe)
             {
+                //only add stops going that way
+                if (stop.ParentId == dest.ParentId && stop.Order <= dest.Order)
+                {
+                    stop.Distance = TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, stop.Lat, stop.Lon);
+                    var dist = stop.Distance.ToString("0.##0");
 
-                //var stopNearMe = allStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon).To;
-
-                //if (stopNearMe != null)
-                //{
-                stop.Distance = TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, stop.Lat, stop.Lon);
-                var dist = stop.Distance.ToString("0.##0");
-                Stop stopLite = stop;
-               
-                stopLite.DistanceAwayDisplay = $"{stop.AgencyTitle} - {dist} away";
-                ret.Add(stopLite);
-                //}
+                    stop.DistanceAwayDisplay = $"{stop.AgencyTitle} - {dist} away, {dest.Order - stop.Order} stops";
+                    ret.Add(stop);
+                }
             }
 
             return ret;

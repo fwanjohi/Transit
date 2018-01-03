@@ -18,7 +18,7 @@ namespace FxITransit.Helpers
     public class TrackingHelper
     {
         private static readonly Lazy<TrackingHelper> instance = new Lazy<TrackingHelper>(() => new TrackingHelper());
-      
+
         public static TrackingHelper Instance
         {
             get { return instance.Value; }
@@ -75,7 +75,7 @@ namespace FxITransit.Helpers
 
 
         }
-        
+
         public async Task<Position> GetMyLocation()
         {
             try
@@ -108,8 +108,8 @@ namespace FxITransit.Helpers
 
         public double CalculateDistance(Stop location1, Stop location2)
         {
-            var loc1 = new Location {Latitude = location1.Lat, Longitude = location1.Lon};
-            var loc2 = new Location {Latitude = location2.Lat, Longitude = location2.Lon};
+            var loc1 = new Location { Latitude = location1.Lat, Longitude = location1.Lon };
+            var loc2 = new Location { Latitude = location2.Lat, Longitude = location2.Lon };
             return CalculateDistance(loc1, loc2);
         }
 
@@ -121,12 +121,12 @@ namespace FxITransit.Helpers
 
         public double MetersFromMiles(double miles)
         {
-            return 1000 * miles  * ((double)8 / (double)5);
+            return 1000 * miles * ((double)8 / (double)5);
         }
 
         public double KiloMetersFromMiles(double miles)
         {
-            return  miles * ((double)8 / (double)5);
+            return miles * ((double)8 / (double)5);
         }
 
 
@@ -160,7 +160,7 @@ namespace FxITransit.Helpers
 
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
-            var loc1 = new Location {Latitude = lat1, Longitude = lon1};
+            var loc1 = new Location { Latitude = lat1, Longitude = lon1 };
             var loc2 = new Location { Latitude = lat2, Longitude = lon2 };
             return CalculateDistance(loc1, loc2);
 
@@ -168,7 +168,7 @@ namespace FxITransit.Helpers
 
         public double CalculateDistance(double lat1, double lon1)
         {
-            
+
             var loc1 = new Location { Latitude = lat1, Longitude = lon1 };
             var loc2 = new Location { Latitude = LastPosition.Latitude, Longitude = LastPosition.Longitude };
             return CalculateDistance(loc1, loc2);
@@ -178,7 +178,7 @@ namespace FxITransit.Helpers
         internal Pin PinFromStop(Stop stop)
         {
             if (stop == null) return null;
-                
+
             return new Pin
             {
                 Position = stop,
@@ -188,44 +188,29 @@ namespace FxITransit.Helpers
             };
         }
 
-        public Stop GetClosestStopVariableDistance(List<Stop> stops, GeoPoint from, double minDistance, double maxDistance)
+        public List<Stop> GetClosestStopsVariableDistance(IEnumerable<Stop> stops, GeoPoint from, double minDistance, double maxDistance, out double foundDistance)
         {
+            var closestStops = new List<Stop>();
+
+            foreach(var stop in stops)
+            {
+                stop.Distance = CalculateDistance(stop.Lat, stop.Lon, from.Lat, from.Lon);
+            }
             var curDistance = minDistance;
+
             while(curDistance <= maxDistance)
             {
-                Stop curStop;
-
-                if (lastPos != null)
+                 closestStops = stops.Where(x => x.Distance <= curDistance).ToList();
+                if (closestStops.Count > 0 )
                 {
-                    curStop = new Stop { Lat = lastPos.Latitude, Lon = lastPos.Longitude };
+                    break;
                 }
-                else
-                {
-                    curStop = stops.First();
-                }
-
-
-                foreach (var stop in stops)
-                {
-
-                    stop.Distance = ToMiles(CalculateDistance(curStop, stop));
-                    if (closestStop == null)
-                    {
-                        closestStop = stop;
-                    }
-                    else
-                    {
-                        if (closestStop.Distance > stop.Distance)
-                        {
-                            closestStop = stop;
-                        }
-                    }
-                }
-                var xPos = new Xamarin.Forms.Maps.Position(closestStop.Lat, closestStop.Lon);
-                return closestStop;
+                curDistance = curDistance + 0.1;
             }
 
-            return null;
+            foundDistance = curDistance;
+
+            return closestStops;
         }
 
         public double CalculateDistance(params Location[] locations)
@@ -247,11 +232,15 @@ namespace FxITransit.Helpers
 
         public Stop GetClosestStopToMe(IEnumerable<Stop> stops)
         {
-            Stop closestStop = null;
-            var lastPos = LastPosition;
+            foreach (var stop in stops)
+            {
+                stop.Distance = ToMiles(CalculateDistance(stop.Lat, stop.Lon, LastPosition.Latitude, LastPosition.Longitude));
+            }
 
-            
-            //Map.Pins.Add(new Xamarin.Forms.Maps.Pin { Position = xPos, Address = ClosestStop.Title, Label = ClosestStop.TitleDisplay });
+            var items = stops.OrderBy(x => x.Distance);
+            var closestStop = items.FirstOrDefault();
+
+            return closestStop;
         }
 
         private void Log(string message)
@@ -282,7 +271,7 @@ namespace FxITransit.Helpers
                         Lon = add.Geometry.Location.Lng,
                         Name = add.Name,
                         Distance = TrackingHelper.Instance.CalculateDistance(add.Geometry.Location.Lat, add.Geometry.Location.Lng),
-                       
+
 
                     };
                     adds.Add(pos);
@@ -296,7 +285,7 @@ namespace FxITransit.Helpers
             return adds.OrderBy(x => x.Distance).ToList(); ;
         }
 
-      
+
 
         public class Location
         {
