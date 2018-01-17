@@ -75,46 +75,13 @@ namespace FxITransit.Helpers
 
 
 
-        //get you a list of stops that 
-        //public List<Stop> SearchStopsNearMeToADestinationV1(Stop dest)
-        //{
-        //    var my = TrackingHelper.Instance.LastPosition;
-        //    var ret = new List<Stop>();
-        //    ////select distinct bus routes that pass there
-
-        //    List<IdItem> routesDest = _db.Query<IdItem>("select distinct ParentId as Id from Stop where lat=? and Lon =?", dest.Lat, dest.Lon).ToList();
-
-        //    var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "Here");
-
-        //    //uniq dests;
-        //    var destRoutes = routesDest.Select(x => x.Id).Distinct().ToList();
-        //    var realStops = _db.Query<Stop>("select * from stop").Where(x => destRoutes.Contains(x.ParentId)).ToList();
-
-        //    foreach (var stop in stopsNearMe)
-        //    {
-        //        var stopNearMe = realStops.FirstOrDefault(r => r.Lat == stop.Lat && r.Lon == stop.Lon);
-
-        //        if (stopNearMe != null)
-        //        {
-        //            stopNearMe.Distance = TrackingHelper.Instance.CalculateDistance(stopNearMe.Lat, stopNearMe.Lon, my.Latitude, my.Longitude);
-        //            ret.Add(stopNearMe);
-        //        }
-        //    }
-
-        //    foreach (var lite in ret)
-        //    {
-        //        lite.IsStart = true;
-        //    }
-
-        //    //var destNearMe = stopsNearMe
-
-        //    return ret;
-        //}
-
-        //get you a list of stops that 
         public async Task<List<Stop>> SearchStopsNearMeToADestination(Stop dest)
         {
             var my = await TrackingHelper.Instance.GetMyLocation();
+
+            //stops near me
+
+            var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude, 0.5, "My Location");
 
             var ret = new List<Stop>();
             //select distinct bus routes that pass there
@@ -125,6 +92,7 @@ namespace FxITransit.Helpers
             {
                 ConfigureRoute(route);
             }
+
             var allStops = routes.SelectMany(x => x.Stops).ToList();
             Double curDistance = 0.1;
             //now figure out what stops pass near destination

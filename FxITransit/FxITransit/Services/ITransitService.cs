@@ -15,7 +15,7 @@ namespace FxITransit.Services
         
         //Task  PopulateRouteList(Agency agency);
         //Task GetRouteDetailsFromService(Route route, Action callBack);
-        Task GetRouteDetails(Route route);
+        Task GetRouteDetails(Route route, bool showDialogs = true, bool checkDb = true);
 
         Position LastPosition { get; }
 

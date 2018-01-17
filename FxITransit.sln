@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxITransit", "FxITransit\FxITransit\FxITransit.csproj", "{938D4267-276F-4DBD-905B-08F98B91D6C6}"
 EndProject
@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RawIcons", "RawIcons", "{1E
 		FxITransit\RawIcons\fave_off.png = FxITransit\RawIcons\fave_off.png
 		FxITransit\RawIcons\Fave_on.png = FxITransit\RawIcons\Fave_on.png
 		FxITransit\RawIcons\fave_remove.png = FxITransit\RawIcons\fave_remove.png
+		Links.txt = Links.txt
 		FxITransit\RawIcons\narow_bus_stop.png = FxITransit\RawIcons\narow_bus_stop.png
 		FxITransit\RawIcons\noun_466303_cc.png = FxITransit\RawIcons\noun_466303_cc.png
 		FxITransit\RawIcons\wide_bus._stop.png = FxITransit\RawIcons\wide_bus._stop.png

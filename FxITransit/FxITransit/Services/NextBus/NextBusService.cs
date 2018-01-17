@@ -18,7 +18,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.Threading;
 
 namespace FxITransit.Services.NextBus
 {
@@ -43,6 +43,14 @@ namespace FxITransit.Services.NextBus
         {
             _client = GetClient();
             _dbHelper = DbHelper.Instance;
+            MessagingCenter.Subscribe<NextBusService, Agency>(this, Constants.BackgroundMessages.ProcessRoutes, async (NextBusService sender, Agency agency) => 
+            {
+                var items = agency.Routes.Where(x => x.IsConfigured).ToList();
+                foreach(var route in items)
+                {
+                    await GetRouteDetails(route, false);
+                }
+            });
 
 
         }
@@ -61,7 +69,7 @@ namespace FxITransit.Services.NextBus
 
             if (list.Count == 0)
             {
-                UserDialogs.Instance.ShowLoading("Loading routes from net...", MaskType.Black);
+                UserDialogs.Instance.ShowLoading("Loading Agencies from net...", MaskType.Black);
                 await Task.Delay(TimeSpan.FromMilliseconds(10));
                 var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
                 var doc = XDoc.LoadXml(data);
@@ -92,7 +100,8 @@ namespace FxITransit.Services.NextBus
             {
                 if (showDialogs)
                 {
-                    UserDialogs.Instance.ShowLoading("Loading routes from net...", MaskType.Black);
+                    UserDialogs.Instance.ShowLoading($"Loading Routes for {agency.Title} from net...", MaskType.Black);
+                    await Task.Delay(1);
                 }
 
                 var xml = await _client.GetStringAsync(EndPoints.RoutesUrl(agency.Tag));
@@ -115,23 +124,53 @@ namespace FxITransit.Services.NextBus
                 {
                     UserDialogs.Instance.HideLoading();
                 }
+                
             }
 
+            //MessagingCenter.Send(this, Constants.BackgroundMessages.ProcessRoutes, agency);
+
+            var cts = new CancellationTokenSource();
+
+            //await Task.Run(() => GetRouteDetailsForAgency(agency, cts.Token), cts.Token);//<--Note the await keyword here
+
+            Task.Factory.StartNew(() => GetRouteDetailsForAgency( agency, cts.Token));
             return routes;
+
         }
 
-        public async Task GetRouteDetails(Route route)
+       
+
+        private void GetRouteDetailsForAgency(Agency agency, CancellationToken token)
+        {
+            var unconfigured = agency.Routes.Where(x => x.IsConfigured == false).ToList();
+
+            foreach (var route in unconfigured)
+            {
+                UtilsHelper.Instance.Log($"Getting data for {route.AgencyTag} - {route.Tag} in backgroundMode");
+                 GetRouteDetails(route, false, false);
+            }
+        }
+
+        public async Task GetRouteDetails(Route route, bool showDialogs = true, bool checkDb = true)
         {
             //Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.ShowLoading("Configuring Details from DB...", MaskType.Black));
-            //UserDialogs.Instance.ShowLoading($"Configuring Details from DB...", MaskType.Black);
 
-            var count = await _dbHelper.ConfigureRoute(route);
+            if (checkDb)
+            {
+                var count = await _dbHelper.ConfigureRoute(route);
+            }
             //UserDialogs.Instance.HideLoading();
 
             if (!route.IsConfigured)
             {
-                UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
-                await Task.Delay(TimeSpan.FromMilliseconds(1));
+                if (showDialogs)
+                {
+                    UserDialogs.Instance.ShowLoading($"Configuring Details from Service", MaskType.Black);
+                    await Task.Delay(1);
+
+                }
+
+                
 
                 //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=N
 
@@ -182,11 +221,6 @@ namespace FxITransit.Services.NextBus
                 }
 
 
-                //foreach (XElement directionNode in dirN
-                //{
-
-                //}
-
                 //directions
                 route.Directions.Clear();
                 foreach (XElement directionNode in doc.GetDescendantElements("direction"))
@@ -236,32 +270,15 @@ namespace FxITransit.Services.NextBus
                     _dbHelper.SaveDirection(direction);
 
                 }
-
-                //var pathXml = "<path>";
-                //foreach (var pathNode in doc.Descendants().Where(x => x.Name == "point"))
-                //{
-                //    var geoPoint = new GeoPoint
-                //    {
-                //        ParentId = route.Tag,
-                //        Lat = Convert.ToDouble(pathNode.GetAttribute("lat")),
-                //        Lon = Convert.ToDouble(pathNode.GetAttribute("lon"))
-                //    };
-                //    //DbHelper.Instance.SaveEntity(geoPoint);
-                //    route.Path.Add(geoPoint);
-                //    pathXml += pathNode.ToString();
-                //}
-                //pathXml += "</path>";
-                //route.PathData = pathXml;
+                
                 route.IsConfigured = true;
                 _dbHelper.SaveRoute(route);
 
-                
-
-                UserDialogs.Instance.HideLoading();
+                if (showDialogs)
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
             }
-
-            
-
 
             //?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true
             //http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r=2&s=6594&useShortTitles=true
@@ -288,7 +305,6 @@ namespace FxITransit.Services.NextBus
                  */
                 List<Prediction> preds = new List<Prediction>();
 
-
                 foreach (var predNode in doc.GetDescendantElements("prediction"))
                 {
                     var pred = new Prediction();
@@ -305,12 +321,9 @@ namespace FxITransit.Services.NextBus
                 stop.Prediction1 = preds.Count >= 1 ? preds[0] : null;
                 stop.Prediction2 = preds.Count >= 2 ? preds[1] : null;
                 stop.Prediction3 = preds.Count >= 3 ? preds[2] : null;
-
             }
 
         }
-
-        
 
         private HttpClient GetClient()
         {
@@ -318,7 +331,6 @@ namespace FxITransit.Services.NextBus
             client.BaseAddress = new Uri(EndPoints.BaseUrl);
             return client;
         }
-
 
     }
 

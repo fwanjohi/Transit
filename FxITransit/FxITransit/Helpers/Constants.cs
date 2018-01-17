@@ -20,5 +20,10 @@ namespace FxITransit.Helpers
             public static double ClosestStopMinDistance = 0.1;
             public static double ClosestStopMaxDistance = 0.5;
         }
+
+        public static class BackgroundMessages
+        {
+            public static string ProcessRoutes = "ProcessRoutes";
+        }
     }
 }

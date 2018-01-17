@@ -58,6 +58,7 @@
     <Compile Include="Helpers\TrackingHelper.cs" />
     <Compile Include="Helpers\UtilsHelper.cs" />
     <Compile Include="Helpers\XDoc.cs" />
+    <Compile Include="Messaging\Messages.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\BaseDataObject.cs" />
