@@ -69,5 +69,12 @@ namespace FxITransit.Services.NextBus
             return uri;
         }
 
+        public static string GoogleReverseGeocodeUrl(double lat, double lon)
+        {
+            var apiKey = "AIzaSyC2scZS8w3cAHdAr8iIPJtDRRBQl6b-gwk";
+            var uri = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&key{apiKey}";
+            return uri;
+        }
+
     }
 }

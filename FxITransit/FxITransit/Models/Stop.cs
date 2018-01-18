@@ -40,7 +40,7 @@ namespace FxITransit.Models
             _otherStops = new ObservableRangeCollection<GeoPoint>();
         }
 
-       
+
 
         public string RouteTag
         {
@@ -80,7 +80,7 @@ namespace FxITransit.Models
         [Ignore]
         public string StopDirectionRouteTitle
         {
-            get { return $" {Title}, {DirectionTitle } , {RouteTitle}"; }
+            get { return $"{DirectionTitle }, {Title},  {RouteTitle}"; }
         }
 
 
@@ -134,15 +134,7 @@ namespace FxITransit.Models
 
 
 
-        [JsonIgnore]
-        [Ignore]
-        public Position Postion
-        {
-            get
-            {
-                return new Position(Lat, Lon);
-            }
-        }
+
 
         [Ignore]
         public double Distance
@@ -187,9 +179,14 @@ namespace FxITransit.Models
         }
 
         [Ignore]
-        public bool IsDestinationStart { get; set; }
+        public string WalkingDistance
+        {
+            get
+            {
+                return $"Walk to {StopDistance} - {TrackingHelper.Instance.GetWalkingDisatance(Distance)} mins ";
+            }
+        }
 
-        
 
         [JsonIgnore]
         [Ignore]
@@ -266,14 +263,14 @@ namespace FxITransit.Models
 
         public static implicit operator Position(Stop stop)
         {
-            return new Position (stop.Lat, stop.Lon );
+            return new Position(stop.Lat, stop.Lon);
         }
 
         public static implicit operator GeoPoint(Stop stop)
         {
             return new GeoPoint { Lat = stop.Lat, Lon = stop.Lon };
         }
-       
+
     }
 
 }

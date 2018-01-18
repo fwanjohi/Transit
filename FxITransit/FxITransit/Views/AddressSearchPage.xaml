@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="{Binding PageTitle}"
-             x:Class="FxITransit.Views.StopLitePage">
+             x:Class="FxITransit.Views.AddressSearchPage">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
-            <!--<StackLayout Orientation ="Horizontal">
+            <StackLayout Orientation ="Horizontal">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400"/>
@@ -29,49 +28,45 @@
 
                 </StackLayout>
 
-            </StackLayout>-->
+            </StackLayout>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <ListView Grid.Row="0"  
-                          x:Name="StopListView"
-                          ItemsSource="{Binding StopsFound}"
-                          SelectedItem="{Binding SelectedStop}" 
-                          VerticalOptions="FillAndExpand"
-                          HasUnevenRows="true"
-                          IsPullToRefreshEnabled="true"
-                          IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                          CachingStrategy="RecycleElement"
-                          ItemTapped="StopListView_ItemTapped"
-                          
-                >
+                          x:Name="ItemsListView"
+				ItemsSource="{Binding Addresses}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                ItemSelected="StopListView_OnItemSelected"
+                CachingStrategy="RecycleElement"
+				>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
 
                                 <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding StopDirectionRouteTitle}"
-                                           LineBreakMode="WordWrap"
-                                           Style="{DynamicResource ListItemTextStyle}"
-                                           FontSize="16"/>
+                                    <Label Text="{Binding FormattedAddress}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        FontSize="16"/>
 
-                                    <Label Text="{Binding DistanceAwayDisplay}"
-                                           LineBreakMode="CharacterWrap"
-                                           Style="{DynamicResource ListItemDetailTextStyle}"
-                                           FontSize="13"/>
+                                    <Label Text="{Binding Display}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemDetailTextStyle}"
+                                        FontSize="13"/>
                                 </StackLayout>
 
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
                 
-                <!--<StackLayout Orientation="Horizontal" Grid.Row="1">
-                    <Button x:Name="BtnOK" Clicked="BtnOK_Clicked" Text="Go to Selected Stop"/>
-                    <Button x:Name="BtnCancel" Clicked="BtnCancel_Clicked" Text="Back"/>
-                </StackLayout>-->
 
             </Grid>
 

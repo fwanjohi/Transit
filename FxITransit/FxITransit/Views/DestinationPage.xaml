@@ -4,7 +4,7 @@
              x:Class="FxITransit.Views.DestinationPage">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
-            <StackLayout Orientation ="Horizontal">
+            <!--<StackLayout Orientation ="Horizontal">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400"/>
@@ -28,47 +28,59 @@
 
                 </StackLayout>
 
-            </StackLayout>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+            </StackLayout>-->
+            
 
-                <ListView Grid.Row="0"  
-                          x:Name="ItemsListView"
-				ItemsSource="{Binding Addresses}"
-                VerticalOptions="FillAndExpand"
-                HasUnevenRows="true"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                ItemSelected="StopListView_OnItemSelected"
-                CachingStrategy="RecycleElement"
-				>
+                <ListView   
+                          x:Name="StopListView"
+                          ItemsSource="{Binding Path =Destination.PossibleRoutes}"
+                          SelectedItem="{Binding SelectedRoute}" 
+                          VerticalOptions="FillAndExpand"
+                          HasUnevenRows="true"
+                          IsPullToRefreshEnabled="true"
+                          IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                          CachingStrategy="RecycleElement"
+                          ItemTapped="StopListView_ItemTapped"
+                          
+                >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
 
                                 <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding FormattedAddress}"
-                                        LineBreakMode="NoWrap"
-                                        Style="{DynamicResource ListItemTextStyle}"
-                                        FontSize="16"/>
+                                    <Label Text="{Binding Path=StartFrom.Title}"
+                                           LineBreakMode="WordWrap"
+                                           Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+                                <Label Text="{Binding Path=StartFrom.WalkingDistance}"
+                                           LineBreakMode="CharacterWrap"
+                                           Style="{DynamicResource ListItemDetailTextStyle}"
+                                           FontSize="10"/>
 
-                                    <Label Text="{Binding Display}"
-                                        LineBreakMode="NoWrap"
-                                        Style="{DynamicResource ListItemDetailTextStyle}"
-                                        FontSize="13"/>
-                                </StackLayout>
+                                <Label Text="to"
+                                           LineBreakMode="CharacterWrap"
+                                           Style="{DynamicResource ListItemDetailTextStyle}"
+                                           FontSize="10"/>
+                                    <Label Text="{Binding Path=StopAt.Title}"
+                                           LineBreakMode="WordWrap"
+                                           Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+                                <Label Text="{Binding Path=StopAt.WalkingDistance}"
+                                           LineBreakMode="CharacterWrap"
+                                           Style="{DynamicResource ListItemDetailTextStyle}"
+                                           FontSize="10"/>
+                            </StackLayout>
 
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                
+                <!--<StackLayout Orientation="Horizontal" Grid.Row="1">
+                    <Button x:Name="BtnOK" Clicked="BtnOK_Clicked" Text="Go to Selected Stop"/>
+                    <Button x:Name="BtnCancel" Clicked="BtnCancel_Clicked" Text="Back"/>
+                </StackLayout>-->
 
-            </Grid>
 
         </StackLayout>
     </ContentPage.Content>

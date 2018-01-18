@@ -42,7 +42,7 @@ namespace FxITransit
                         Icon = Device.OnPlatform("tab_feed.png",null,null),
                     },
 
-                    new NavigationPage(new DestinationPage())
+                    new NavigationPage(new AddressSearchPage())
                     {
                         Title = "Dest",
                         Icon = Device.OnPlatform("tab_feed.png",null,null),

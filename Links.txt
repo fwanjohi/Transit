@@ -1,3 +1,63 @@
 http://arteksoftware.com/backgrounding-with-xamarin-forms/
 https://docs.microsoft.com/en-us/windows/uwp/launch-resume/trigger-background-task-from-app
 https://blogs.msdn.microsoft.com/pfxteam/2011/10/24/task-run-vs-task-factory-startnew/
+
+
+
+
+        public async Task<List<Stop>> SearchStopsNearMeToADestination(Stop dest)
+        {
+            var my = await TrackingHelper.Instance.GetMyLocation();
+
+            //stops near me
+            var stopsNearMe = SearchStopsNearAddress(my.Latitude, my.Longitude,Constants.GeoDistance.ClosestStopMaxDistance, "My Location");
+
+            var ret = new List<Stop>();
+            //select distinct bus routes that pass there
+            List<Route> routes = _db.Query<Route>("select * from route where IsConfigured = ?", true);//.Where(x=> !string.IsNullOrEmpty(x.PathData)).ToList();
+
+
+            foreach (var route in routes)
+            {
+                ConfigureRoute(route);
+            }
+
+            var allStops = routes.SelectMany(x => x.Stops).ToList();
+            Double curDistance = 0.1;
+            //now figure out what stops pass near destination
+            var stopsNearDest = new List<Stop> { dest };// TrackingHelper.Instance.GetClosestStopsVariableDistance(allStops, dest, 0.1, 0.5, out curDistance);
+
+            var destRouteIds = stopsNearDest.Select(x => x.ParentId).Distinct().ToList();
+
+            //now figure out what stops new me are common
+            var stopsNearMe = TrackingHelper.Instance.GetClosestStopsVariableDistance(allStops, new GeoPoint { Lat = my.Latitude, Lon = my.Longitude }, 0.1, 0.5, out curDistance);
+            var myRouteIds = stopsNearMe.Select(x => x.ParentId).Distinct().ToList();
+
+            var commonRouteIds = myRouteIds.Intersect(destRouteIds).ToList();
+
+            //if no common routes found; keep increasing the distance
+            while (commonRouteIds.Count == 0 && curDistance <= 1.0)
+            {
+                curDistance = curDistance + 0.1;
+                stopsNearMe = allStops.Where(x => x.Distance <= curDistance).ToList();
+                myRouteIds = stopsNearMe.Select(x => x.ParentId).Distinct().ToList();
+                commonRouteIds = myRouteIds.Intersect(destRouteIds).ToList();
+            }
+
+            var sharedNearMe = stopsNearMe.Where(m => commonRouteIds.Contains(m.ParentId)).ToList();
+
+            foreach (var stop in sharedNearMe)
+            {
+                //only add stops going that way
+                if (stop.ParentId == dest.ParentId && stop.Order <= dest.Order)
+                {
+                    stop.Distance = TrackingHelper.Instance.CalculateDistance(my.Latitude, my.Longitude, stop.Lat, stop.Lon);
+                    var dist = stop.Distance.ToString("0.##0");
+
+                    stop.DistanceAwayDisplay = $"{stop.AgencyTitle} - {dist} away, {dest.Order - stop.Order} stops";
+                    ret.Add(stop);
+                }
+            }
+
+            return ret;
+        }

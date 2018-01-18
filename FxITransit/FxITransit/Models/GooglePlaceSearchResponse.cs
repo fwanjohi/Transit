@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace FxITransit.Models
+namespace FxITransit.Models.ReverseGeoCode
 {
     public class GooglePlaceSearchResponse
     {

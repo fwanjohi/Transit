@@ -59,7 +59,7 @@
     <Compile Include="Helpers\UtilsHelper.cs" />
     <Compile Include="Helpers\XDoc.cs" />
     <Compile Include="Messaging\Messages.cs" />
-    <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\GoogleAddress.cs" />
     <Compile Include="Models\Agency.cs" />
     <Compile Include="Models\BaseDataObject.cs" />
     <Compile Include="Models\GooglePlaceSearchResponse.cs" />
@@ -67,6 +67,7 @@
     <Compile Include="Models\DbEntity.cs" />
     <Compile Include="Models\Direction.cs" />
     <Compile Include="Models\GeoPoint.cs" />
+    <Compile Include="Models\GoogleReverseGeoCodeResponse.cs" />
     <Compile Include="Models\LogItem.cs" />
     <Compile Include="Models\NotificationBaseObject.cs" />
     <Compile Include="Models\Prediction.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Preference.cs" />
     <Compile Include="Models\ServiceError.cs" />
+    <Compile Include="Models\Destination.cs" />
     <Compile Include="Models\Stop.cs" />
     <Compile Include="Models\StopDirections.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,20 +86,23 @@
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\AgenciesViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\DestinationViewModel.cs" />
+    <Compile Include="ViewModels\AddressSearchViewModel.cs" />
     <Compile Include="ViewModels\FavouritesViewModel.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="ViewModels\PredictionsViewModel.cs" />
     <Compile Include="ViewModels\RepeatableStackPageViewModel.cs" />
     <Compile Include="ViewModels\RoutesViewModel.cs" />
     <Compile Include="Models\StopLite.cs" />
-    <Compile Include="ViewModels\StopLiteViewModel.cs" />
+    <Compile Include="ViewModels\DestinationViewModel.cs" />
     <Compile Include="ViewModels\StopPredictionBaseViewModel.cs" />
     <Compile Include="ViewModels\StopsViewModel.cs" />
     <Compile Include="Views\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AgencyListView.xaml.cs" />
+    <Compile Include="Views\AddressSearchPage.xaml.cs">
+      <DependentUpon>AddressSearchPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DestinationPage.xaml.cs">
       <DependentUpon>DestinationPage.xaml</DependentUpon>
     </Compile>
@@ -114,9 +119,6 @@
     <Compile Include="Views\RouteListPage.xaml.cs" />
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\StopLitePage.xaml.cs">
-      <DependentUpon>StopLitePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StopsPage.xaml.cs" />
     <Compile Include="Views\TestSelector.cs" />
@@ -295,13 +297,13 @@
     <Content Include="Images\wide_bus._stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\DestinationPage.xaml">
+    <EmbeddedResource Include="Views\AddressSearchPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\StopLitePage.xaml">
+    <EmbeddedResource Include="Views\DestinationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

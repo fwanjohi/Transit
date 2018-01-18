@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xamarin.Forms.Maps;
 using Position = Plugin.Geolocator.Abstractions.Position;
+using FxITransit.Models.ReverseGeoCode;
+using FxITransit.Models.Places;
 
 namespace FxITransit.Helpers
 {
@@ -158,6 +160,13 @@ namespace FxITransit.Helpers
             return Math.Abs(distance);
         }
 
+        public double GetWalkingDisatance(double distance)
+        {
+            var rate = 1 / 15;
+
+            return distance / rate;
+        }
+
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
             var loc1 = new Location { Latitude = lat1, Longitude = lon1 };
@@ -284,6 +293,41 @@ namespace FxITransit.Helpers
             }
             return adds.OrderBy(x => x.Distance).ToList(); ;
         }
+
+        public async Task<List<GoogleAddress>> GetAddressReverseGeocode(double lat, double lon)
+        {
+            var url = EndPoints.GoogleReverseGeocodeUrl(lat, lon);
+            var client = new HttpClient();
+            var json = await client.GetStringAsync(url);
+            var adds = new List<GoogleAddress>();
+
+            GoogleReverseGeoCodeResponse resp = JsonConvert.DeserializeObject<GoogleReverseGeoCodeResponse>(json);
+
+            try
+            {
+                foreach (var add in resp.Results)
+                {
+                    var pos = new GoogleAddress
+                    {
+                        RequestedAddress = add.FormattedAddress,
+                        FormattedAddress = add.FormattedAddress,
+                       
+                        
+                        //Distance = TrackingHelper.Instance.CalculateDistance(add.Geometry.Location.Lat, add.Geometry.Location.Lng),
+
+
+                    };
+                    adds.Add(pos);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return adds.OrderBy(x => x.Distance).ToList(); ;
+        }
+
 
 
 
