@@ -45,8 +45,8 @@
                 >
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
-
+                            <ViewCell> 
+  
                                 <StackLayout Orientation="Vertical" Padding="10">
                                     <Label Text="{Binding Path=StartFrom.Title}"
                                            LineBreakMode="WordWrap"

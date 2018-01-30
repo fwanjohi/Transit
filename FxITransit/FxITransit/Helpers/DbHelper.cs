@@ -115,9 +115,9 @@ namespace FxITransit.Helpers
         //    return ret;
         //}
 
-        private SourceToDest FindCommonDestinations(Stop sourceStop, List<Stop> sharedStops )
+        private PossibleRoute FindCommonDestinations(Stop sourceStop, List<Stop> sharedStops )
         {
-            var sourceToDest = new SourceToDest(sourceStop);
+            var sourceToDest = new PossibleRoute(sourceStop);
             //only stops going same direction
             var destStops = sharedStops.Where(x => x.ParentId == sourceStop.ParentId).OrderBy(y=>y.Order).ToList();
 

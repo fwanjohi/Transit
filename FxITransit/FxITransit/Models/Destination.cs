@@ -10,13 +10,13 @@ namespace FxITransit.Models
     {
         public Destination()
         {
-            PossibleRoutes = new List<SourceToDest>();
+            PossibleRoutes = new List<PossibleRoute>();
         }
-       public List<SourceToDest> PossibleRoutes { get; set; }
+       public List<PossibleRoute> PossibleRoutes { get; set; }
     }
-    public class SourceToDest
+    public class PossibleRoute
     {
-        public SourceToDest(Stop sourceAddres)
+        public PossibleRoute(Stop sourceAddres)
         {
             StopsToNear = new List<Stop>();
             StartFrom = sourceAddres; 
