@@ -3,6 +3,8 @@ https://docs.microsoft.com/en-us/windows/uwp/launch-resume/trigger-background-ta
 https://blogs.msdn.microsoft.com/pfxteam/2011/10/24/task-run-vs-task-factory-startnew/
 
 https://www.pay.gov/tcsonline/payment.do?execution=e1s1
+https://wolfprogrammer.com/2016/07/22/navigation-using-mvvm-light/
+
 
 
 

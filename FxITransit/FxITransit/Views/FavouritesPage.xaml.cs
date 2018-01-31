@@ -61,8 +61,7 @@ namespace FxITransit.Views
 
         private void FavesListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            var stop = e.Item as Stop;
-            if (stop != null)
+            if (e.Item is Stop stop)
             {
                 var page = Application.Current.MainPage as MainLaunchPage;
 
@@ -108,7 +107,7 @@ namespace FxITransit.Views
 
         private void btnFave_Clicked(object sender, EventArgs e)
         {
-            var stop = (sender as Button).BindingContext as Stop;
+            var stop = (sender as Button)?.BindingContext as Stop;
 
             ConfirmConfig config = new ConfirmConfig
             {

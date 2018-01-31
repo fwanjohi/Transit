@@ -20,7 +20,9 @@ namespace FxITransit
             
             var result = CrossNotifications.Current.RequestPermission().Result;
             
-            SetMainPage();
+            Current.MainPage = new NavigationPage( new WelcomePage());
+            TrackingHelper.Instance.InitializeGeoLocator();
+            //SetMainPage();
         }
 
 

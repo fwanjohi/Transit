@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Welcome to FxiTransit"
+             x:Class="FxITransit.Views.WelcomePage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                
+                <StackLayout BackgroundColor="LightBlue">
+                    <Label HorizontalTextAlignment="Center" Text="The Multi Agency Transit System" />
+                    <Image Source="fxitransit.png" />
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+
+                <Button Grid.Row="0"  x:Name="BtnHowTo" Text="How to use the app" Clicked="NextButton_OnClicked"/>
+                <Button Grid.Row="1" Grid.Column="0" x:Name="BtnRouteSetup" Text=" Agencies, Routes and Stops" Clicked="BtnRouteSetup_OnClicked"/>
+                <Button Grid.Row="2" Grid.Column="0" x:Name="BtnFavourites" Text="Favourite Stops" Clicked="BtnFavourites_OnClicked"/>
+                <Button Grid.Row="3" Grid.Column="0" x:Name="BtnSettings" Text="My Settings" Clicked="BtnSettings_OnClicked"/>
+                <Button Grid.Row="4" Grid.Column="0" x:Name="BtnDest" Text="Route to a Destination" Clicked="BtnDest_OnClicked"/>
+            </Grid>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

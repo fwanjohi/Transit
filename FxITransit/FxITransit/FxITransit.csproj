@@ -122,6 +122,9 @@
     </Compile>
     <Compile Include="Views\StopsPage.xaml.cs" />
     <Compile Include="Views\TestSelector.cs" />
+    <Compile Include="Views\WelcomePage.xaml.cs">
+      <DependentUpon>WelcomePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -293,6 +296,7 @@
     <Content Include="Images\bus.png" />
     <Content Include="Images\fave_add.png" />
     <Content Include="Images\fave_off.png" />
+    <Content Include="Images\fxitransit.png" />
     <Content Include="Images\narow_bus_stop.png" />
     <Content Include="Images\wide_bus._stop.png" />
   </ItemGroup>
@@ -304,6 +308,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\DestinationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\WelcomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
