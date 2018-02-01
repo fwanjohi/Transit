@@ -3,12 +3,13 @@ using FxITransit.Models;
 using System.Threading.Tasks;
 using System;
 using Plugin.Geolocator.Abstractions;
+using System.Threading;
 
 namespace FxITransit.Services
 {
     public interface ITransitService
     {
-        Task<IEnumerable<Agency>> GetAgencyList();
+        Task<IEnumerable<Agency>> GetAgencyList(bool showDialog = true);
 
         Task<IEnumerable<Route>> GetRouteList(Agency agency, bool showDialogs = true);
 
@@ -20,6 +21,8 @@ namespace FxITransit.Services
         Position LastPosition { get; }
 
         void GetPredictionsFromService(IList<Stop> stop);
+
+        //void ConfigureInBackGround(CancellationToken token);
 
     }
 }

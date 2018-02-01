@@ -63,13 +63,17 @@ namespace FxITransit.Services.NextBus
 
         }
 
-        public async Task<IEnumerable<Agency>> GetAgencyList()
+        public async Task<IEnumerable<Agency>> GetAgencyList(bool showDialog = true)
         {
             var list = await _dbHelper.GetAgencyListAsync();
 
             if (list.Count == 0)
             {
-                UserDialogs.Instance.ShowLoading("Loading Agencies from net...", MaskType.Black);
+                if (showDialog)
+                {
+                    UserDialogs.Instance.ShowLoading("Loading Agencies from net...", MaskType.Black);
+                }
+
                 await Task.Delay(TimeSpan.FromMilliseconds(10));
                 var data = await _client.GetStringAsync(EndPoints.AgenciesUrl());
                 var doc = XDoc.LoadXml(data);
@@ -85,7 +89,11 @@ namespace FxITransit.Services.NextBus
                     list.Add(agency);
                 }
             }
-            UserDialogs.Instance.HideLoading();
+
+            if (showDialog)
+            {
+                UserDialogs.Instance.HideLoading();
+            }
 
             return list;
         }
@@ -138,7 +146,15 @@ namespace FxITransit.Services.NextBus
 
         }
 
-       
+        //public void ConfigureSelectedAgencies()
+        //{
+
+        //    var cts = new CancellationTokenSource();
+
+        //    //await Task.Run(() => GetRouteDetailsForAgency(agency, cts.Token), cts.Token);//<--Note the await keyword here
+
+        //    Task.Factory.StartNew(() => GetRouteDetailsForAgency(agency, cts.Token));
+        //}
 
         private void GetRouteDetailsForAgency(Agency agency, CancellationToken token)
         {
@@ -149,6 +165,17 @@ namespace FxITransit.Services.NextBus
                 UtilsHelper.Instance.Log($"Getting data for {route.AgencyTag} - {route.Tag} in backgroundMode");
                  GetRouteDetails(route, false, false);
             }
+        }
+        public async Task  ConfigureInBackGround( CancellationToken token)
+        {
+            var unconfiguredPopular = _dbHelper.GetUnconfiguredRoutes()
+                .OrderByDescending(x => x.IsFavorite).ToList();
+            
+            foreach(var route in unconfiguredPopular)
+            {
+                 await GetRouteDetails(route, false, false);
+            }
+
         }
 
         public async Task GetRouteDetails(Route route, bool showDialogs = true, bool checkDb = true)
@@ -332,6 +359,7 @@ namespace FxITransit.Services.NextBus
             return client;
         }
 
+        
     }
 
 

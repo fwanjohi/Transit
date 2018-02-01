@@ -4,72 +4,89 @@
              x:Class="FxITransit.Views.AddressSearchPage">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
-            <StackLayout Orientation ="Horizontal">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="400"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <Entry Grid.Column="0"  
-                       WidthRequest="300"
-                       VerticalOptions="Center"
-                       HorizontalOptions="StartAndExpand"
-                       x:Name="TxtSearch"
-                       Placeholder="Search an address" 
-                       Text="{Binding ToAddress, Mode=TwoWay}"/>
-                <StackLayout Grid.Column="1" Orientation="Vertical">
-                    <Button
-                        x:Name="BtnSearch"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center" 
-                        Clicked="OnSearchAddress"
-                        Text ="Search"/>
+            <Frame  BackgroundColor="AliceBlue">
+                <StackLayout Orientation="Vertical">
+                    <Label Text="From (name of place/establishment) : "/>
+                    
+                    <StackLayout Grid.Column="1" Orientation="Horizontal" Grid.RowSpan="3">
+                        <Label VerticalOptions="Center" Text="Use my location:" HorizontalOptions="Start"/>
+                        <Switch 
+                                HorizontalOptions="End"
+                                VerticalOptions="Center" 
+                                IsToggled="{Binding UseMyLocation}"/>
+                    </StackLayout>
+                    
+                    <StackLayout Orientation ="Horizontal" IsVisible="{Binding CustomFromAddress}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+
+                        <Entry Grid.Column="0"  
+                           WidthRequest="300"
+                           VerticalOptions="Center"
+                           HorizontalOptions="StartAndExpand"
+                           x:Name="TxtSearchFrom"
+                           Placeholder="Search an address" 
+                           Text="{Binding FromAddress, Mode=TwoWay}"/>
+
+                        <Button
+                            x:Name="BtnSearchFrom"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center" 
+                            Clicked="OnSearchFromAddress"
+                            Text ="Search"/>
+
+                    </StackLayout>
+                    
+
+
 
                 </StackLayout>
-
-            </StackLayout>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <ListView Grid.Row="0"  
-                          x:Name="ItemsListView"
-				ItemsSource="{Binding Addresses}"
-                VerticalOptions="FillAndExpand"
-                HasUnevenRows="true"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                ItemSelected="StopListView_OnItemSelected"
-                CachingStrategy="RecycleElement"
-				>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-
-                                <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding FormattedAddress}"
-                                        LineBreakMode="NoWrap"
-                                        Style="{DynamicResource ListItemTextStyle}"
-                                        FontSize="16"/>
-
-                                    <Label Text="{Binding Display}"
-                                        LineBreakMode="NoWrap"
-                                        Style="{DynamicResource ListItemDetailTextStyle}"
-                                        FontSize="13"/>
-                                </StackLayout>
-
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                
-
-            </Grid>
-
+            </Frame>
+            
+            <Frame  BackgroundColor="AliceBlue">
+                <StackLayout Orientation="Vertical">
+                    <Label Text="To (name of place/establishment)"/>
+                    <StackLayout Orientation ="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                        <Entry Grid.Column="0"  
+                           WidthRequest="300"
+                           VerticalOptions="Center"
+                           HorizontalOptions="StartAndExpand"
+                           x:Name="TxtSearch"
+                           Placeholder="Search an address" 
+                           Text="{Binding ToAddress, Mode=TwoWay}"/>
+                        
+                        <StackLayout Grid.Column="1" Orientation="Vertical">
+                            
+                            <Button
+                                x:Name="BtnSearch"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center" 
+                                Clicked="OnSearchToAddress"
+                                Text ="Search"/>    
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+            
+            <Frame BackgroundColor="Azure">
+                <StackLayout Orientation="Vertical">
+                    <Label Text="{Binding Path = SelectedFromAddress.Display}" FontSize="16"/>
+                    <Label Text="to"/>
+                    <Label Text="{Binding Path = SelectedToAddress.Display}" FontSize="16"/>
+                    
+                    <Button x:Name="BtnSearchRoutes" Text="Search possible routes" Clicked="BtnSearchRoutes_Clicked"/>
+                </StackLayout>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

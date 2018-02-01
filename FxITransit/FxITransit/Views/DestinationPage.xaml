@@ -48,7 +48,7 @@
                             <ViewCell> 
   
                                 <StackLayout Orientation="Vertical" Padding="10">
-                                    <Label Text="{Binding Path=StartFrom.Title}"
+                                <Label Text="{Binding Path=StartFrom.StopDirectionRouteTitle}"
                                            LineBreakMode="WordWrap"
                                            Style="{DynamicResource ListItemTextStyle}"
                                            FontSize="13"/>
@@ -61,7 +61,7 @@
                                            LineBreakMode="CharacterWrap"
                                            Style="{DynamicResource ListItemDetailTextStyle}"
                                            FontSize="10"/>
-                                    <Label Text="{Binding Path=StopAt.Title}"
+                                <Label Text="{Binding Path=StopAt.StopDirectionRouteTitle}"
                                            LineBreakMode="WordWrap"
                                            Style="{DynamicResource ListItemTextStyle}"
                                            FontSize="13"/>

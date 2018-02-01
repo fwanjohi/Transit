@@ -162,9 +162,11 @@ namespace FxITransit.Helpers
 
         public double GetWalkingDisatance(double distance)
         {
-            var rate = 1 / 15;
+            double  speed = (double)1 / (double)15;
 
-            return distance / rate;
+            double time =(double) distance / speed;
+
+            return time;
         }
 
         public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FxITransit.Views.AddressFoundListPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid BackgroundColor="AliceBlue">
+            <Label FontAttributes="Bold" FontSize="Medium" Text="{Binding SearchTitle}"
+               HorizontalOptions="StartAndExpand"
+               VerticalOptions="Fill"/>
+
+        </Grid>
+        <ListView Grid.Row="1"  
+                          x:Name="ItemsListView"
+				ItemsSource="{Binding Addresses}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                ItemTapped="ItemsListView_ItemTapped"
+                SelectedItem="{Binding PickedAddress, Mode=TwoWay}"
+                CachingStrategy="RecycleElement"
+				>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+
+                        <StackLayout Orientation="Vertical" Padding="10">
+                            <Label Text="{Binding FormattedAddress}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        FontSize="16"/>
+
+                            <Label Text="{Binding Display}"
+                                        LineBreakMode="NoWrap"
+                                        Style="{DynamicResource ListItemDetailTextStyle}"
+                                        FontSize="13"/>
+                        </StackLayout>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Grid.Row="2" x:Name="BtnCancel" Text="Cancel" Clicked="BtnCancel_Clicked"/>
+
+
+    </Grid>
+</ContentPage>

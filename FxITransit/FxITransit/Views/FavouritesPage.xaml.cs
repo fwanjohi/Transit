@@ -65,14 +65,7 @@ namespace FxITransit.Views
             {
                 var page = Application.Current.MainPage as MainLaunchPage;
 
-                var browse = page.Children.FirstOrDefault(x => (x as NavigationPage).Title == "Browse");
-
-                if (browse != null)
-                {
-                    page.CurrentPage = browse;
-
-                    browse.Navigation.PushAsync(new PredictionsPage(stop));
-                }
+                Navigation.PushAsync(new PredictionsPage(stop));
 
             }
 
@@ -115,18 +108,18 @@ namespace FxITransit.Views
                 CancelText = "No",
                 OkText = "Yes",
                 Message = "Message",
-                OnAction=(yes) =>
-                {
-                    if (yes)
-                    {
-                        stop.IsFavorite = false;
+                OnAction = (yes) =>
+                  {
+                      if (yes)
+                      {
+                          stop.IsFavorite = false;
 
-                        DbHelper.Instance.SaveEntity(stop);
-                        _viewModel.FavoriteStops.Remove(stop);
-                        OnPropertyChanged("FavoriteStops");
-                    }
-                   
-                }
+                          DbHelper.Instance.SaveEntity(stop);
+                          _viewModel.FavoriteStops.Remove(stop);
+                          OnPropertyChanged("FavoriteStops");
+                      }
+
+                  }
 
             };
 
@@ -135,14 +128,14 @@ namespace FxITransit.Views
         }
 
 
-        
+
 
 
 
 
         private void DoSomething(bool ok)
         {
-            
+
         }
 
 

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using SQLite;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System.Diagnostics;
 
 namespace FxITransit.Models
 {
+    [DebuggerDisplay("Id={Id}, Name={StopDirectionRouteTitle}")]
     public class Stop : DbEntity
     {
 
@@ -80,7 +82,7 @@ namespace FxITransit.Models
         [Ignore]
         public string StopDirectionRouteTitle
         {
-            get { return $"{DirectionTitle }, {Title},  {RouteTitle}"; }
+            get { return $"{Title} ({RouteTitle}, {DirectionTitle })"; }
         }
 
 
@@ -183,7 +185,11 @@ namespace FxITransit.Models
         {
             get
             {
-                return $"Walk to {StopDistance} - {TrackingHelper.Instance.GetWalkingDisatance(Distance)} mins ";
+                var dist = Distance.ToString("0.##0");
+                double mins = TrackingHelper.Instance.GetWalkingDisatance(Distance);
+               
+                double r = Math.Round(mins, 0);
+                return $"Walk to {StopDistance} - {r} mins ";
             }
         }
 

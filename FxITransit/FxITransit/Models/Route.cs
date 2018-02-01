@@ -6,9 +6,12 @@ using System.Xml.Serialization;
 using SQLite;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using System.Diagnostics;
 
 namespace FxITransit.Models
 {
+    [DebuggerDisplay("Id={Id}, Name={Display}")]
+
     public class Route : DbEntity
     {
         public Route()

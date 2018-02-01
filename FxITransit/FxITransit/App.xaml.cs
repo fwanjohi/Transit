@@ -6,6 +6,9 @@ using FxITransit.Views;
 using Plugin.Notifications;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FxITransit.Services.NextBus;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,12 +22,14 @@ namespace FxITransit
             InitializeComponent();
             
             var result = CrossNotifications.Current.RequestPermission().Result;
-            
-            Current.MainPage = new NavigationPage( new WelcomePage());
             TrackingHelper.Instance.InitializeGeoLocator();
+
+            Current.MainPage = new NavigationPage( new WelcomePage());
+            
             //SetMainPage();
         }
 
+       
 
         ~App()
         {
@@ -80,6 +85,8 @@ namespace FxITransit
         protected override void OnStart()
         {
             base.OnStart();
+            //var cts = new CancellationTokenSource();
+            //Task.Factory.StartNew(() => NextBusService.Instance.ConfigureInBackGround());
 
         }
 

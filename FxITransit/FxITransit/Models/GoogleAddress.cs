@@ -23,7 +23,8 @@ namespace FxITransit.Models
         {
             get
             {
-                return  $"{Name}, {Distance} miles away"; 
+                var dist = Distance.ToString("0.##0");
+                return  $"{Name}, {dist} miles away"; 
             }
         }
     }
