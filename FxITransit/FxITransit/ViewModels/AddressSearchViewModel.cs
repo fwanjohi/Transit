@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using FxITransit.Helpers;
 using FxITransit.Models;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace FxITransit.ViewModels
@@ -28,6 +30,7 @@ namespace FxITransit.ViewModels
         public string FromAddress { get; set; }
 
         public string SearchTitle { get; set; }
+        public string FromLabel { get; set; }
 
         public ObservableRangeCollection<GoogleAddress> Addresses { get; set; }
 
@@ -46,7 +49,12 @@ namespace FxITransit.ViewModels
 
         public async Task<List<GoogleAddress>> SearchAddress(string address)
         {
+            UserDialogs.Instance.ShowLoading($"Searching address for {address}", MaskType.Black);
+            await Task.Delay(5);
             var adds = await TrackingHelper.Instance.GetAddressPosition(address);
+
+             UserDialogs.Instance.HideLoading();
+
             return adds;
         }
 
@@ -61,10 +69,13 @@ namespace FxITransit.ViewModels
                 {
                     SelectedFromAddress = _myLocation;
                 }
+
+                FromLabel = value ? "Use my location" : "Enter a location below";
                 
                 OnPropertyChanged("UseMyLocation");
                 OnPropertyChanged("CustomFromAddress");
                 OnPropertyChanged("SelectedFromAddress");
+                OnPropertyChanged("FromLabel");
             }
         }
 
@@ -79,8 +90,9 @@ namespace FxITransit.ViewModels
 
             };
 
-            Stop fromStop =  fromGoogleAddress == null ? null : new Stop
+            Stop fromStop =   new Stop
             {
+
                 Title = fromGoogleAddress.RequestedAddress,
                 Lat = fromGoogleAddress.Lat,
                 Lon = fromGoogleAddress.Lon,
@@ -89,8 +101,10 @@ namespace FxITransit.ViewModels
             };
 
             //var stops = Db.SearchStopsNearAddress(googleAddress.Lat, googleAddress.Lon, 0.3, googleAddress.Name);
-            var destination = await Db.SearchDestinationRoutesTo(fromStop, destStop);
-
+            UserDialogs.Instance.ShowLoading($"Calculating possible routes from {fromGoogleAddress.Name}  to {toGoogleAddress.Name}", MaskType.Black);
+            await Task.Delay(1);
+            var destination = await Db.SearchDestinationRoutesTo(fromStop, destStop, fromGoogleAddress.Name, toGoogleAddress.FormattedAddress);
+            UserDialogs.Instance.HideLoading();
             return destination;
         }
 

@@ -3,21 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FxITransit.Helpers"
              x:Class="FxITransit.Views.FavouritesPage">
-    <!--<ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="PredictionStyle" TargetType="Label">
-                <Style.Triggers>
-                    <DataTrigger TargetType="Label"
-                                 Binding="{Binding IsArriving, Mode=TwoWay}"
-                                 Value="true">
-                        <Setter Property="TextColor"  Value="Color.Red" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-            
-            
-        </ResourceDictionary>
-    </ContentPage.Resources>-->
+    
     
     <ContentPage.Content>
         <StackLayout>
@@ -38,11 +24,6 @@
                                        LineBreakMode="WordWrap"
                                        Style="{DynamicResource ListItemTextStyle}"
                                        FontSize="16"/>
-                                    <!--<Label Text="{Binding Title}"
-                                       LineBreakMode="WordWrap"
-                                       Style="{DynamicResource ListItemTextStyle}"
-                                       FontSize="16"/>-->
-
                                     <Label Text="{Binding AgencyTitle}"
                                        LineBreakMode="CharacterWrap"
                                        Style="{DynamicResource ListItemDetailTextStyle}"
@@ -64,22 +45,12 @@
                                             />
                                 </AbsoluteLayout>
 
-                                <!--<local:CustomImage Source="fave_on.png" Grid.Column ="1"
-                                                   OnClick="RemoveFave_OnClicked" 
-                                                   WidthRequest="20" 
-                                                   HeightRequest="20" Aspect="AspectFit"/>-->
-                                <!--<Image  Grid.Column ="1" Source="fave_on.png" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />-->
-                                <!--<Button x:Name ="Remove" Image="fave_on.png"  Grid.Column ="1" HeightRequest="20" WidthRequest="20"
-                                    Text ="Remove"
-                                    Clicked="RemoveFave_OnClicked"/>-->
-
-
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button x:Name="BackButtion" Clicked="BackButtio_OnClicked" Text="Back"/>
+            <!--<Button x:Name="BackButtion" Clicked="BackButtio_OnClicked" Text="Back"/>-->
         </StackLayout>
         <!--<ListView x:Name="FaveStopsListView"
                   ItemsSource="{Binding Path = Alerts.Stops}"

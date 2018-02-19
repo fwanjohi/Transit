@@ -37,7 +37,7 @@
                         <FormattedString>
                             <FormattedString.Spans>
                                 <Span Text="Created By "/>
-                                <Span Text="Festus Wanjohi" FontAttributes="Bold" FontSize="22"/>
+                                <Span Text="FX" FontAttributes="Bold" FontSize="22"/>
                                 <Span Text=" "/>
                                 <Span Text="fwanjohi@gmail.com" ForegroundColor="{StaticResource LightTextColor}"/>
                             </FormattedString.Spans>

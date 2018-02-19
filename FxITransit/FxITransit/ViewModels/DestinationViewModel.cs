@@ -12,11 +12,12 @@ namespace FxITransit.ViewModels
 
         private bool _isStart;
         public Destination Destination { get; set; }
-        
+        public string DestinationTitle { get; set; }
 
         public DestinationViewModel(Destination destination)
         {
             Destination = destination;
+            DestinationTitle = destination.DestinationTitle;
             //StopsFound = stopsFound;
             //_isStart = isStart;
         }

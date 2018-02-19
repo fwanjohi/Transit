@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FxITransit.Layouts"
              Title="Available Transit Agencies"
              x:Class="FxITransit.Views.AgencyListView">
     <ContentPage.Content>
@@ -32,6 +33,7 @@
                 </StackLayout>
             </StackLayout>
 
+            
             <ListView x:Name="ItemsListView"
 				ItemsSource="{Binding Filtered}"
                 VerticalOptions="FillAndExpand"
@@ -39,11 +41,13 @@
                 RefreshCommand="{Binding LoadAgenciesCommand}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                CachingStrategy="RecycleElement"
+                SeparatorVisibility="Default"
+                SeparatorColor="Green"
+                
 				ItemSelected="OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
+                        <ViewCell BindingContextChanged="ViewCell_BindingContextChanged">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>

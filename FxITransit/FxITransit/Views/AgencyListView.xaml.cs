@@ -69,5 +69,24 @@ namespace FxITransit.Views
                 DbHelper.Instance.SaveEntity(agency);
             }
         }
+
+        private void ViewCell_BindingContextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var cell = sender as ViewCell;
+                if (cell != null)
+                {
+                    var data = cell.BindingContext as Agency;
+                    var index = viewModel.Filtered.IndexOf(data);
+                    cell.View.BackgroundColor = index % 2 == 0 ? Color.White : Color.LightGray;
+
+                }
+            } catch (Exception ex)
+            {
+                var m = ex.Message;
+            }
+            
+        }
     }
 }

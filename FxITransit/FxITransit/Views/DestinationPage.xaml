@@ -29,9 +29,9 @@
                 </StackLayout>
 
             </StackLayout>-->
-            
 
-                <ListView   
+
+            <ListView   
                           x:Name="StopListView"
                           ItemsSource="{Binding Path =Destination.PossibleRoutes}"
                           SelectedItem="{Binding SelectedRoute}" 
@@ -43,40 +43,64 @@
                           ItemTapped="StopListView_ItemTapped"
                           
                 >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell> 
-  
-                                <StackLayout Orientation="Vertical" Padding="10">
-                                <Label Text="{Binding Path=StartFrom.StopDirectionRouteTitle}"
-                                           LineBreakMode="WordWrap"
-                                           Style="{DynamicResource ListItemTextStyle}"
-                                           FontSize="13"/>
-                                <Label Text="{Binding Path=StartFrom.WalkingDistance}"
-                                           LineBreakMode="CharacterWrap"
-                                           Style="{DynamicResource ListItemDetailTextStyle}"
-                                           FontSize="10"/>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell BindingContextChanged="ViewCell_BindingContextChanged">
 
-                                <Label Text="to"
+                            <StackLayout Orientation="Vertical" Padding="10">
+                                <!--walk to polk and hyde 2 mile away, 2 mins-->
+                                <StackLayout Orientation="Horizontal">
+                                    <Label FontSize="13" Text="Walk to "/>
+                                    <Label Text="{Binding Path=StartFrom.WalkingDistanceTime}"
                                            LineBreakMode="CharacterWrap"
-                                           Style="{DynamicResource ListItemDetailTextStyle}"
-                                           FontSize="10"/>
-                                <Label Text="{Binding Path=StopAt.StopDirectionRouteTitle}"
+                                          Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label FontSize="13" Text="Take vehicle "/>
+                                    <!--1 - california, inbound-->
+                                    <Label Text="{Binding Path=StartFrom.RouteDirecction}"
                                            LineBreakMode="WordWrap"
                                            Style="{DynamicResource ListItemTextStyle}"
                                            FontSize="13"/>
-                                <Label Text="{Binding Path=StopAt.WalkingDistance}"
+                                </StackLayout>
+                                
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Get off at "
+                                           FontSize="13"/>
+                                    
+                                    <Label Text="{Binding Path=StopAt.Title}"
+                                           LineBreakMode="WordWrap"
+                                           Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+                                </StackLayout>
+                                
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Then walk to " 
+                                           FontSize="13"/>
+                                    
+                                    <Label Text="{Binding Path= DestinationTitle}"
                                            LineBreakMode="CharacterWrap"
-                                           Style="{DynamicResource ListItemDetailTextStyle}"
-                                           FontSize="10"/>
+                                          Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+
+                                    <Label Margin="5,0,0,0" Text="{Binding Path= StopAt.DistanceTimeDisplay}"
+                                           LineBreakMode="CharacterWrap"
+                                          Style="{DynamicResource ListItemTextStyle}"
+                                           FontSize="13"/>
+
+
+                                </StackLayout>
+                                
                             </StackLayout>
 
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-                <!--<StackLayout Orientation="Horizontal" Grid.Row="1">
+            <!--<StackLayout Orientation="Horizontal" Grid.Row="1">
                     <Button x:Name="BtnOK" Clicked="BtnOK_Clicked" Text="Go to Selected Stop"/>
                     <Button x:Name="BtnCancel" Clicked="BtnCancel_Clicked" Text="Back"/>
                 </StackLayout>-->

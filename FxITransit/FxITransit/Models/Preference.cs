@@ -23,6 +23,7 @@ namespace FxITransit.Models
         private bool _favoriteAgenciesOnly;
         private bool _favoriteRoutesOnly;
         private bool _favoriteStopsOnly;
+        private double _maximumDistanceToSearch;
 
         private ObservableRangeCollection<Stop> _favoriteStops;
 
@@ -33,7 +34,16 @@ namespace FxITransit.Models
             _favoriteStops = new ObservableRangeCollection<Stop>();
         }
 
+        public double MaximumDistanceToSearch
+        {
+            get { return _maximumDistanceToSearch; }
+            set
+            {
+                _maximumDistanceToSearch = value;
+                OnPropertyChanged("MaximumDistanceToSearch");
+            }
 
+        }
         public int AlertMinsBefore
         {
             get { return _alertMinsBefore; }
@@ -42,7 +52,7 @@ namespace FxITransit.Models
                 _alertMinsBefore = value;
 
                 OnPropertyChanged("AlertMinsBefore");
-                
+
             }
         }
 
@@ -54,7 +64,7 @@ namespace FxITransit.Models
                 _alertInterval = value;
                 OnPropertyChanged("AlertInterval");
 
-                
+
             }
         }
 
@@ -64,7 +74,7 @@ namespace FxITransit.Models
             set
             {
                 _alert = value;
-                
+
                 OnPropertyChanged("Alert");
             }
         }
@@ -75,7 +85,7 @@ namespace FxITransit.Models
             set
             {
                 _autoRefresh = value;
-                
+
                 OnPropertyChanged("AutoRefresh");
 
             }
@@ -87,9 +97,9 @@ namespace FxITransit.Models
             set
             {
                 _speak = value;
-                
+
                 OnPropertyChanged("Speak");
-               
+
             }
         }
         public bool Vibrate
@@ -98,7 +108,7 @@ namespace FxITransit.Models
             set
             {
                 _vibrate = value;
-                
+
                 OnPropertyChanged("Vibrate");
             }
         }
@@ -111,9 +121,9 @@ namespace FxITransit.Models
             set
             {
                 _favoriteAgenciesOnly = value;
-                
+
                 OnPropertyChanged("FavoriteAgenciesOnly");
-                
+
             }
         }
 
@@ -123,7 +133,7 @@ namespace FxITransit.Models
             set
             {
                 _favoriteRoutesOnly = value;
-                
+
                 OnPropertyChanged("FavoriteRoutesOnly");
             }
         }
@@ -134,12 +144,12 @@ namespace FxITransit.Models
             set
             {
                 _favoriteStopsOnly = value;
-                
+
                 OnPropertyChanged("FavoriteStopsOnly");
             }
         }
 
-        
+
     }
 
 

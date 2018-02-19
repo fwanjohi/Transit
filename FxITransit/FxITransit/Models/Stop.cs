@@ -85,6 +85,13 @@ namespace FxITransit.Models
             get { return $"{Title} ({RouteTitle}, {DirectionTitle })"; }
         }
 
+        [JsonIgnore]
+        [Ignore]
+        public string RouteDirecction
+        {
+            get { return $"{RouteTitle}, {DirectionTitle }"; }
+        }
+
 
         public string RouteTitle
         {
@@ -95,6 +102,7 @@ namespace FxITransit.Models
                 OnPropertyChanged("RouteTitle");
                 OnPropertyChanged("AgencyStopTitle");
                 OnPropertyChanged("StopDirectionRouteTitle");
+                OnPropertyChanged("RouteDirecction");
             }
         }
 
@@ -163,7 +171,7 @@ namespace FxITransit.Models
                 if (string.IsNullOrEmpty(_distanceAwayDisplay))
                 {
                     var dist = Distance.ToString("0.##0");
-                    _distanceAwayDisplay = $"{Title} - ({dist} Miles away)";
+                    _distanceAwayDisplay = $"{Title} - {dist} Miles";
 
                 }
 
@@ -176,20 +184,49 @@ namespace FxITransit.Models
             get
             {
                 var dist = Distance.ToString("0.##0");
-                return $"{Title} - ({dist} Miles)";
+                return $"{Title} - {dist} miles";
             }
         }
 
-        [Ignore]
-        public string WalkingDistance
+        public string DistanceDisplay
         {
             get
             {
                 var dist = Distance.ToString("0.##0");
-                double mins = TrackingHelper.Instance.GetWalkingDisatance(Distance);
+                return $"{dist} miles ";
+            }
+        }
+
+        [Ignore]
+        public string WalkingDistanceTime
+        {
+            get
+            {
+                var dist = Distance.ToString("0.##0");
+                double mins = TrackingHelper.Instance.CalculateWalkingTime(Distance);
                
                 double r = Math.Round(mins, 0);
-                return $"Walk to {StopDistance} - {r} mins ";
+                return $"{StopDistance} - {r} mins ";
+            }
+        }
+
+        [Ignore]
+        public string WalkingTimeDisplay
+        {
+            get
+            {
+                double mins = TrackingHelper.Instance.CalculateWalkingTime(Distance);
+
+                double r = Math.Round(mins, 0);
+                return $"{r} mins";
+            }
+        }
+
+        public string DistanceTimeDisplay
+        {
+            get
+            {
+                return $"({DistanceDisplay} - {WalkingTimeDisplay})";
             }
         }
 

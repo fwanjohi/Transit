@@ -90,12 +90,49 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\BadgeLogo.scale-100.png" />
+    <Content Include="Assets\BadgeLogo.scale-125.png" />
+    <Content Include="Assets\BadgeLogo.scale-150.png" />
+    <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
+    <Content Include="Assets\LargeTile.scale-100.png" />
+    <Content Include="Assets\LargeTile.scale-125.png" />
+    <Content Include="Assets\LargeTile.scale-150.png" />
+    <Content Include="Assets\LargeTile.scale-200.png" />
+    <Content Include="Assets\LargeTile.scale-400.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\narow_bus_stop.scale-100.png" />
+    <Content Include="Assets\narow_bus_stop.scale-125.png" />
+    <Content Include="Assets\narow_bus_stop.scale-150.png" />
+    <Content Include="Assets\narow_bus_stop.scale-200.png" />
+    <Content Include="Assets\narow_bus_stop.scale-400.png" />
+    <AndroidResource Include="Assets\pink_bus_og.jpg" />
+    <Content Include="Assets\pink_bus.scale-100.png" />
+    <Content Include="Assets\pink_bus.scale-125.png" />
+    <Content Include="Assets\pink_bus.scale-150.png" />
+    <Content Include="Assets\pink_bus.scale-200.png" />
+    <Content Include="Assets\pink_bus.scale-400.png" />
+    <Content Include="Assets\SmallTile.scale-100.png" />
+    <Content Include="Assets\SmallTile.scale-125.png" />
+    <Content Include="Assets\SmallTile.scale-150.png" />
+    <Content Include="Assets\SmallTile.scale-200.png" />
+    <Content Include="Assets\SmallTile.scale-400.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\Square150x150Logo.scale-150.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-400.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-125.png" />
+    <Content Include="Assets\StoreLogo.scale-150.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="project.json" />
   </ItemGroup>
@@ -117,12 +154,31 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\wide_bus_stop.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\wide_bus_stop.altform-unplated_targetsize-24.png" />
+    <Content Include="Assets\wide_bus_stop.altform-unplated_targetsize-256.png" />
+    <Content Include="Assets\wide_bus_stop.altform-unplated_targetsize-32.png" />
+    <Content Include="Assets\wide_bus_stop.altform-unplated_targetsize-48.png" />
+    <Content Include="Assets\wide_bus_stop.scale-100.png" />
+    <Content Include="Assets\wide_bus_stop.scale-125.png" />
+    <Content Include="Assets\wide_bus_stop.scale-150.png" />
+    <Content Include="Assets\wide_bus_stop.scale-200.png" />
+    <Content Include="Assets\wide_bus_stop.scale-400.png" />
+    <Content Include="Assets\wide_bus_stop.targetsize-16.png" />
+    <Content Include="Assets\wide_bus_stop.targetsize-24.png" />
+    <Content Include="Assets\wide_bus_stop.targetsize-256.png" />
+    <Content Include="Assets\wide_bus_stop.targetsize-32.png" />
+    <Content Include="Assets\wide_bus_stop.targetsize-48.png" />
     <Content Include="bus.png" />
     <Content Include="fave_add.png" />
     <Content Include="Fave_on.png" />
     <Content Include="fave_remove.png" />
+    <Content Include="fxi-t2.png" />
+    <AndroidResource Include="fxitransit.png" />
     <Content Include="narow_bus_stop.png" />
     <Content Include="narow_bus_stop.scale-400.png" />
+    <Content Include="pink_bus.jpg" />
     <Content Include="profile_generic.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="slideout.png" />

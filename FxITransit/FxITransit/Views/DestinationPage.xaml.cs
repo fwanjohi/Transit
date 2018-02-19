@@ -15,12 +15,12 @@ namespace FxITransit.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DestinationPage : ContentPage
     {
-        private DestinationViewModel _StopLiteViewModel;
+        private DestinationViewModel _viewModel;
 
         public DestinationPage(DestinationViewModel viewModel)
         {
             InitializeComponent();
-            _StopLiteViewModel = viewModel;
+            _viewModel = viewModel;
             BindingContext = viewModel;
         }
 
@@ -33,6 +33,26 @@ namespace FxITransit.Views
             {
                 await Navigation.PushAsync(new PredictionsPage(route.StartFrom));
             }
+        }
+
+        private void ViewCell_BindingContextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var cell = sender as ViewCell;
+                if (cell != null)
+                {
+                    var data = cell.BindingContext as PossibleRoute;
+                    var index = _viewModel.Destination.PossibleRoutes.IndexOf(data);
+                    cell.View.BackgroundColor = index % 2 == 0 ? Color.White : Color.LightBlue;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+            }
+
         }
 
     }

@@ -19,6 +19,12 @@
                     <SwitchCell   Text="Show Favorite Routes Only" On="{Binding Path=FavoriteRoutesOnly}" />
                     <SwitchCell   Text="Show Favorite Stops Only" On="{Binding Path=FavoriteStopsOnly}" />
                 </TableSection>
+
+                <TableSection Title="Destination Search">
+                    <!--<Slider Minimum="0.5" Maximum="2.0"  Value="{Binding MaximumDistanceToSearch, Mode=TwoWay}"/>-->
+                    <EntryCell Text="{Binding Path=MaximumDistanceToSearch}" Keyboard="Numeric" LabelColor ="Color.Black" Label="Maximum Distance To Search:" HorizontalTextAlignment ="Start" />
+                </TableSection>
+                    
             </TableRoot>
         </TableView>
     </ContentPage.Content>

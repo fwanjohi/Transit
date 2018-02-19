@@ -66,7 +66,6 @@ namespace FxITransit.Views
                 var page = Application.Current.MainPage as MainLaunchPage;
 
                 Navigation.PushAsync(new PredictionsPage(stop));
-
             }
 
         }

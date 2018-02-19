@@ -15,8 +15,9 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="FxITransit.UWP.App">
-      <uap:VisualElements DisplayName="FxI Transit" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="wide_bus_stop.png" Description="FxI Transit - Global Transit App" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="FxI Transit" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\wide_bus_stop.png" Description="FxI Transit - Global Transit App" BackgroundColor="transparent">
+        <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
@@ -24,7 +25,7 @@
           <uap:Rotation Preference="portraitFlipped" />
           <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
-        <uap:SplashScreen Image="narow_bus_stop.png" />
+        <uap:SplashScreen Image="Assets\pink_bus.png" BackgroundColor="white" />
       </uap:VisualElements>
     </Application>
   </Applications>

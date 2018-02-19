@@ -92,9 +92,9 @@ namespace FxITransit.Helpers
 
             return sourceToDest;
         }
-        public async Task<Destination> SearchDestinationRoutesTo( Stop from, Stop dest)
+        public async Task<Destination> SearchDestinationRoutesTo( Stop from, Stop dest, string start, string end)
         {
-            double lat;
+            double lat; ;
             double lon;
 
             if (from != null)
@@ -120,8 +120,8 @@ namespace FxITransit.Helpers
 //Longitude = -122.41708645
 
 //            //stops near me
-            var stopsNearMe = SearchStopsNearAddress(lat, lon, 0.5, "Near Me");
-            var stopsNearDest = SearchStopsNearAddress(dest.Lat, dest.Lon, 0.5, $"To Destination");
+            var stopsNearMe = SearchStopsNearAddress(lat, lon, 0.5, start);
+            var stopsNearDest = SearchStopsNearAddress(dest.Lat, dest.Lon, 0.5, end);
 
             //var destRouteIds = new List<string> { dest.ParentId };
             var destRouteIds = stopsNearDest.Select(x => x.ParentId).Distinct().ToList();
@@ -147,6 +147,7 @@ namespace FxITransit.Helpers
             var ret = new List<Stop>();
 
             var finalDestination = new Destination();
+            finalDestination.DestinationTitle = end;
             
             foreach (var routeId in commonRouteIds)
             {
@@ -158,6 +159,7 @@ namespace FxITransit.Helpers
                     var shared = FindCommonDestinations(closestStopPerRoute, stopsNearDest);
                     if (shared.StopsToNear.Count != 0)
                     {
+                        shared.DestinationTitle = end;
                         finalDestination.PossibleRoutes.Add(shared);
                     }
                 }

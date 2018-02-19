@@ -9,7 +9,7 @@
                     <Label Text="From (name of place/establishment) : "/>
                     
                     <StackLayout Grid.Column="1" Orientation="Horizontal" Grid.RowSpan="3">
-                        <Label VerticalOptions="Center" Text="Use my location:" HorizontalOptions="Start"/>
+                        <Label VerticalOptions="Center" Text="{Binding FromLabel,Mode=TwoWay}" HorizontalOptions="Start"/>
                         <Switch 
                                 HorizontalOptions="End"
                                 VerticalOptions="Center" 

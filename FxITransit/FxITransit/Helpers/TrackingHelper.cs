@@ -160,7 +160,7 @@ namespace FxITransit.Helpers
             return Math.Abs(distance);
         }
 
-        public double GetWalkingDisatance(double distance)
+        public double CalculateWalkingTime(double distance)
         {
             double  speed = (double)1 / (double)15;
 
